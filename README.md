@@ -63,6 +63,10 @@ Neue Version: `VERSION` in `hysec_industrie.py` erhöhen, Tag `v<Version>` pushe
 ### Datenquellen und Dank
 Spieldaten aus der `Data.p4k` (Patch steht im Programm unten). Optional auf Knopfdruck: UEX Corp (Handelspreise), SCMDB (Fundorte, Raffinerie-Boni). Shader- und Modell-Logik für die Katalog-Bilder nach dem Open-Source-Projekt [StarBreaker](https://github.com/diogotr7/StarBreaker) (MIT).
 
+### Lizenz
+Der Quellcode steht unter der **GNU AGPL-3.0** (siehe [LICENSE](LICENSE)): Du darfst ihn frei nutzen, ändern und weitergeben. Wer eine veränderte Fassung weitergibt **oder als Online-Dienst für andere betreibt**, muss den eigenen Quellcode ebenfalls unter AGPL-3.0 offenlegen.
+Spieldaten, Modelle und daraus erzeugte Bilder gehören Cloud Imperium Games und fallen nicht unter diese Lizenz.
+
 Pliskin Industrie ist ein Fan-Projekt und steht in keiner Verbindung zu Cloud Imperium Games. Star Citizen® ist eine Marke von Cloud Imperium Rights LLC.
 
 ---
@@ -86,5 +90,7 @@ Your data stays on your machine: Windows `%LOCALAPPDATA%\PliskinIndustrie`, Linu
 **Updates:** checked on start (can be muted); any version can be installed under Settings → Program.
 
 **Help & bug reports:** in the program under *Help → Contact*, via [GitHub issues](../../issues/new/choose) or by mail to **pliskinindustrie@gmail.com**. The detailed manual ([docs/HANDBUCH.md](docs/HANDBUCH.md)) is in German for now.
+
+**License:** source code under the **GNU AGPL-3.0** ([LICENSE](LICENSE)) – free to use, change and share; anyone distributing a modified version **or running it as an online service for others** must publish their source under AGPL-3.0 too. Game data, models and renders derived from them belong to Cloud Imperium Games and are not covered.
 
 Fan project, not affiliated with Cloud Imperium Games. Star Citizen® is a trademark of Cloud Imperium Rights LLC. Rendering logic based on StarBreaker (MIT).
