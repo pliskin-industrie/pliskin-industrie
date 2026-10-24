@@ -1,0 +1,17 @@
+/* Pliskin-Zeichen (orangenes P im Sechseck) in der Kopfleiste – je Design leicht angepasst (24.10.2026) */
+.badge{display:flex;align-items:center;gap:12px}
+.badge .btxt{min-width:0}
+.plogo{width:46px;height:46px;flex:none;display:block;filter:drop-shadow(0 2px 2px rgba(0,0,0,.7))}
+body.mob .mtop .plogo{width:26px;height:26px}
+/* WC-Gehäuse: wie eine eingesetzte, leicht abgenutzte Plakette */
+body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"]) .plogo{filter:saturate(.85) contrast(1.05) drop-shadow(0 -1px 0 rgba(255,255,255,.12)) drop-shadow(0 2px 3px rgba(0,0,0,.9))}
+body[data-t="wc5m"] .plogo{filter:drop-shadow(0 0 4px rgba(255,138,42,.35)) drop-shadow(0 2px 2px rgba(0,0,0,.8))}
+/* SC-Designs */
+body[data-t="scfab"] .badge{align-items:center}
+body[data-t="scfab"] .badge .btxt{display:flex;align-items:baseline}
+body[data-t="scfab"] .plogo{width:38px;height:38px}
+body[data-t="sccargo"] .badge::before{display:none}
+body[data-t="sccargo"] .plogo{width:30px;height:30px;filter:none}
+body[data-t="scholo"] .plogo{filter:drop-shadow(0 0 6px rgba(127,230,255,.45)) drop-shadow(0 0 2px rgba(255,138,42,.6))}
+body.mob[data-t="sccargo"] .mtop .plogo{width:24px;height:24px}
+@media (max-width:1100px){.plogo{width:36px;height:36px}}

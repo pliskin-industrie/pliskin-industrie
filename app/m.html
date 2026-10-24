@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0c0e">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Pliskin</title>
+<link rel="icon" type="image/svg+xml" href="logo.svg">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="m.css">
+<link rel="stylesheet" href="wc-mobil.css">
+<link rel="stylesheet" href="sc-designs.css">
+<link rel="stylesheet" href="logo.css">
+<script>
+window.MOBILE = {};
+/* Tablet: Android ohne "Mobile" in der Kennung, iPad, oder grosser Touch-Bildschirm */
+window.HYSEC_TABLET = (function () {
+  var ua = navigator.userAgent;
+  return (/Android/.test(ua) && !/Mobile/.test(ua)) || /iPad/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)
+    || Math.min(screen.width, screen.height) >= 600;
+})();
+</script>
+</head>
+<body data-t="wc3v" class="mob">
+<script>if (window.HYSEC_TABLET) document.body.classList.add('tab');</script>
+<div class="mapp">
+  <div class="mtop">
+    <span class="mback" id="m-back" hidden>◂</span>
+    <img class="plogo" src="logo.svg" alt=""><span class="mname" id="m-title">Pliskin</span>
+    <span class="mled"><i id="ind-auto" class="amb"></i>AUTO</span>
+    <span class="mled"><i id="ind-uex" class="grn"></i>UEX</span>
+    <span class="mled"><i id="ind-warn" class="red"></i>WARN</span>
+  </div>
+  <div class="msegs">
+    <div class="mseg"><b id="m-s1">0</b><i>Pläne</i></div>
+    <div class="mseg"><b id="m-s2">0</b><i>SCU</i></div>
+    <div class="mseg"><b id="m-s3">0</b><i>BPs</i></div>
+    <div class="mseg"><b id="m-s4">0</b><i>offen</i></div>
+  </div>
+  <div class="mscr" id="m-scr">
+    <div class="mcomm" id="comm">SYSTEM BEREIT</div>
+    <div id="m-view"></div>
+    <div class="mfoot" id="m-foot"></div>
+  </div>
+  <div class="mkeys" id="m-keys">
+    <div class="mkey on" data-v="todo"><s>☰</s>To-do</div>
+    <div class="mkey" data-v="plans"><s>▤</s>Pläne</div>
+    <div class="mkey plus" data-v="+"><s>+</s></div>
+    <div class="mkey" data-v="lager"><s>▦</s>Lager</div>
+    <div class="mkey tabonly" data-v="bp"><s>◈</s>Blueprints</div>
+    <div class="mkey" data-v="mehr"><s>⋯</s>Mehr</div>
+  </div>
+</div>
+
+<div class="modal" id="modal"><div class="box" id="modal-box"></div></div>
+<div class="toast" id="toast"></div>
+
+<script src="app.js"></script>
+<script src="etappe2.js"></script>
+<script src="lageransicht.js"></script>
+<script src="verkauf.js"></script>
+<script src="wissen.js"></script>
+<script src="eigene.js"></script>
+<script src="katalog.js"></script>
+<script src="heute.js"></script>
+<script src="hilfe.js"></script>
+<script src="programm.js"></script>
+<script src="erkennung.js"></script>
+<script src="erfassung.js"></script>
+<script src="i18n_en.js"></script>
+<script src="i18n.js"></script>
+<script src="mobile.js"></script>
+</body>
+</html>

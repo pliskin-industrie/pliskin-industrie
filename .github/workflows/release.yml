@@ -1,0 +1,45 @@
+# Baut Pliskin Industrie fuer Windows und Linux und haengt beide Dateien an das GitHub-Release.
+# Ausloesen: Tag „v<Version>“ pushen (muss zu VERSION in hysec_industrie.py passen), z. B. v1.0.0
+name: Release bauen
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: python -m pip install -r requirements-windows.txt pyinstaller
+      - run: python -m PyInstaller --noconfirm --onefile --windowed --icon pliskin.ico --name "Pliskin-Industrie" --add-data "app;app" --add-data "edition.json;." hysec_industrie.py
+      - run: Rename-Item dist\Pliskin-Industrie.exe "Pliskin-Industrie-${{ github.ref_name }}-windows.exe"
+      - uses: actions/upload-artifact@v4
+        with: { name: windows, path: dist/*.exe }
+  linux:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: sudo apt-get update && sudo apt-get install -y libegl1 libgl1 libxkbcommon-x11-0 libxcb-cursor0 libnss3
+      - run: python -m pip install -r requirements-linux.txt pyinstaller
+      - run: python -m PyInstaller --noconfirm --onefile --name "Pliskin-Industrie-${{ github.ref_name }}-linux-x86_64" --add-data "app:app" --add-data "edition.json:." --hidden-import webview.platforms.qt hysec_industrie.py
+      - uses: actions/upload-artifact@v4
+        with: { name: linux, path: dist/Pliskin-Industrie-* }
+  release:
+    needs: [windows, linux]
+    runs-on: ubuntu-22.04
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - uses: actions/download-artifact@v4
+        with: { path: dateien }
+      - name: Pruefsummen (SHA-256) – jeder kann nachpruefen, dass die Datei genau aus diesem Quellcode-Bau stammt
+        run: cd dateien && find . -type f -exec mv {} . \; && find . -mindepth 1 -type d -delete && sha256sum Pliskin-Industrie-* > SHA256SUMS.txt
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: dateien/*
+          generate_release_notes: true

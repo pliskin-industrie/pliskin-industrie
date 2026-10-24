@@ -1,0 +1,250 @@
+/* Hysec Industrie – Handy-Oberflaeche (Skizze hysec-handy-entwurf.html, ohne Flackern).
+   Farben kommen aus den Themes in style.css. */
+html,body.mob{height:100%;overflow:hidden}
+body.mob{font-size:16px;-webkit-tap-highlight-color:transparent;overscroll-behavior:none}
+/* Hoehe = wirklich sichtbarer Bereich (Firefox am Handy zaehlt seine untere Leiste sonst mit) */
+.mapp{height:100%;height:100dvh;height:var(--apph,100dvh);display:flex;flex-direction:column;max-width:760px;margin:0 auto;position:relative}
+
+/* Kopf: eine schmale Zeile */
+.mtop{display:flex;align-items:center;gap:8px;padding:calc(7px + env(safe-area-inset-top)) 10px 7px;
+  background:linear-gradient(180deg,#1c1d20,#0d0e10);border-bottom:2px solid #000}
+.mname{flex:1;font:700 14px var(--font);letter-spacing:.18em;color:var(--gold);text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mback{font:700 22px var(--font);color:var(--pill);padding:0 8px 0 2px;cursor:pointer}
+.mled{display:flex;align-items:center;gap:3px;font:10px var(--vdu);color:#9a9a9a}
+.mled i{width:9px;height:9px;border-radius:50%;background:#2a2c30;box-shadow:inset 0 1px 2px #000}
+.mled i.amb.on{background:#ffaa10;box-shadow:0 0 6px #ffaa10}
+.mled i.grn.on{background:#3fd469;box-shadow:0 0 6px #3fd469}
+.mled i.red.on{background:#ff4030;box-shadow:0 0 6px #ff4030}
+
+/* rote 7-Segment-Ziffern */
+.msegs{display:flex;gap:4px;padding:5px 7px;background:#050505;border-bottom:2px solid #000}
+.mseg{flex:1;text-align:center;background:#0c0303;border:1px solid #2a0a0a;border-radius:3px;padding:1px 0 2px}
+.mseg b{display:block;font:400 24px/1 var(--seg7);color:#ff3b2a;text-shadow:0 0 6px #ff3b2a;letter-spacing:.06em}
+.mseg i{font:9px var(--vdu);font-style:normal;color:#7a6060;text-transform:uppercase;letter-spacing:.06em}
+
+/* Bildschirm (ohne Flackern, ohne Rollbalken-Animation) */
+.mscr{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;position:relative;
+  background:radial-gradient(ellipse at 50% 30%,var(--scr2),var(--scr) 80%);
+  border-left:3px solid var(--frame);border-right:3px solid var(--frame);padding:8px 10px 18px}
+.mcomm{font:13px var(--vdu);color:var(--data);border:1px solid var(--grid);background:rgba(0,0,0,.4);padding:4px 8px;margin-bottom:8px;
+  letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  clip-path:polygon(0 0,100% 0,100% 70%,97% 100%,0 100%)}
+.mfoot{margin-top:18px;font:11px var(--vdu);color:var(--dim);opacity:.8;line-height:1.5}
+
+.mhd{display:flex;align-items:center;gap:8px;margin:4px 0 8px}
+.mhd h3{margin:0;flex:1;font:700 16px var(--font);color:var(--pill);letter-spacing:.14em;text-transform:uppercase}
+.mhd h3::before{content:"▸ "}
+.mpill{font:700 12px var(--vdu);border:1px solid var(--frame);color:var(--pill);border-radius:20px;padding:1px 9px;white-space:nowrap}
+.mpill.btn{cursor:pointer;padding:4px 12px}
+
+.mchips{display:flex;gap:6px;margin-bottom:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.mchips::-webkit-scrollbar{display:none}
+.mchip{font:700 13px var(--font);padding:7px 12px;border-radius:6px;border:1px solid var(--grid);color:var(--dim);white-space:nowrap;cursor:pointer;flex:none}
+.mchip.on{background:var(--frame);color:#fff;border-color:var(--frame)}
+.mchip b{font-weight:400;opacity:.8;margin-left:4px}
+
+.mgrp{font:700 12px var(--vdu);color:var(--dim);letter-spacing:.14em;text-transform:uppercase;margin:12px 0 6px;border-bottom:1px dashed var(--grid);
+  display:flex;justify-content:space-between;gap:8px}
+.mgrp span{color:var(--txt);opacity:.8;letter-spacing:.04em}
+
+/* Eintraege zum Antippen */
+.mit{display:flex;align-items:center;gap:9px;padding:10px 9px;border:1px solid var(--grid);border-radius:7px;margin-bottom:6px;background:rgba(0,0,0,.28);cursor:pointer}
+.mit:active{background:rgba(255,255,255,.06)}
+.mit .tx{flex:1;min-width:0}
+.mit .tx b{display:block;font-size:15px;color:var(--txt);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mit .tx small{display:block;color:var(--dim);font-size:12.5px;line-height:1.35}
+.mit .v{font:400 19px var(--vdu);color:var(--data);text-align:right;white-space:nowrap}
+.mit .v.w{color:var(--warn)} .mit .v.b{color:var(--bad)} .mit .v.d{color:var(--dim);font-size:15px}
+.mit.sel{border-color:var(--pill)}
+.mit.done{opacity:.6}
+.mic{width:32px;height:32px;flex:none;border-radius:6px;display:grid;place-items:center;font:700 15px var(--vdu);border:1px solid}
+.mic.m{color:var(--bad);border-color:var(--bad)} .mic.a{color:var(--warn);border-color:var(--warn)} .mic.c{color:var(--data);border-color:var(--data)}
+.mbar2{height:6px;background:rgba(0,0,0,.6);border:1px solid var(--grid);border-radius:2px;margin-top:5px;overflow:hidden}
+.mbar2 i{display:block;height:100%;background:repeating-linear-gradient(90deg,var(--data) 0 8px,transparent 8px 10px)}
+
+/* Bauteil im Plan (aufklappbar) */
+.mpart{border:1px solid var(--grid);border-radius:7px;margin-bottom:6px;background:rgba(0,0,0,.28)}
+.mpart .mit{border:none;margin:0;background:none}
+.mpart.open{border-color:var(--pill)}
+.mpart .more{padding:2px 10px 10px;border-top:1px dashed var(--grid)}
+.mreq{display:flex;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:14px}
+.mreq .n{flex:1;min-width:0}
+.mreq .n small{display:block;color:var(--dim);font-size:12px}
+.mreq .a{font:15px var(--vdu);text-align:right;white-space:nowrap}
+.mrow{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-top:9px}
+.mrow label{font:12px var(--vdu);color:var(--dim);text-transform:uppercase}
+
+.mstp{display:flex;align-items:center;border:1px solid var(--frame);border-radius:7px;overflow:hidden;flex:none}
+.mstp span{width:38px;height:38px;display:grid;place-items:center;font:700 20px var(--vdu);color:var(--pill);background:rgba(0,0,0,.45);cursor:pointer;user-select:none}
+.mstp span:active{background:var(--frame);color:#fff}
+.mstp em{font:400 20px var(--vdu);font-style:normal;min-width:30px;text-align:center;color:var(--data)}
+
+/* Eingaben in der Ansicht */
+.mscr input,.mscr select,.mscr textarea{background:#000;color:var(--data);border:2px solid var(--frame);border-radius:6px;padding:9px 10px;font:16px var(--vdu);max-width:100%}
+.mscr input:focus,.mscr select:focus{outline:none;border-color:var(--pill)}
+.msearch{display:flex;gap:6px;margin-bottom:8px}
+.msearch input{flex:1;min-width:0}
+.msearch select{max-width:42%}
+
+/* Knoepfe */
+.mbtn{display:flex;align-items:center;justify-content:center;gap:6px;min-height:46px;padding:6px 14px;border-radius:7px;border:2px solid #111;cursor:pointer;
+  background:linear-gradient(180deg,#9a9da2,#6e7176);color:#151618;font:700 14px var(--font);letter-spacing:.08em;text-transform:uppercase;text-align:center;
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.45),inset 0 -3px 0 rgba(0,0,0,.35),0 2px 0 #000;user-select:none}
+.mbtn:active{transform:translateY(1px)}
+.mbtn.pri{background:linear-gradient(180deg,var(--keyb),var(--key));color:var(--keyfg)}
+.mbtn.go{background:linear-gradient(180deg,#5fe080,#2a9a48);color:#06210e;min-height:54px;font-size:16px}
+.mbtn.x{background:linear-gradient(180deg,#d06a5a,#8a2e22);color:#fff}
+.mbtn.sm{min-height:38px;font-size:12px;padding:4px 10px}
+.mbtn.dash{background:none;border:1px dashed var(--pill);color:var(--pill);box-shadow:none}
+.mbtns{display:flex;gap:7px;margin-top:8px}.mbtns>*{flex:1}
+
+/* Untere Tastenreihe – Cockpit-Taster */
+.mkeys{display:flex;gap:5px;padding:6px 6px calc(8px + env(safe-area-inset-bottom));
+  background:linear-gradient(180deg,var(--metal1),var(--metal2));border-top:2px solid #000}
+.mkey{flex:1;min-height:52px;border-radius:7px;border:2px solid #111;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;user-select:none;
+  background:linear-gradient(180deg,#9a9da2,#6e7176);color:#151618;font:700 10px var(--font);letter-spacing:.06em;text-transform:uppercase;
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.45),inset 0 -3px 0 rgba(0,0,0,.35),0 2px 0 #000}
+.mkey s{text-decoration:none;font-size:18px;line-height:1.1}
+.mkey:active{transform:translateY(1px)}
+.mkey.on{background:linear-gradient(180deg,var(--keyb),var(--key));color:var(--keyfg)}
+.mkey.plus{background:linear-gradient(180deg,#f6aa40,#d88a20);color:#2a1804;flex:1.15}
+.mkey.plus s{font-size:28px}
+
+/* Mehr-Menue */
+.mmenu{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mmenu .mbtn{min-height:66px;flex-direction:column;gap:2px;font-size:12px}
+.mmenu .mbtn s{text-decoration:none;font-size:21px;line-height:1}
+.mmenu .mbtn small{font-size:10px;text-transform:none;letter-spacing:0;font-weight:400}
+.mmenu .mbtn.dis{opacity:.4}
+
+/* Fenster (aus app.js) als Blatt von unten */
+body.mob .modal{align-items:flex-end}
+body.mob .modal .box{width:100%;max-width:760px;max-height:92vh;border-radius:14px 14px 0 0;border:none;border-top:3px solid var(--pill);
+  padding:12px 12px calc(14px + env(safe-area-inset-bottom));background:linear-gradient(180deg,var(--scr2),var(--scr))}
+body.mob .modal .box::before{content:"";display:block;width:44px;height:4px;border-radius:2px;background:var(--dim);margin:0 auto 10px;opacity:.7}
+body.mob .modal h3{font-size:18px;color:var(--pill);text-shadow:none}
+body.mob .modal input,body.mob .modal select,body.mob .modal textarea{font-size:16px;max-width:100%}
+body.mob .modal .form{gap:8px}
+body.mob .modal .fld{flex:1 1 130px;min-width:0}
+body.mob .modal .fld input,body.mob .modal .fld select{width:100%!important}
+body.mob .modal input[type=range]{width:100%!important}
+body.mob .modal .foot{position:sticky;bottom:calc(-14px - env(safe-area-inset-bottom));background:var(--scr);padding:10px 0 4px;margin-bottom:-4px}
+body.mob .modal .foot button.k{flex:1;min-height:46px;font-size:14px}
+body.mob .modal .ptab{width:100%}
+body.mob .modal .ptab td{padding:7px 4px}
+body.mob .modal .ptab td.l.dim{font-size:12px}
+body.mob .modal .search input{min-width:0}
+body.mob .modal .boxin{display:flex;flex-wrap:wrap;gap:6px}
+body.mob .modal .boxin input{width:52px}
+body.mob .ac-list{max-height:40vh}
+body.mob .ac-item{padding:10px 10px;font-size:15px}
+body.mob .toast{left:12px;right:12px;bottom:calc(84px + env(safe-area-inset-bottom));text-align:center}
+
+/* Schnell-Einbuchen */
+.qb .lb{font:12px var(--vdu);color:var(--dim);text-transform:uppercase;letter-spacing:.1em;margin:9px 0 4px}
+.qb input{width:100%}
+.qb .amt{font:400 30px var(--vdu)!important;text-align:right;color:var(--data)}
+.qb .units{display:flex;border:2px solid var(--frame);border-radius:7px;overflow:hidden;margin-top:6px}
+.qb .units span{flex:1;text-align:center;padding:10px 0;font:15px var(--vdu);color:var(--dim);cursor:pointer}
+.qb .units span.on{background:var(--frame);color:#fff}
+.qb .conv{font:13px var(--vdu);color:var(--dim);text-align:right;min-height:18px;margin-top:3px}
+.qb .two{display:flex;gap:8px}.qb .two>div{flex:1;min-width:0}
+.qb .sugg{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.qb .sugg span{font-size:13px;border:1px dashed var(--grid);border-radius:5px;padding:5px 9px;color:var(--dim);cursor:pointer}
+.qb .sugg span.need{border-color:var(--warn);color:var(--warn)}
+.qb details{margin-top:8px;color:var(--dim);font-size:14px}
+.qb summary{cursor:pointer;padding:4px 0}
+
+/* SCU-Rechner und Einstellungen aus app.js in schmal */
+#m-view .cols2,#m-view .cols3{display:block}
+#m-view .win{margin-bottom:12px;padding:10px}
+#m-view .fld{flex:1 1 130px;min-width:0}
+#m-view .fld input,#m-view .fld select{width:100%!important}
+#m-view .form{gap:8px}
+#m-view .ptab{width:100%;font-size:13px}
+#m-view button.k{font:700 13px var(--font);text-transform:uppercase;padding:9px 12px;border-radius:6px;border:2px solid #111;
+  background:linear-gradient(180deg,#9a9da2,#6e7176);color:#151618;cursor:pointer}
+#m-view button.k.pri{background:linear-gradient(180deg,var(--keyb),var(--key));color:var(--keyfg)}
+#m-view button.k.x{background:linear-gradient(180deg,#d06a5a,#8a2e22);color:#fff}
+#m-view .row2{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
+#m-view .drop{display:none}
+#m-view .search input{min-width:0}
+
+/* ================= Tablet (body.tab) ================= */
+.mkey.tabonly{display:none}
+body.tab .mkey.tabonly{display:flex}
+body.tab .mapp{max-width:none}
+body.tab .mscr{padding:10px 14px 18px}
+/* To-do-Gruppen nebeneinander, sobald Platz ist */
+.mgs{display:block}
+body.tab .mgs{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:4px 12px;align-items:start}
+/* Listen in zwei Spalten (Blueprints, Lager rechts) */
+body.tab .mcols{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:0 8px}
+body.tab .mcols .mgrp{grid-column:1/-1}
+/* Liste links + Details rechts */
+.msplit{display:flex;gap:12px;align-items:flex-start}
+.msplit>.ml{width:300px;flex:none;position:sticky;top:0}
+.msplit>.mr{flex:1;min-width:0}
+.msplit>.mr .mpart{background:rgba(0,0,0,.2)}
+
+/* Quer: Cockpit-Tasten als Leiste links */
+@media (orientation:landscape){
+  body.tab .mapp{display:grid;grid-template-columns:96px 1fr;grid-template-rows:auto auto 1fr}
+  body.tab .mtop,body.tab .msegs{grid-column:1/-1}
+  body.tab .mtop{padding-left:calc(12px + env(safe-area-inset-left))}
+  body.tab .mkeys{grid-column:1;grid-row:3;flex-direction:column;gap:7px;padding:9px 8px calc(9px + env(safe-area-inset-bottom)) calc(8px + env(safe-area-inset-left));
+    border-top:none;border-right:2px solid #000;background:linear-gradient(90deg,var(--metal1),var(--metal2));overflow-y:auto}
+  body.tab .mkey{flex:0 0 auto;min-height:64px}
+  body.tab .mkey[data-v="mehr"]{margin-top:auto}
+  body.tab .mscr{grid-column:2;grid-row:3;border-left:none}
+  body.tab .msegs{justify-content:flex-end}
+  body.tab .mseg{flex:0 0 96px}
+  body.tab .toast{left:auto;right:16px;bottom:16px;max-width:420px}
+  body.tab .modal{align-items:center}
+  body.tab .modal .box{max-width:680px;border-radius:12px;border:3px solid var(--pill)}
+}
+/* Hochkant: Tasten unten wie am Handy, nur etwas hoeher */
+@media (orientation:portrait){
+  body.tab .mkey{min-height:58px;font-size:11px}
+  body.tab .modal .box{max-width:none}
+}
+
+/* Pliskin 1.0 auf dem Handy */
+body.mob .wcols,body.mob .cols2{grid-template-columns:1fr}
+body.mob .wpick .wpl{min-width:0;width:100%}
+body.mob .helpgrid{grid-template-columns:1fr}
+body.mob #demo-banner{top:auto;bottom:calc(var(--keysh,64px) + 6px);font-size:12px}
+body.mob .mit .tx small a{color:var(--pill)}
+body.mob .wlinks{margin:4px 0 8px}
+body.mob .mtodo .mit .tx b{white-space:normal;overflow:visible;text-overflow:clip;line-height:1.3}
+body.mob .mtodo .mit .v.va{font-size:13px;max-width:34%;white-space:normal;text-align:right;line-height:1.2}
+body.mob #demo-banner{left:auto;right:6px;transform:none;flex-wrap:wrap;max-width:60vw;border-radius:8px}
+body.mob .wtd{margin-left:0;width:100%}
+body.mob .wtm span{min-width:0;flex:1 1 45%}
+body.mob .wtsels{gap:6px}
+body.mob .wtsel{flex:1 1 calc(50% - 6px);flex-wrap:wrap;padding:4px 6px;gap:4px}
+body.mob .wtsel b{flex:1;font-size:14px}
+body.mob .wtsel .wtk{display:none}
+body.mob .wtsel select{order:3;width:100%;font-size:13px}
+body.mob .wtsel .k{min-height:0;padding:0 8px}
+body.mob .kgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+body.mob .kim{height:130px}body.mob .kim img{max-height:126px}
+body.mob .khero img{max-height:380px}
+body.mob .ktab{font-size:12.5px}body.mob .ktab th,body.mob .ktab td{padding:3px 3px}
+body.mob .kadd select{max-width:100%}
+body.mob .ktab td:first-child{white-space:normal}
+/* Tour planen: Übersicht (aufklappbar) */
+.e2ov summary { cursor: pointer; list-style: none; display: flex; align-items: center; gap: 8px; }
+.e2ov summary::-webkit-details-marker { display: none; }
+.e2ov summary::after { content: '▾'; margin-left: auto; opacity: .7; }
+.e2ov:not([open]) summary::after { content: '▸'; }
+.e2ov table.ptab td input[type=checkbox] { width: 22px; height: 22px; }
+.upd-banner { position: fixed; left: 8px; right: 8px; bottom: 74px; z-index: 900; display: flex; gap: 6px; align-items: center; flex-wrap: wrap;
+  background: var(--panel, #10161c); border: 1px solid var(--accent, #5ad2e8); padding: 8px 10px; border-radius: 8px; }
+
+/* Eigene Daten (Handy) */
+.rfgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px 10px;margin:8px 0}
+.rfgrid label{display:flex;flex-direction:column;gap:2px;font-size:13px}
+.rfgrid input{width:100%;box-sizing:border-box}
+tr.dimrow td{opacity:.55}
+textarea{box-sizing:border-box;max-width:100%}

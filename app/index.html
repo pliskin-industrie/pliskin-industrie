@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pliskin Industrie</title>
+<link rel="icon" type="image/svg+xml" href="logo.svg">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="wc-gehaeuse.css">
+<link rel="stylesheet" href="wc-gehaeuse2.css">
+<link rel="stylesheet" href="sc-designs.css">
+<link rel="stylesheet" href="logo.css">
+<script>
+/* Handy erkannt -> Handy-Oberflaeche (m.html). Nicht in der Hysec-App, nicht wenn "PC-Ansicht" gewaehlt. */
+(function () {
+  var ua = navigator.userAgent;
+  var tablet = (/Android/.test(ua) && !/Mobile/.test(ua)) || /iPad/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var small = tablet || Math.min(screen.width, screen.height) < 600;
+  var app = /[?&]app=1\b/.test(location.search) || location.hostname === '127.0.0.1' || location.protocol === 'file:';
+  var pc = false; try { pc = localStorage.getItem('hysec-view') === 'pc'; } catch (e) { /* egal */ }
+  window.HYSEC_SMALL = small && !app;
+  if (small && !app && !pc) location.replace('m.html');
+})();
+</script>
+</head>
+<body data-t="wc3v">
+<div class="console">
+  <i class="screw tl"></i><i class="screw tr"></i><i class="screw bl"></i><i class="screw br"></i>
+  <span class="serial">LP-<span class="app-ver-s">1.1</span></span>
+
+  <div class="plate">
+    <div class="badge"><img class="plogo" src="logo.svg" alt=""><div class="btxt"><h1>Pliskin Industrie</h1><small>LONY PLISKIN · CRAFTING · LOGISTIK · V<span class="app-ver">1.0.0</span></small></div></div>
+    <div class="grill"></div>
+    <div class="inds">
+      <div class="ind" title="Log-Sync"><i id="ind-auto" class="amb"></i>AUTO</div>
+      <div class="ind" title="UEX-Preise"><i id="ind-uex" class="grn"></i>UEX</div>
+      <div class="ind" title="Warnung"><i id="ind-warn" class="red"></i>WARN</div>
+    </div>
+    <div class="grow"></div>
+    <div class="readout">
+      <div class="lcd"><b id="lcd-plans" data-g="888">0</b><i>Pläne</i></div>
+      <div class="lcd"><b id="lcd-scu" data-g="888.8">0</b><i>SCU Lager</i></div>
+      <div class="lcd"><b id="lcd-bp" data-g="888">0</b><i>Blueprints</i></div>
+      <div class="lcd"><b id="lcd-open" data-g="88">0</b><i>offen</i></div>
+    </div>
+    <div class="syncbox"><div class="key sm on" id="btn-sync">⟳ Log-Sync</div><span id="sync-time">–</span></div>
+    <select id="theme" title="Design">
+      <option value="wc3v">WC III · Victory</option>
+      <option value="wc4l">WC IV · Lexington</option>
+      <option value="wc4i">WC IV · Intrepid</option>
+      <option value="wc5m">Prophecy · Midway</option>
+      <option value="scfab">SC · Item Fabricator</option>
+      <option value="sccargo">SC · Freight Elevator</option>
+      <option value="scholo">SC · Holo</option>
+    </select>
+  </div>
+
+  <div class="deck">
+    <div class="side" id="nav">
+      <div class="grp">Heute</div>
+      <div class="key on" data-tab="todo">Heute / To-do</div>
+      <div class="grp">Logistik</div>
+      <div class="key" data-tab="lager">Lager</div>
+      <div class="key" data-tab="tour">Tour planen</div>
+      <div class="key" data-tab="ctr">Contracts</div>
+      <div class="key" data-tab="orte">Home &amp; Favoriten</div>
+      <div class="grp">Crafting</div>
+      <div class="key" data-tab="plan">Crafting-Pläne</div>
+      <div class="grp">Schiffe</div>
+      <div class="key" data-tab="ships">Schiffe</div>
+      <div class="grp">Wissen</div>
+      <div class="key" data-tab="db">Datenbank</div>
+      <div class="grp">System</div>
+      <div class="key" data-tab="log">Log-Sync</div>
+      <div class="key" data-tab="opt">Einstellungen</div>
+      <div class="key" data-tab="help">Hilfe</div>
+    </div>
+
+    <div class="screen-wrap"><div class="crt" id="crt">
+      <div class="glass"></div><div class="roll"></div><div class="hud"></div>
+      <div class="scr" id="scr">
+        <div class="comm" id="comm">SYSTEM BEREIT</div>
+        <section class="screen on" id="todo"></section>
+        <section class="screen" id="lager"></section>
+        <section class="screen" id="tour"></section>
+        <section class="screen" id="ctr"></section>
+        <section class="screen" id="orte"></section>
+        <section class="screen" id="plan"></section>
+        <section class="screen" id="ships"></section>
+        <section class="screen" id="db"></section>
+        <section class="screen" id="log"></section>
+        <section class="screen" id="opt"></section>
+        <section class="screen" id="help"></section>
+      </div>
+    </div></div>
+  </div>
+  <div class="footer" id="footer"></div>
+</div>
+
+<div class="modal" id="modal"><div class="box" id="modal-box"></div></div>
+<div class="toast" id="toast"></div>
+
+<script src="app.js"></script>
+<script src="etappe2.js"></script>
+<script src="lageransicht.js"></script>
+<script src="verkauf.js"></script>
+<script src="wissen.js"></script>
+<script src="eigene.js"></script>
+<script src="katalog.js"></script>
+<script src="heute.js"></script>
+<script src="hilfe.js"></script>
+<script src="programm.js"></script>
+<script src="erkennung.js"></script>
+<script src="erfassung.js"></script>
+<script src="i18n_en.js"></script>
+<script src="i18n.js"></script>
+<script>
+/* Auf dem Handy in der PC-Ansicht: kleiner Knopf zurueck zur Handy-Oberflaeche */
+if (window.HYSEC_SMALL) {
+  var hb = document.createElement('div');
+  hb.textContent = '▯ Handy-Ansicht';
+  hb.style.cssText = 'position:fixed;left:10px;bottom:10px;z-index:80;padding:10px 14px;border-radius:8px;border:2px solid #111;background:linear-gradient(180deg,#f6aa40,#d88a20);color:#2a1804;font:700 14px sans-serif;box-shadow:0 2px 0 #000';
+  hb.onclick = function () { try { localStorage.removeItem('hysec-view'); } catch (e) { /* egal */ } location.href = 'm.html'; };
+  document.body.appendChild(hb);
+}
+</script>
+</body>
+</html>

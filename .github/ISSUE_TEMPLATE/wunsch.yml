@@ -1,0 +1,15 @@
+name: "💡 Wunsch / Idee · Feature request"
+description: "Neue Funktion oder Verbesserung vorschlagen · Suggest a feature or improvement"
+labels: ["wunsch"]
+body:
+  - type: textarea
+    id: idee
+    attributes:
+      label: "Was wünschst du dir? / What would you like?"
+      description: "Wofür brauchst du es im Spiel? Ein Beispiel hilft sehr. · What do you need it for in game? An example helps a lot."
+    validations:
+      required: true
+  - type: textarea
+    id: bild
+    attributes:
+      label: "Skizze / Screenshot (optional)"

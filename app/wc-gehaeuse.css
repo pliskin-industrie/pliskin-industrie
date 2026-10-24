@@ -1,0 +1,146 @@
+/* Pliskin Industrie – Gehäuse der Wing-Commander-Designs (WC III Victory, WC IV Lexington, WC IV Intrepid)
+   Vorlage: WC4-Remaster-Konsolen (wcnews.com, 11.07.2023): mattes Anthrazit-Metall mit Fasen, tief eingelassener
+   Bildschirm in schwarzer Blende, klobige Hardware-Tasten (grau, aktiv orange, „zurück“ blau), Typennummer + Rillen oben.
+   Nur Gehäuse/Tasten/Menü – der Bildschirm-Inhalt (Raster, Kacheln) bleibt wie in style.css.
+   Wird nach style.css geladen und überschreibt dort die älteren Metall-Regeln. */
+
+body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]){
+  --hs-top:#3c3f44;--hs:#2b2d31;--hs-dk:#1a1b1e;--hs-ink:#7c8188;--hs-lip:#45484e;
+  --kg1:#b2b7be;--kg2:#888d95;--kg3:#4a4e55;--kgt:#1f2226;
+  background:radial-gradient(ellipse 90% 70% at 50% 15%,#2c2735,#0d0c10 72%);
+}
+body[data-t="wc3v"]{--hs-top:#35383c;--hs:#25272a;--hs-dk:#141517;--hs-lip:#3d4045}
+body[data-t="wc4i"]{ /* Intrepid: das hellgraue Original-Gehäuse von 1996 */
+  --hs-top:#d3d4d6;--hs:#aeb0b4;--hs-dk:#7e8186;--hs-ink:#55585e;--hs-lip:#c3c5c8;
+  --kg1:#c8ccd2;--kg2:#999da4;--kg3:#5b5f66}
+
+/* ---------- Gehäuse ---------- */
+body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) .console{
+  border-radius:26px;padding:26px 20px 14px;
+  background:
+    radial-gradient(ellipse 120% 50% at 50% -8%,rgba(255,255,255,.08),transparent 60%),
+    radial-gradient(ellipse 140% 40% at 50% 112%,rgba(0,0,0,.35),transparent 60%),
+    var(--noise),
+    linear-gradient(180deg,var(--hs-top),var(--hs) 14%,var(--hs) 86%,var(--hs-dk));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.2),inset 0 -2px 0 rgba(0,0,0,.55),inset 0 0 0 1px rgba(0,0,0,.65),
+    inset 0 0 0 7px rgba(255,255,255,.025),0 14px 44px rgba(0,0,0,.75)}
+/* Rillen oben in der Mitte + rotes Warn-Schildchen links (wie „IIII IIII“ / WARNING am Original) */
+body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) .console::before{
+  content:"IIII IIII              IIII IIII";position:absolute;top:6px;left:50%;transform:translateX(-50%);white-space:pre;
+  font:700 11px/1 var(--mono);letter-spacing:2px;color:rgba(0,0,0,.6);text-shadow:0 1px 0 rgba(255,255,255,.09);pointer-events:none}
+body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) .console::after{
+  content:"WARNING";position:absolute;top:6px;left:46px;padding:1px 26px 1px 4px;pointer-events:none;
+  font:700 7px/1.2 var(--mono);letter-spacing:.08em;color:#f2e6e0;
+  background:linear-gradient(90deg,#9a2b24 0 44px,#d9d4cc 44px);border:1px solid rgba(0,0,0,.6);border-radius:1px;opacity:.75;
+  box-shadow:0 1px 0 rgba(255,255,255,.08)}
+/* eingeprägte Typennummer oben rechts (wie „CD47-228“) */
+body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) .serial{top:3px;right:58px;font:700 17px/1 var(--mono);letter-spacing:.04em;
+  color:rgba(0,0,0,.42);text-shadow:0 1px 0 rgba(255,255,255,.1),0 -1px 0 rgba(0,0,0,.25)}
+/* Schrauben: runde Inbus-Bolzen statt Schlitzschrauben */
+body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) .screw{width:20px;height:20px;filter:none;
+  background:
+    radial-gradient(circle,transparent 0 2.2px,rgba(0,0,0,.85) 2.6px 3.6px,transparent 4px),
+    radial-gradient(circle at 42% 36%,#9aa0a7,#5a5e64 55%,#2c2e32 90%);
+  box-shadow:inset 0 0 0 2px rgba(0,0,0,.55),inset 0 1px 1px rgba(255,255,255,.25),0 1px 1px rgba(255,255,255,.1),0 -1px 1px rgba(0,0,0,.5)}
+body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) .screw::before,
+body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) .screw::after{display:none}
+body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) .screw.tl,body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) .screw.tr{top:8px}
+body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) .screw.tl,body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) .screw.bl{left:10px}
+body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) .screw.tr,body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) .screw.br{right:10px}
+
+/* Kopfzeile kompakter, Design-Auswahl als dunkles Bedienfeld */
+body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) .plate{margin:2px 8px 12px;gap:12px}
+body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) .badge{border-radius:14px;background:var(--noise),linear-gradient(180deg,#121315,#07080a);
+  box-shadow:inset 0 2px 6px rgba(0,0,0,.9),0 0 0 2px #050506,0 0 0 4px var(--hs-lip),0 0 0 5px rgba(0,0,0,.55)}
+body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) #theme{background:#0d0e10;color:#cfd3d8;border:1px solid #000;border-radius:8px;
+  padding:6px 8px;font-size:13px;box-shadow:inset 0 1px 3px #000,0 0 0 2px var(--hs-lip),0 0 0 3px rgba(0,0,0,.5)}
+
+/* ---------- Tasten-Mulde links (Menü) ---------- */
+body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) .deck{gap:22px}
+body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) .side{
+  gap:0;padding:10px 9px 8px;border-radius:18px;width:178px;
+  background:var(--noise),linear-gradient(180deg,rgba(0,0,0,.30),rgba(0,0,0,.16));
+  box-shadow:inset 0 3px 8px rgba(0,0,0,.75),inset 0 0 0 1px rgba(0,0,0,.55),0 1px 0 rgba(255,255,255,.08)}
+/* eingeprägte Gruppen-Beschriftung mit Fuge statt weißer Leiste */
+body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) .grp{
+  display:flex;align-items:center;gap:6px;margin:7px 2px 4px;padding:0;background:none;border:none;border-radius:0;box-shadow:none;
+  font:700 10px/1 var(--mono);letter-spacing:.24em;text-align:left;color:var(--hs-ink);
+  text-shadow:0 1px 0 rgba(255,255,255,.07),0 -1px 0 rgba(0,0,0,.6)}
+body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) .grp:first-child{margin-top:0}
+body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) .grp::after{content:"";flex:1;height:1px;background:rgba(0,0,0,.5);box-shadow:0 1px 0 rgba(255,255,255,.07)}
+body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) .grp::before{display:none}
+
+/* ---------- Hardware-Tasten ---------- */
+body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) .key{
+  position:relative;border-radius:4px;border:1px solid #0b0c0e;color:var(--kgt);
+  font:700 12.5px/1.15 var(--font);letter-spacing:.09em;text-shadow:0 1px 0 rgba(255,255,255,.35);
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.6) 0 1px,rgba(255,255,255,.18) 1px 3px,transparent 3px),
+    repeating-linear-gradient(180deg,transparent 0 2px,rgba(0,0,0,.07) 2px 3px) 0 3px/100% 7px no-repeat,
+    radial-gradient(ellipse 90% 70% at 50% 30%,rgba(255,255,255,.12),transparent 70%),
+    linear-gradient(180deg,var(--kg1),var(--kg2));
+  box-shadow:0 3px 0 var(--kg3),0 4px 0 #0b0c0e,0 6px 9px rgba(0,0,0,.5),inset 0 -2px 0 rgba(0,0,0,.2),inset 1px 0 0 rgba(255,255,255,.15);
+  transition:transform .06s,box-shadow .06s}
+/* eingeprägtes Kreis-Logo rechts auf der Taste (wie am Original) */
+body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) .side .key::after{content:"";position:absolute;right:9px;top:50%;width:11px;height:11px;margin-top:-5px;
+  border-radius:50%;border:1.5px solid rgba(0,0,0,.18);box-shadow:0 1px 0 rgba(255,255,255,.25);pointer-events:none}
+body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) .side .key{min-height:35px;margin:0 0 7px;padding:5px 24px 5px 8px}
+body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) .key:hover{filter:brightness(1.06)}
+body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) .key:active{transform:translateY(3px);
+  box-shadow:0 0 0 var(--kg3),0 1px 0 #0b0c0e,0 2px 3px rgba(0,0,0,.55),inset 0 -1px 0 rgba(0,0,0,.2)}
+body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) .key.on{color:#1d1003;text-shadow:0 1px 0 rgba(255,255,255,.3);
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.55) 0 1px,rgba(255,255,255,.2) 1px 3px,transparent 3px),
+    repeating-linear-gradient(180deg,transparent 0 2px,rgba(0,0,0,.08) 2px 3px) 0 3px/100% 7px no-repeat,
+    radial-gradient(ellipse 90% 70% at 50% 30%,rgba(255,255,255,.14),transparent 70%),
+    linear-gradient(180deg,var(--keyb),var(--key));
+  box-shadow:0 3px 0 color-mix(in srgb,var(--key) 45%,#000),0 4px 0 #0b0c0e,0 6px 9px rgba(0,0,0,.5),inset 0 -2px 0 rgba(0,0,0,.18)}
+body[data-t="wc3v"] .key.on{color:#f2f4ff;text-shadow:0 -1px 0 rgba(0,0,0,.45)}
+body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) .key.on::after{border-color:rgba(0,0,0,.28)}
+/* Leiste unten (Seiten mit .bottom): orange = Aktion, blau = zurück/OK – wie am Original */
+body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) .bottom .key.or{color:#1d1003;
+  background:linear-gradient(180deg,rgba(255,255,255,.55) 0 1px,transparent 3px),linear-gradient(180deg,#f6b14a,#dc861d);
+  box-shadow:0 3px 0 #7a440b,0 4px 0 #0b0c0e,0 6px 9px rgba(0,0,0,.5)}
+body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) .bottom .key.go{color:#fff;
+  background:linear-gradient(180deg,rgba(255,255,255,.5) 0 1px,transparent 3px),linear-gradient(180deg,#4a6cff,#2142d6);
+  box-shadow:0 3px 0 #13246e,0 4px 0 #0b0c0e,0 6px 9px rgba(0,0,0,.5)}
+
+/* ---------- Bildschirm: tief eingelassen, erhabener Rand, schwarze Fuge ---------- */
+body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) .screen-wrap{
+  border-radius:40px;padding:15px;margin:0 6px 6px 0;
+  background:radial-gradient(ellipse 80% 30% at 50% 0,rgba(255,255,255,.04),transparent 70%),#08090b;
+  box-shadow:inset 0 0 0 2px #000,inset 0 8px 16px rgba(0,0,0,.95),inset 0 -2px 6px rgba(255,255,255,.04),
+    0 0 0 3px #0c0d0f,0 0 0 9px var(--hs-lip),0 0 0 10px rgba(0,0,0,.55),0 -1px 0 10px rgba(255,255,255,.07),0 6px 18px 10px rgba(0,0,0,.35)}
+body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) .crt{border-radius:28px}
+
+/* ---------- Fußzeile dezent eingeprägt ---------- */
+body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) footer,body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) #footer,
+body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) #sync-time{
+  color:var(--hs-ink);text-shadow:0 -1px 0 rgba(0,0,0,.6),0 1px 0 rgba(255,255,255,.06)}
+body[data-t="wc4i"] footer,body[data-t="wc4i"] #footer,body[data-t="wc4i"] #sync-time{color:#3e4146;text-shadow:0 1px 0 rgba(255,255,255,.45)}
+/* Intrepid (hell): Mulde heller, Prägung dunkel auf hell */
+body[data-t="wc4i"] .side{background:linear-gradient(180deg,#9a9da2,#a4a7ab);
+  box-shadow:inset 0 3px 8px rgba(0,0,0,.45),inset 0 0 0 1px rgba(0,0,0,.35),0 1px 0 rgba(255,255,255,.5)}
+body[data-t="wc4i"] .ind{color:#2f3236;text-shadow:0 1px 0 rgba(255,255,255,.45)}
+body[data-t="wc4i"] .grp{color:#3e4146;text-shadow:0 1px 0 rgba(255,255,255,.5)}
+body[data-t="wc4i"] .grp::after{background:rgba(0,0,0,.3);box-shadow:0 1px 0 rgba(255,255,255,.45)}
+body[data-t="wc4i"] .serial,body[data-t="wc4i"] .console::before{color:rgba(0,0,0,.45);text-shadow:0 1px 0 rgba(255,255,255,.55)}
+
+/* ---------- Scrollbalken (alle Designs; Firefox nutzt nur scrollbar-width/-color) ---------- */
+.side,.scr,.modal .box,.e2tl,.kflt,.klst,.kdet,.ac-list,.e2gcard{scrollbar-width:thin;scrollbar-color:color-mix(in srgb,var(--frame) 80%,#fff 0%) transparent}
+.side::-webkit-scrollbar{width:6px}.side::-webkit-scrollbar-track{background:transparent}
+.side::-webkit-scrollbar-thumb{background:rgba(0,0,0,.45);border-radius:3px}
+body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) .side{scrollbar-color:rgba(0,0,0,.55) transparent}
+body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) .scr{scrollbar-color:var(--frame) rgba(0,0,0,.35)}
+
+/* Kleinere Bildschirme (Laptop): Kopfzeile in einer Reihe halten, damit das Menü mehr Höhe bekommt */
+@media (max-width:1560px){
+  body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) .grill{display:none}
+  body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) .lcd{min-width:78px;padding:3px 9px}
+  body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) .badge h1{font-size:22px;letter-spacing:.16em}
+  body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) #theme{max-width:150px}
+}
+@media (max-height:820px){
+  body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) .side .key{min-height:31px;margin-bottom:6px;font-size:11.5px}
+  body:is([data-t="wc3v"],[data-t="wc4l"],[data-t="wc4i"],[data-t="wc5m"]) .grp{margin:5px 2px 3px}
+}

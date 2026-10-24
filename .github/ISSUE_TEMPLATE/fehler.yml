@@ -1,0 +1,35 @@
+name: "🐞 Fehler melden / Bug report"
+description: "Etwas geht nicht oder rechnet falsch · Something is broken or calculates wrong"
+labels: ["fehler"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Danke fürs Melden! Am schnellsten geht es aus dem Programm heraus: **Hilfe → Kontakt → Fehler melden** (füllt die Programm-Infos automatisch aus).
+        Thanks for reporting! Fastest way is from inside the program: **Help → Contact → Report a bug** (fills in the program info automatically).
+  - type: textarea
+    id: was
+    attributes:
+      label: "Was ist passiert? / What happened?"
+      description: "Was hast du gemacht, was kam raus, was hättest du erwartet? · What did you do, what happened, what did you expect?"
+      placeholder: "1. Lager → Einbuchen …\n2. …\nErwartet / expected: …"
+    validations:
+      required: true
+  - type: textarea
+    id: bild
+    attributes:
+      label: "Screenshot (optional)"
+      description: "Einfach hier hineinziehen oder einfügen · Drag & drop or paste here"
+  - type: textarea
+    id: umgebung
+    attributes:
+      label: "Programm-Infos / Program info"
+      description: "Version, System, Design, Patch (Hilfe → Kontakt → Programm-Infos kopieren)"
+      render: text
+  - type: checkboxes
+    id: daten
+    attributes:
+      label: "Datenschutz / Privacy"
+      options:
+        - label: "Ich habe keine Passwörter oder privaten Daten eingefügt · I did not paste passwords or private data"
+          required: true

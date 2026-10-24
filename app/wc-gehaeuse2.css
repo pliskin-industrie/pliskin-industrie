@@ -1,0 +1,194 @@
+/* Pliskin Industrie – Gehäuse der Wing-Commander-Designs, Fassung 2 (23.10.2026; Intrepid Fassung 3)
+   Vorlagen (daten/wc4-vorlagen/): WC3-Aufzugspult/Loadout der TCS Victory (dunkles Bronze-Gussmetall, gelb-schwarze Warnstreifen,
+   Bernstein-Lämpchen, rot leuchtende Schilder, blaue Leuchtbalken), WC4-Remaster Lexington (Anthrazit, blaugraue Tasten, orange aktiv),
+   WC4 BWS Intrepid (Gehäuse mit Rohrleitungen, grüne Tasten, rote „zurück“-Taste).
+   Gilt bei body[data-gh="2"] (setzt applyTheme immer). Grundlage bleibt wc-gehaeuse.css (Fassung 1). */
+
+/* =========================== WC III · Victory =========================== */
+body[data-gh="2"][data-t="wc3v"]{
+  --hs-top:#2e2a26;--hs:#221f1c;--hs-dk:#141210;--hs-ink:#9a8670;--hs-lip:#3b342d;
+  --kg1:#3f4247;--kg2:#2a2c30;--kg3:#121315;--kgt:#cdd2d8;
+  background:radial-gradient(ellipse 90% 70% at 50% 10%,#2a2018,#0b0908 72%)}
+body[data-gh="2"][data-t="wc3v"] .console{
+  background:
+    linear-gradient(180deg,rgba(255,190,110,.05),transparent 40px),
+    repeating-linear-gradient(90deg,transparent 0 180px,rgba(0,0,0,.28) 180px 186px,rgba(255,220,180,.04) 186px 188px,transparent 188px 360px),
+    var(--noise),
+    linear-gradient(180deg,var(--hs-top),var(--hs) 14%,var(--hs) 86%,var(--hs-dk))}
+/* Reihe Bernstein-Lämpchen oben (statt Rillen) */
+body[data-gh="2"][data-t="wc3v"] .console::before{content:"";left:70px;right:240px;top:7px;   /* rechts frei für „LP-1.0“ */transform:none;height:7px;
+  background:radial-gradient(circle,#ffd48a 0 1.6px,rgba(255,160,50,.55) 2.4px,transparent 3.6px) 0 50%/30px 7px repeat-x;
+  filter:drop-shadow(0 0 3px rgba(255,170,60,.6))}
+/* gelb-schwarzer Warnstreifen statt WARNING-Schild */
+body[data-gh="2"][data-t="wc3v"] .console::after{content:"";top:auto;bottom:6px;left:60px;width:180px;height:8px;padding:0;border-radius:1px;opacity:.85;
+  background:repeating-linear-gradient(-45deg,#e8b81c 0 7px,#141210 7px 14px);border:1px solid #000;box-shadow:0 1px 0 rgba(255,255,255,.06)}
+body[data-gh="2"][data-t="wc3v"] .serial{color:#ff6a34;text-shadow:0 0 6px rgba(255,90,40,.6);font-size:14px;letter-spacing:.12em;top:6px}
+/* Tasten-Mulde mit Warnstreifen oben */
+body[data-gh="2"][data-t="wc3v"] .side{background:var(--noise),linear-gradient(180deg,#151311,#1c1916);
+  box-shadow:inset 0 3px 8px rgba(0,0,0,.85),inset 0 0 0 1px #000,0 1px 0 rgba(255,220,180,.06);padding-top:16px;position:relative}
+body[data-gh="2"][data-t="wc3v"] .side::before{content:"";position:absolute;left:10px;right:10px;top:5px;height:6px;border-radius:1px;
+  background:repeating-linear-gradient(-45deg,#e8b81c 0 6px,#141210 6px 12px);opacity:.8}
+/* Gruppen-Schilder: rot-orange leuchtend wie „BRIDGE“ / „FLIGHT CONTROL“ */
+body[data-gh="2"][data-t="wc3v"] .grp{justify-content:center;margin:8px 0 5px;padding:2px 0;background:#140a06;border:1px solid #2e1509;border-radius:2px;
+  color:#ff6a34;letter-spacing:.2em;text-shadow:0 0 5px rgba(255,90,40,.75),0 0 1px #ffb090;box-shadow:inset 0 0 8px rgba(255,80,30,.12)}
+body[data-gh="2"][data-t="wc3v"] .grp::after{display:none}
+/* Tasten: dunkles Gussmetall, aktiv = blauer Leuchtbalken */
+body[data-gh="2"][data-t="wc3v"] .key{color:var(--kgt);text-shadow:0 -1px 0 rgba(0,0,0,.7);
+  background:linear-gradient(180deg,rgba(255,255,255,.16) 0 1px,transparent 2px),
+    repeating-linear-gradient(90deg,transparent 0 3px,rgba(0,0,0,.08) 3px 4px),
+    linear-gradient(180deg,var(--kg1),var(--kg2));
+  box-shadow:0 3px 0 var(--kg3),0 4px 0 #000,0 6px 9px rgba(0,0,0,.6),inset 0 -2px 0 rgba(0,0,0,.35)}
+body[data-gh="2"][data-t="wc3v"] .side .key{padding-left:18px}
+body[data-gh="2"][data-t="wc3v"] .side .key::after{right:auto;left:7px;width:4px;height:60%;top:20%;margin:0;border:none;border-radius:2px;
+  background:#1a3a6a;box-shadow:inset 0 0 2px #000}
+body[data-gh="2"][data-t="wc3v"] .key.on{color:#fff;text-shadow:0 0 6px rgba(150,210,255,.9);
+  background:linear-gradient(180deg,rgba(255,255,255,.25) 0 1px,transparent 2px),
+    radial-gradient(ellipse 80% 120% at 50% 50%,rgba(90,180,255,.45),transparent 70%),
+    linear-gradient(180deg,#2a3a55,#18223a);
+  box-shadow:0 3px 0 #0b1426,0 4px 0 #000,0 0 14px rgba(70,160,255,.45),inset 0 0 0 1px rgba(110,190,255,.5)}
+body[data-gh="2"][data-t="wc3v"] .side .key.on::after{background:#8fd4ff;box-shadow:0 0 6px #5ab8ff,0 0 12px #3a8cff}
+/* Bildschirm-Rahmen in Bronze */
+body[data-gh="2"][data-t="wc3v"] .screen-wrap{border-radius:26px;
+  box-shadow:inset 0 0 0 2px #000,inset 0 8px 16px rgba(0,0,0,.95),0 0 0 3px #0c0a09,0 0 0 9px var(--hs-lip),0 0 0 10px rgba(0,0,0,.6),
+    0 -1px 0 10px rgba(255,220,180,.06),0 6px 18px 10px rgba(0,0,0,.4)}
+body[data-gh="2"][data-t="wc3v"] .crt{border-radius:18px}
+body[data-gh="2"][data-t="wc3v"] .badge{box-shadow:inset 0 2px 6px rgba(0,0,0,.9),0 0 0 2px #050404,0 0 0 4px var(--hs-lip),0 0 0 5px rgba(0,0,0,.6)}
+
+/* =========================== WC IV · Lexington =========================== */
+body[data-gh="2"][data-t="wc4l"]{
+  --hs-top:#3a3d46;--hs:#2a2c34;--hs-dk:#18191e;--hs-ink:#7d8494;--hs-lip:#454955;
+  --kg1:#aab3c4;--kg2:#7c869a;--kg3:#434a59;--kgt:#1b1f27;
+  background:radial-gradient(ellipse 90% 75% at 50% 15%,#3a2d4c,#100c16 74%)}
+/* Tasten: oberes Drittel geriffelt, Kreis-Logo rechts größer (wie die Tasten am Original) */
+body[data-gh="2"][data-t="wc4l"] .key{
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.6) 0 1px,rgba(255,255,255,.15) 1px 3px,transparent 3px),
+    repeating-linear-gradient(180deg,rgba(255,255,255,.18) 0 1px,rgba(0,0,0,.12) 1px 3px) 0 3px/100% 34% no-repeat,
+    radial-gradient(ellipse 90% 70% at 50% 40%,rgba(255,255,255,.12),transparent 70%),
+    linear-gradient(180deg,var(--kg1),var(--kg2))}
+body[data-gh="2"][data-t="wc4l"] .key.on{
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.55) 0 1px,rgba(255,255,255,.2) 1px 3px,transparent 3px),
+    repeating-linear-gradient(180deg,rgba(255,255,255,.2) 0 1px,rgba(0,0,0,.12) 1px 3px) 0 3px/100% 34% no-repeat,
+    radial-gradient(ellipse 90% 70% at 50% 40%,rgba(255,255,255,.15),transparent 70%),
+    linear-gradient(180deg,#f8b54a,#df881c)}
+body[data-gh="2"][data-t="wc4l"] .side .key::after{width:14px;height:14px;margin-top:-7px;right:8px;border-width:2px;border-color:rgba(0,0,0,.16)}
+body[data-gh="2"][data-t="wc4l"] .side .key{padding-right:28px}
+/* blauer Neon-Rand um den Schirm (wie die blaue Leuchtkante am Remaster) */
+body[data-gh="2"][data-t="wc4l"] .crt{box-shadow:inset 0 0 0 3px var(--scr),inset 0 0 0 5px var(--frame),inset 0 0 90px rgba(0,0,0,.85),0 0 16px rgba(70,120,255,.35)}
+body[data-gh="2"][data-t="wc4l"] .screen-wrap{background:radial-gradient(ellipse 80% 40% at 50% 100%,rgba(60,90,255,.10),transparent 70%),#07080c}
+
+/* =========================== WC IV · Intrepid (Fassung 3) ===========================
+   Vorlage: WC4 1996, Terminal der BWS Intrepid (intrepid_05-46…06-01.png): Gehäuse aus verschraubten Plattenkacheln,
+   Rohrleitungen + runde Lüftungsgitter, dicker gerundeter Schirmrahmen, eckige grüne Block-Tasten mit schwarzem Punkt,
+   rote „zurück“-Taste. Metall auf Wunsch dunkler als im Original. */
+body[data-gh="2"][data-t="wc4i"]{
+  --hs-top:#62666b;--hs:#51555a;--hs-dk:#383b3f;--hs-ink:#202226;--hs-lip:#7b7f85;
+  --kg1:#5cb247;--kg2:#2f7d24;--kg3:#164210;--kgt:#08170a;
+  background:radial-gradient(ellipse 90% 70% at 50% 15%,#2b2a30,#0b0b0d 72%)}
+/* Plattenkacheln: Fugen waagrecht/senkrecht, je Platte oben Lichtkante; Lüftungsgitter unten links/rechts */
+body[data-gh="2"][data-t="wc4i"] .console{padding-left:32px;padding-right:32px;
+  background:
+    radial-gradient(circle at 26px calc(100% - 26px),#1d1f22 0 5px,transparent 5.5px),
+    repeating-linear-gradient(0deg,transparent 0 3px,rgba(0,0,0,.65) 3px 4px) 14px calc(100% - 38px)/24px 24px no-repeat,
+    radial-gradient(circle at calc(100% - 26px) calc(100% - 26px),#1d1f22 0 5px,transparent 5.5px),
+    repeating-linear-gradient(0deg,transparent 0 3px,rgba(0,0,0,.65) 3px 4px) calc(100% - 14px) calc(100% - 38px)/24px 24px no-repeat,
+    repeating-linear-gradient(180deg,transparent 0 118px,rgba(0,0,0,.55) 118px 120px,rgba(255,255,255,.10) 120px 121px,transparent 121px 122px),
+    repeating-linear-gradient(90deg,transparent 0 238px,rgba(0,0,0,.45) 238px 240px,rgba(255,255,255,.08) 240px 241px,transparent 241px 242px),
+    radial-gradient(ellipse 120% 50% at 50% -8%,rgba(255,255,255,.10),transparent 60%),
+    var(--noise),
+    linear-gradient(180deg,var(--hs-top),var(--hs) 14%,var(--hs) 86%,var(--hs-dk))}
+/* Rohrleitungen links und rechts, mit Schellen; unten knickt das Rohr zur Mitte ab */
+body[data-gh="2"][data-t="wc4i"] .console::before,body[data-gh="2"][data-t="wc4i"] .console::after{
+  content:"";position:absolute;top:96px;bottom:58px;width:12px;transform:none;left:auto;right:auto;padding:0;border:none;opacity:1;
+  border-radius:6px 6px 0 6px;
+  background:
+    repeating-linear-gradient(180deg,transparent 0 96px,rgba(0,0,0,.6) 96px 98px,#9a9da2 98px 108px,rgba(0,0,0,.6) 108px 110px,transparent 110px 200px),
+    linear-gradient(90deg,#24262a,#b7babe 36%,#8a8d92 60%,#33363a);
+  box-shadow:1px 2px 3px rgba(0,0,0,.55)}
+body[data-gh="2"][data-t="wc4i"] .console::before{left:9px}
+body[data-gh="2"][data-t="wc4i"] .console::after{right:9px;border-radius:6px 6px 6px 0}
+body[data-gh="2"][data-t="wc4i"] .serial{color:rgba(0,0,0,.55);text-shadow:0 1px 0 rgba(255,255,255,.14)}
+body[data-gh="2"][data-t="wc4i"] .screw{background:radial-gradient(circle at 40% 35%,#a7abb0,#5a5e63 60%,#2a2c2f);
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.6),0 1px 0 rgba(255,255,255,.12)}
+/* Tasten-Mulde = eigene Platte mit Fugen */
+body[data-gh="2"][data-t="wc4i"] .side{
+  background:var(--noise),repeating-linear-gradient(180deg,transparent 0 158px,rgba(0,0,0,.4) 158px 160px,rgba(255,255,255,.07) 160px 161px,transparent 161px 162px),
+    linear-gradient(180deg,#3e4146,#45494e);
+  box-shadow:inset 0 3px 8px rgba(0,0,0,.7),inset 0 0 0 1px rgba(0,0,0,.6),0 1px 0 rgba(255,255,255,.12)}
+body[data-gh="2"][data-t="wc4i"] .grp{color:#c4c8cd;text-shadow:0 -1px 0 rgba(0,0,0,.75)}
+body[data-gh="2"][data-t="wc4i"] .grp::after{background:rgba(0,0,0,.5);box-shadow:0 1px 0 rgba(255,255,255,.09)}
+body[data-gh="2"][data-t="wc4i"] .ind{color:#d6d8db;text-shadow:0 -1px 0 rgba(0,0,0,.6)}
+body[data-gh="2"][data-t="wc4i"] footer,body[data-gh="2"][data-t="wc4i"] #footer,body[data-gh="2"][data-t="wc4i"] #sync-time{color:#c3c6ca;text-shadow:0 -1px 0 rgba(0,0,0,.6)}
+/* Block-Tasten: fast eckig, flache grüne Front mit Fase, schwarzer Punkt links (wie im Original unten am Terminal) */
+body[data-gh="2"][data-t="wc4i"] .key{border-radius:3px;color:var(--kgt);text-shadow:0 1px 0 rgba(255,255,255,.28);
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.42) 0 1px,rgba(255,255,255,.12) 1px 3px,transparent 3px),
+    linear-gradient(90deg,rgba(255,255,255,.10) 0 2px,transparent 2px calc(100% - 2px),rgba(0,0,0,.18) calc(100% - 2px)),
+    linear-gradient(180deg,var(--kg1),var(--kg2));
+  box-shadow:0 3px 0 var(--kg3),0 4px 0 #0a0b0c,0 6px 8px rgba(0,0,0,.55),inset 0 -2px 0 rgba(0,0,0,.25)}
+body[data-gh="2"][data-t="wc4i"] .side .key{padding-left:30px;padding-right:8px}
+body[data-gh="2"][data-t="wc4i"] .side .key::after{right:auto;left:9px;width:12px;height:12px;margin-top:-6px;border:none;border-radius:50%;
+  background:radial-gradient(circle at 40% 35%,#2b2f2c,#050605 70%);box-shadow:0 1px 0 rgba(255,255,255,.35),inset 0 1px 2px rgba(0,0,0,.9)}
+body[data-gh="2"][data-t="wc4i"] .key.on{color:#061204;transform:translateY(2px);
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.55) 0 1px,rgba(255,255,255,.18) 1px 3px,transparent 3px),
+    radial-gradient(ellipse 80% 90% at 50% 45%,rgba(230,255,200,.40),transparent 70%),
+    linear-gradient(180deg,#9bec80,#4fbb3c);
+  box-shadow:0 1px 0 var(--kg3),0 2px 0 #0a0b0c,0 0 12px rgba(120,240,90,.40),inset 0 -2px 0 rgba(0,0,0,.15)}
+body[data-gh="2"][data-t="wc4i"] .side .key.on::after{background:radial-gradient(circle at 40% 35%,#d8ffc8,#6cff4a 45%,#1d7a12);box-shadow:0 0 6px #7dff5a}
+body[data-gh="2"][data-t="wc4i"] .bottom .key.go{color:#fff;
+  background:linear-gradient(180deg,rgba(255,255,255,.45) 0 1px,transparent 3px),linear-gradient(180deg,#dc4034,#a11e17);box-shadow:0 3px 0 #560e0a,0 4px 0 #0a0b0c,0 6px 8px rgba(0,0,0,.5)}
+/* dicker, runder Schirmrahmen: helle Wulst außen, dunkle Fuge, schwarze Blende */
+body[data-gh="2"][data-t="wc4i"] .screen-wrap{border-radius:34px;
+  box-shadow:inset 0 0 0 2px #000,inset 0 8px 16px rgba(0,0,0,.95),0 0 0 3px #0b0c0e,0 0 0 5px #2a2d31,
+    0 0 0 11px #8a8e94,0 0 0 12px #3a3d41,0 -1px 0 12px rgba(255,255,255,.18),0 7px 16px 12px rgba(0,0,0,.4)}
+body[data-gh="2"][data-t="wc4i"] .badge{box-shadow:inset 0 2px 6px rgba(0,0,0,.9),0 0 0 2px #050505,0 0 0 5px #7b7f85,0 0 0 6px rgba(0,0,0,.5)}
+
+/* =========================== Prophecy · Midway =========================== 
+   Vorlage: WC Prophecy 1997 (wc5_f042/f072/f086.png – Flight History, Menü, Debriefing): sandgestrahltes graues Metall mit
+   aufgesetzten Klemmblöcken an den Seiten, rote Alarm-Kuppel oben mittig, dicker runder Rahmen, Schirm dunkelblau mit Cyan-Raster,
+   Titel gelbgrün, Knöpfe petrol mit Cyan-Rand („EXIT“, „LOAD“, „RETURN TO GAME“). Metall etwas dunkler als im Spiel. */
+body[data-gh="2"][data-t="wc5m"]{
+  --hs-top:#7b8187;--hs:#62686e;--hs-dk:#44494e;--hs-ink:#22262a;--hs-lip:#8d9399;
+  --scr:#030b14;--scr2:#06131f;--grid:#0d4a58;--frame:#1fb8c8;--pill:#7ff0f0;
+  background:radial-gradient(ellipse 90% 70% at 50% 15%,#1d2a33,#06090c 72%)}
+body[data-gh="2"][data-t="wc5m"] .console{
+  background:
+    linear-gradient(90deg,transparent 0 10px,rgba(0,0,0,.45) 10px 11px,rgba(255,255,255,.10) 11px 12px,transparent 12px) 0 0/100% 100%,
+    repeating-linear-gradient(180deg,transparent 0 70px,#575d63 70px 72px,#82888e 72px 108px,#3e4348 108px 110px,transparent 110px 170px) 0 0/16px 100% repeat-y,
+    repeating-linear-gradient(180deg,transparent 0 70px,#575d63 70px 72px,#82888e 72px 108px,#3e4348 108px 110px,transparent 110px 170px) 100% 0/16px 100% repeat-y,
+    radial-gradient(ellipse 120% 50% at 50% -8%,rgba(255,255,255,.12),transparent 60%),
+    radial-gradient(circle,rgba(0,0,0,.18) .6px,transparent 1px) 0 0/3px 3px,
+    var(--noise),
+    linear-gradient(180deg,var(--hs-top),var(--hs) 14%,var(--hs) 86%,var(--hs-dk))}
+/* rote Alarm-Kuppel oben mittig */
+body[data-gh="2"][data-t="wc5m"] .console::before{content:"";top:3px;left:50%;transform:translateX(-50%);width:26px;height:18px;border-radius:13px 13px 4px 4px;
+  background:radial-gradient(circle at 40% 35%,#ffb0a8 0 2px,#e8352c 5px,#8a0f0b 11px,#3a0605 14px);
+  box-shadow:0 0 0 3px #3b4045,0 0 0 4px rgba(255,255,255,.15),0 0 10px rgba(255,60,40,.45)}
+body[data-gh="2"][data-t="wc5m"] .console::after{display:none}
+body[data-gh="2"][data-t="wc5m"] .serial{color:rgba(0,0,0,.5);text-shadow:0 1px 0 rgba(255,255,255,.15)}
+body[data-gh="2"][data-t="wc5m"] .screw{background:radial-gradient(circle at 40% 35%,#c3c8cc,#6a7075 60%,#2d3135)}
+/* Tasten-Bucht: dunkel, Cyan-Haarlinie */
+body[data-gh="2"][data-t="wc5m"] .side{background:var(--noise),linear-gradient(180deg,#0a1219,#0d1820);
+  box-shadow:inset 0 3px 8px rgba(0,0,0,.85),inset 0 0 0 1px #000,inset 0 0 0 2px rgba(31,184,200,.35),0 0 0 3px #4a5056,0 0 0 4px rgba(255,255,255,.12)}
+body[data-gh="2"][data-t="wc5m"] .grp{color:#d6ee5c;letter-spacing:.16em;text-shadow:0 0 4px rgba(214,238,92,.45)}
+body[data-gh="2"][data-t="wc5m"] .grp::after{background:linear-gradient(90deg,rgba(31,184,200,.6),rgba(31,184,200,.1));box-shadow:none}
+body[data-gh="2"][data-t="wc5m"] .ind{color:#e2e6ea;text-shadow:0 -1px 0 rgba(0,0,0,.6)}
+body[data-gh="2"][data-t="wc5m"] footer,body[data-gh="2"][data-t="wc5m"] #footer,body[data-gh="2"][data-t="wc5m"] #sync-time{color:#cfd4d8;text-shadow:0 -1px 0 rgba(0,0,0,.6)}
+/* Knöpfe petrol mit Cyan-Rand, aktiv hell-cyan */
+body[data-gh="2"][data-t="wc5m"] .key{border-radius:7px;color:#b4f6f2;text-shadow:0 0 4px rgba(120,240,240,.35);
+  background:linear-gradient(180deg,rgba(255,255,255,.14) 0 1px,transparent 3px),linear-gradient(180deg,#16878a,#0c5a5e);
+  box-shadow:inset 0 0 0 1px #000,inset 0 0 0 2px rgba(110,235,240,.55),0 2px 0 #062c2e,0 3px 0 #000,0 5px 8px rgba(0,0,0,.5)}
+body[data-gh="2"][data-t="wc5m"] .side .key::after{border-color:rgba(160,250,250,.45)}
+body[data-gh="2"][data-t="wc5m"] .key.on{color:#00191b;text-shadow:none;
+  background:linear-gradient(180deg,rgba(255,255,255,.35) 0 1px,transparent 3px),linear-gradient(180deg,#5ef0ee,#1bb8bc);
+  box-shadow:inset 0 0 0 1px #000,inset 0 0 0 2px rgba(220,255,255,.7),0 2px 0 #0a5658,0 3px 0 #000,0 0 14px rgba(70,230,235,.45)}
+body[data-gh="2"][data-t="wc5m"] .key.on::after{border-color:rgba(0,40,42,.4)}
+body[data-gh="2"][data-t="wc5m"] .bottom .key.go{color:#fff;background:linear-gradient(180deg,#d8392f,#9a1a14);box-shadow:inset 0 0 0 2px rgba(255,170,160,.45),0 3px 0 #000}
+/* dicker runder Rahmen: helle Wulst, schwarze Fuge */
+body[data-gh="2"][data-t="wc5m"] .screen-wrap{border-radius:36px;
+  box-shadow:inset 0 0 0 2px #000,inset 0 8px 16px rgba(0,0,0,.95),0 0 0 3px #0b0d0f,0 0 0 5px #2b3035,
+    0 0 0 12px #8a9096,0 0 0 13px #33383d,0 -1px 0 13px rgba(255,255,255,.18),0 7px 16px 13px rgba(0,0,0,.4)}
+body[data-gh="2"][data-t="wc5m"] .crt{border-radius:26px}
+body[data-gh="2"][data-t="wc5m"] .badge h1{color:#d6ee5c;text-shadow:0 0 6px rgba(214,238,92,.35)}

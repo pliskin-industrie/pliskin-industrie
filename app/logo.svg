@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Pliskin Industrie – Zeichen (eigener Entwurf, 24.10.2026): kantiges P im Sechseck -->
+  <defs>
+    <linearGradient id="pi_or" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff8a2a"/><stop offset="1" stop-color="#d4570c"/></linearGradient>
+    <linearGradient id="pi_rd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6c7178"/><stop offset="1" stop-color="#3b3f45"/></linearGradient>
+  </defs>
+  <polygon points="256,14 466,135 466,377 256,498 46,377 46,135" fill="#24272b" stroke="url(#pi_rd)" stroke-width="22" stroke-linejoin="round"/>
+  <g transform="translate(256 262) scale(.98)">
+    <path d="M-150 -210 H90 L160 -140 V-30 L90 40 H-30 V210 H-150 Z" fill="url(#pi_or)"/>
+    <path d="M-30 -110 H50 L70 -90 V-60 L50 -40 H-30 Z" fill="#24272b"/>
+    <rect x="40" y="90" width="110" height="120" fill="url(#pi_or)"/>
+  </g>
+</svg>

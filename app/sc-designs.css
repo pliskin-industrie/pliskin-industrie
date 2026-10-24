@@ -1,0 +1,469 @@
+/* Hysec Industrie – Star-Citizen-Designs (Zusatz zu den WC-Designs in style.css)
+   scfab   = Item Fabricator  (nach dem „FABRICATION KIOSK“ im Spiel: grün-schwarz, Olivgelb, graue Blende)
+   sccargo = Freight Elevator (nach dem „FREIGHT MANAGER“-Kiosk: Elevator-Seite orange, Warehouse-Seite grün)
+   scholo  = Hysec Holo       (mobiGlas-Hologramm über dem Pyro-Horizont)
+   Die Metall-/Röhren-Effekte aus style.css greifen hier nicht (dort per :not([data-t^="sc"]) ausgenommen). */
+@font-face{font-family:"Rajdhani";font-weight:500;src:url("fonts/Rajdhani-Medium.ttf") format("truetype")}
+@font-face{font-family:"Rajdhani";font-weight:600;src:url("fonts/Rajdhani-SemiBold.ttf") format("truetype")}
+@font-face{font-family:"Rajdhani";font-weight:700;src:url("fonts/Rajdhani-Bold.ttf") format("truetype")}
+@font-face{font-family:"Orbitron";font-weight:400 900;src:url("fonts/Orbitron-VF.ttf") format("truetype")}
+
+/* ================= Farben je Design ================= */
+body[data-t="scholo"]{
+  --scr:rgba(8,20,38,.50);--scr2:rgba(12,30,56,.55);--grid:rgba(110,200,255,.16);--frame:rgba(120,215,255,.45);--pill:#7fe6ff;
+  --txt:#dff5ff;--dim:#8fb6cc;--data:#6fe3ff;--warn:#ffc65c;--bad:#ff6f7d;--ok:#7ff0b4;--gold:#ffffff;
+  --key:#2bb8e6;--keyb:#7fe6ff;--keyfg:#021522;--key2:#2bb8e6;--key2fg:#021522;--bg:#02040a;
+  --sc-line:rgba(120,215,255,.28);--sc-line2:rgba(120,215,255,.5);--sc-acc:#5fd8ff;--sc-accfg:#021522;--sc-acc-soft:rgba(95,216,255,.14);
+  --sc-title:#ffffff;--sc-panel:rgba(8,22,42,.55);--sc-panel2:rgba(14,34,62,.55);--sc-input:rgba(2,10,22,.7);--sc-head:"Orbitron",sans-serif}
+
+/* ================= gemeinsamer Aufbau (alle SC-Designs) ================= */
+body[data-t^="sc"]{--font:"Rajdhani","Segoe UI",sans-serif;--mono:"Rajdhani","Segoe UI",sans-serif;--vdu:"Rajdhani","Segoe UI",sans-serif;--seg7:"Rajdhani",sans-serif;
+  font-size:18px;font-weight:500;font-variant-numeric:tabular-nums;letter-spacing:.01em}
+body[data-t^="sc"] .console{background:none;box-shadow:none;border-radius:0;padding:10px 14px 6px;margin:0;height:100vh}
+body[data-t^="sc"] .screw{display:none}
+body[data-t^="sc"] .serial{top:auto;bottom:4px;right:18px;color:var(--dim);opacity:.6;font:600 10px var(--font);letter-spacing:.3em}
+body[data-t^="sc"] .plate{margin:0 0 10px;padding:8px 14px;gap:14px;background:var(--sc-panel);border:1px solid var(--sc-line);position:relative}
+body[data-t^="sc"] .badge{background:none;border:none;box-shadow:none;padding:0 6px 0 0}
+body[data-t^="sc"] .badge h1{font:700 25px var(--sc-head);letter-spacing:.22em;color:var(--sc-title);text-shadow:none}
+body[data-t^="sc"] .badge small{font:600 11px var(--font);letter-spacing:.32em;color:var(--dim)}
+body[data-t^="sc"] .grill{display:none}
+body[data-t^="sc"] .ind{font:700 10px var(--font);color:var(--dim);text-shadow:none;letter-spacing:.2em}
+body[data-t^="sc"] .ind i{width:9px;height:9px;border-radius:50%;background:#333;box-shadow:none}
+body[data-t^="sc"] .ind i.amb.on{background:var(--sc-acc);box-shadow:0 0 8px var(--sc-acc)}
+body[data-t^="sc"] .ind i.grn.on{background:var(--ok);box-shadow:0 0 8px var(--ok)}
+body[data-t^="sc"] .ind i.red.on{background:var(--bad);box-shadow:0 0 8px var(--bad)}
+body[data-t^="sc"] .lcd{background:var(--sc-panel2);border:1px solid var(--sc-line);border-radius:0;box-shadow:none;padding:3px 12px 4px;min-width:96px;text-align:left}
+body[data-t^="sc"] .lcd b{display:block;font:700 26px/1.05 var(--sc-head);color:var(--sc-title);text-shadow:none}
+body[data-t^="sc"] .lcd i{display:block;font:600 10px var(--font);letter-spacing:.24em;color:var(--dim);text-transform:uppercase}
+body[data-t^="sc"] .syncbox span{color:var(--dim);text-shadow:none;font:600 11px var(--font);letter-spacing:.1em}
+body[data-t^="sc"] select{background:var(--sc-input);color:var(--txt);border:1px solid var(--sc-line2);border-radius:0;font:600 15px var(--font)}
+
+/* Navigation links */
+body[data-t^="sc"] .side{gap:4px;width:186px}
+body[data-t^="sc"] .grp{background:none;border:none;box-shadow:none;border-radius:0;text-align:left;color:var(--dim);text-shadow:none;
+  font:700 11px var(--font);letter-spacing:.32em;padding:0 0 3px 2px;margin:12px 0 2px;border-bottom:1px solid var(--sc-line)}
+body[data-t^="sc"] .key{position:relative;justify-content:flex-start;text-align:left;min-height:42px;padding:4px 12px 4px 18px;
+  background:var(--sc-panel2);border:1px solid var(--sc-line);border-radius:0;box-shadow:none;color:var(--txt);text-shadow:none;
+  font:700 15px var(--font);letter-spacing:.14em;transition:background .12s,border-color .12s}
+body[data-t^="sc"] .key::before{content:"";position:absolute;left:0;top:-1px;bottom:-1px;width:4px;background:transparent}
+body[data-t^="sc"] .key:hover{border-color:var(--sc-line2);background:color-mix(in srgb,var(--sc-panel2) 80%,#fff 4%)}
+body[data-t^="sc"] .key.on{background:var(--sc-acc-soft);border-color:var(--sc-acc);color:var(--sc-title)}
+body[data-t^="sc"] .key.on::before{background:var(--sc-acc);box-shadow:0 0 10px var(--sc-acc)}
+body[data-t^="sc"] .key:active{transform:none}
+body[data-t^="sc"] .subkeys .key,body[data-t^="sc"] .bottom .key{justify-content:center;padding:4px 14px;min-height:38px}
+body[data-t^="sc"] .bottom .key.or,body[data-t^="sc"] .bottom .key.go{background:var(--sc-acc);color:var(--sc-accfg);border-color:var(--sc-acc)}
+body[data-t^="sc"] .key.sm{min-height:32px;font-size:12px;justify-content:center;padding:3px 12px}
+
+/* Schirm */
+body[data-t^="sc"] .screen-wrap{background:none;box-shadow:none;border-radius:0;padding:0}
+body[data-t^="sc"] .crt{background:var(--scr);border:1px solid var(--sc-line);border-radius:0;box-shadow:none;padding:12px 8px 12px 14px;font-family:var(--font)}
+body[data-t^="sc"] .crt::before{inset:0;border-radius:0;opacity:.5;background-size:24px 24px;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  -webkit-mask:radial-gradient(ellipse at 50% 0%,#000,transparent 75%);mask:radial-gradient(ellipse at 50% 0%,#000,transparent 75%)}
+body[data-t^="sc"] .crt::after{content:none}
+body[data-t^="sc"] .crt .comm{display:flex;align-items:center;gap:10px;width:auto;max-width:none;margin:0 0 10px;padding:3px 10px;text-align:left;
+  background:none;border:none;border-left:3px solid var(--sc-acc);color:var(--dim);font:700 12px var(--font);letter-spacing:.3em;text-shadow:none;box-shadow:none}
+body[data-t^="sc"] .win{position:relative;background:var(--scr2);border:1px solid var(--sc-line);border-radius:0;box-shadow:none;padding:12px 14px}
+body[data-t^="sc"] .win.tight{padding:10px 12px}
+body[data-t^="sc"] .pill,body[data-t^="sc"] .win.tight .pill{display:flex;align-items:center;gap:8px;background:none;border:none;border-radius:0;box-shadow:none;padding:0;margin:0 0 10px;
+  font:700 15px var(--sc-head);letter-spacing:.2em;text-transform:uppercase;color:var(--sc-title);text-shadow:none}
+body[data-t^="sc"] .pill::before{content:"";width:8px;height:8px;background:var(--sc-acc);flex:none}
+body[data-t^="sc"] .sub{border:none;padding:0;margin-left:10px;color:var(--dim);font:600 12px var(--font);letter-spacing:.14em;text-transform:uppercase}
+body[data-t^="sc"] .pipe{display:none}
+body[data-t^="sc"] .big{font-family:var(--sc-head);color:var(--sc-title)}
+
+/* Tabellen, Texte */
+body[data-t^="sc"] table{font:500 16px var(--font)}
+body[data-t^="sc"] th{font:700 11px var(--font);letter-spacing:.2em;color:var(--dim);border-bottom:1px solid var(--sc-line2)}
+body[data-t^="sc"] td{border-bottom:1px solid var(--grid);color:var(--data);text-shadow:none}
+body[data-t^="sc"] td.name,body[data-t^="sc"] .pn,body[data-t^="sc"] .plan .n,body[data-t^="sc"] .bp .n,body[data-t^="sc"] .task .t b{color:var(--sc-title);font-weight:600}
+body[data-t^="sc"] tr.sum td{border-top:1px solid var(--sc-line2)}
+body[data-t^="sc"] .clickrow:hover td{background:var(--sc-acc-soft)}
+body[data-t^="sc"] .th{font:700 12px var(--font);letter-spacing:.2em;color:var(--sc-acc);border-bottom-color:var(--sc-line)}
+body[data-t^="sc"] .loc{color:var(--sc-acc);letter-spacing:.2em}
+body[data-t^="sc"] .empty{font-family:var(--font);letter-spacing:.1em}
+
+/* Karten / Zeilen */
+body[data-t^="sc"] .prow,body[data-t^="sc"] .plan,body[data-t^="sc"] .bp,body[data-t^="sc"] .slot,body[data-t^="sc"] .e2gcard,body[data-t^="sc"] .e2st{border-radius:0}
+body[data-t^="sc"] .prow{border-color:var(--sc-line);background:var(--sc-panel2)}
+body[data-t^="sc"] .prow.sel,body[data-t^="sc"] .plan.sel{border-color:var(--sc-acc);box-shadow:inset 3px 0 0 var(--sc-acc);background:var(--sc-acc-soft)}
+body[data-t^="sc"] .bp{border-color:var(--sc-line);border-left-width:3px;background:var(--sc-panel2)}
+body[data-t^="sc"] .slot{border-color:var(--sc-line);border-left-color:var(--sc-acc)}
+body[data-t^="sc"] .slot .sn{font:700 13px var(--font);color:var(--sc-acc);letter-spacing:.14em}
+body[data-t^="sc"] .slot .eff{font-family:var(--font)}
+
+/* Eingaben + Knöpfe */
+body[data-t^="sc"] .crt input,body[data-t^="sc"] .crt select,body[data-t^="sc"] .crt textarea,
+body[data-t^="sc"] .modal input,body[data-t^="sc"] .modal select,body[data-t^="sc"] .modal textarea,
+body[data-t^="sc"] .fld input,body[data-t^="sc"] .fld select{background:var(--sc-input);color:var(--sc-title);border:1px solid var(--sc-line2);border-radius:0;font:600 16px var(--font)}
+body[data-t^="sc"] .crt input:focus,body[data-t^="sc"] .crt select:focus,body[data-t^="sc"] .modal input:focus,body[data-t^="sc"] .modal select:focus{border-color:var(--sc-acc);box-shadow:0 0 0 1px var(--sc-acc)}
+body[data-t^="sc"] .crt button.k,body[data-t^="sc"] .modal button.k,body[data-t^="sc"] .mini{background:var(--sc-panel2);color:var(--txt);border:1px solid var(--sc-line2);border-radius:0;box-shadow:none;
+  font:700 13px var(--font);letter-spacing:.14em;text-shadow:none}
+body[data-t^="sc"] .crt button.k:hover,body[data-t^="sc"] .modal button.k:hover,body[data-t^="sc"] .mini:hover{border-color:var(--sc-acc);color:var(--sc-title)}
+body[data-t^="sc"] .crt button.k.pri,body[data-t^="sc"] .modal button.k.pri{background:var(--sc-acc);color:var(--sc-accfg);border-color:var(--sc-acc)}
+body[data-t^="sc"] .crt button.k.x,body[data-t^="sc"] .modal button.k.x,body[data-t^="sc"] .mini.x{background:transparent;color:var(--bad);border-color:var(--bad)}
+body[data-t^="sc"] .crt button.k:active,body[data-t^="sc"] .modal button.k:active{transform:none;filter:brightness(1.2)}
+body[data-t^="sc"] input[type=checkbox],body[data-t^="sc"] input[type=range]{accent-color:var(--sc-acc)}
+body[data-t^="sc"] .tag{border-radius:0;font:600 12px var(--font);letter-spacing:.06em}
+body[data-t^="sc"] .chips2 span,body[data-t^="sc"] .fchips span{border-radius:0;font:600 14px var(--font);letter-spacing:.06em;border-color:var(--sc-line2)}
+body[data-t^="sc"] .chips2 span.on{border-color:var(--sc-acc);box-shadow:inset 0 -2px 0 var(--sc-acc);color:var(--sc-title)}
+body[data-t^="sc"] .fchips span.on{background:var(--sc-acc);border-color:var(--sc-acc);color:var(--sc-accfg)}
+body[data-t^="sc"] .ac-list{background:var(--sc-input);border:1px solid var(--sc-acc)}
+body[data-t^="sc"] .ac-item{font:600 15px var(--font)}
+body[data-t^="sc"] .ac-item:hover,body[data-t^="sc"] .ac-item.sel{background:var(--sc-acc);color:var(--sc-accfg)}
+body[data-t^="sc"] .drop{border-radius:0;border:1px dashed var(--sc-line2)}
+body[data-t^="sc"] .flbl{font:700 11px var(--font);letter-spacing:.24em}
+
+/* Balken */
+body[data-t^="sc"] .bar,body[data-t^="sc"] .mbar{border:none;border-radius:0;background:color-mix(in srgb,var(--data) 12%,transparent);height:6px}
+body[data-t^="sc"] .bar i,body[data-t^="sc"] .mbar i{background:var(--data);box-shadow:0 0 6px color-mix(in srgb,var(--data) 60%,transparent)}
+body[data-t^="sc"] .seg{border:none;background:color-mix(in srgb,var(--warn) 10%,transparent);height:8px}
+
+/* MFD-Leiste (Pläne) */
+body[data-t^="sc"] .vdu{background:var(--scr2);border:1px solid var(--sc-line);border-radius:0;box-shadow:none;font-family:var(--font)}
+body[data-t^="sc"] .vh{font:700 13px var(--sc-head);letter-spacing:.2em;color:var(--sc-title);text-shadow:none}
+body[data-t^="sc"] .gauge{color:var(--dim);font-size:13px;letter-spacing:.06em}
+body[data-t^="sc"] .gauge em{color:var(--data);text-shadow:none}
+body[data-t^="sc"] .wpn text{fill:var(--data);font:600 11px var(--font)}
+body[data-t^="sc"] .vl{font:600 13px var(--font)}
+body[data-t^="sc"] .radar{border:1px solid var(--data);box-shadow:0 0 10px color-mix(in srgb,var(--data) 30%,transparent);
+  --rc:color-mix(in srgb,var(--data) 40%,transparent);
+  background:radial-gradient(circle,transparent 0 18px,var(--rc) 18px 19px,transparent 19px 38px,var(--rc) 38px 39px,transparent 39px),
+    linear-gradient(90deg,transparent 58px,var(--rc) 58px 59px,transparent 59px),linear-gradient(0deg,transparent 58px,var(--rc) 58px 59px,transparent 59px),
+    radial-gradient(circle,color-mix(in srgb,var(--data) 10%,#000),#000)}
+body[data-t^="sc"] .radar::after{background:conic-gradient(from 0deg,color-mix(in srgb,var(--data) 35%,transparent),transparent 18%)}
+
+/* Fenster, Meldungen */
+body[data-t^="sc"] .modal{background:rgba(0,0,0,.6)}
+body[data-t^="sc"] .modal .box{background:var(--sc-panel);border:1px solid var(--sc-acc);border-radius:0;box-shadow:0 24px 70px rgba(0,0,0,.85)}
+body[data-t^="sc"] .modal h3{font:700 18px var(--sc-head);letter-spacing:.2em;color:var(--sc-title);text-shadow:none;border-bottom:1px solid var(--sc-line);padding-bottom:8px}
+body[data-t^="sc"] .toast{background:var(--sc-panel);border:1px solid var(--sc-acc);border-left-width:4px;color:var(--sc-title);text-shadow:none;font:700 15px var(--font);letter-spacing:.1em}
+body[data-t^="sc"] .footer{color:var(--dim);text-shadow:none;font:600 11px var(--font);letter-spacing:.12em}
+body[data-t^="sc"] .scr::-webkit-scrollbar{width:6px}
+body[data-t^="sc"] .scr::-webkit-scrollbar-thumb{background:var(--sc-line2);border-radius:0}
+body[data-t^="sc"] .scr::-webkit-scrollbar-track{background:transparent}
+body[data-t^="sc"] .scr{scrollbar-width:thin;scrollbar-color:var(--sc-line2) transparent}
+body[data-t^="sc"] .e2st.sel{border-color:var(--sc-acc);background:var(--sc-acc-soft)}
+body[data-t^="sc"] .e2gcard{background:var(--sc-panel2);border-color:var(--sc-line)}
+body[data-t^="sc"] .e2gh{font:700 12px var(--font);letter-spacing:.14em}
+body[data-t^="sc"] #e2tip{border-radius:0;border-color:var(--sc-acc);font-family:var(--font)}
+
+/* ================= 1) ITEM FABRICATOR ================= */
+/* Vorbild: „FABRICATION KIOSK //FABRICATE“ (Standbilder 1280×720 aus dem Video „Fabricator Full Guide“, Farben gemessen):
+   flacher petrol-schwarzer Schirm, Reiter petrol / aktiv senfgelb, graue Petrol-Knöpfe, Itemname gelb, Kopfbalken
+   mit heller Kante links („FRAME“, „STATISTICS“), FABRICATE = dunkel-oliv mit gelbem Rahmen + Schrägecke.
+   Schirm in dicker dunkelgrauer Gummi-Blende, Maschine außen rot-weiß. */
+body[data-t="scfab"]{
+  --scr:#142020;--scr2:#1a2b2a;--grid:#223634;--frame:#2c4542;--pill:#d8d08a;
+  --txt:#d6dedb;--dim:#8fa29d;--data:#b9e0d6;--warn:#e0c060;--bad:#e8785e;--ok:#a8d890;--gold:#e8dc8c;
+  --key:#b3a85a;--keyb:#d8cf86;--keyfg:#f6eeb4;--key2:#b3a85a;--key2fg:#f6eeb4;--bg:#2a2b2c;
+  --sc-line:#263c39;--sc-line2:#36524e;--sc-acc:#c9bd66;--sc-accfg:#1a1a0c;--sc-acc-soft:rgba(201,189,102,.12);
+  --sc-title:#f2f4f2;--sc-panel:#1a2a29;--sc-panel2:#1f3231;--sc-input:#1f2f2e;--sc-head:"Rajdhani",sans-serif;
+  background:var(--noise),radial-gradient(ellipse at 60% 0%,#4a4744,#2a2827 55%,#1c1b1a)}
+body[data-t="scfab"] .console{padding:14px 18px 10px 40px}
+/* Maschinengehäuse links: weiße Platte mit roter Kante und rotem Taster */
+body[data-t="scfab"] .console::before{content:"";position:fixed;left:8px;top:14px;bottom:14px;width:20px;border-radius:6px;
+  background:radial-gradient(circle at 50% 50%,#d8473a 0 5px,#7a2219 6px,transparent 7px) 0 40%/100% 40px no-repeat,
+    linear-gradient(90deg,#b44a3b 0 6px,#e9e6e1 6px 18px,#b9b5ae 18px);box-shadow:inset 0 0 0 1px rgba(0,0,0,.35),2px 0 4px rgba(0,0,0,.4)}
+/* Kopf = Titelzeile im Schirm: „HYSEC INDUSTRIE //CRAFTING & LAGER“ */
+body[data-t="scfab"] .plate{background:#142020;border:none;border-radius:14px;
+  box-shadow:0 0 0 7px #2b2a27,0 0 0 9px #6f6b66,0 0 0 13px #a9493a,0 4px 14px 13px rgba(0,0,0,.45);margin:13px 13px 22px}
+body[data-t="scfab"] .badge{display:flex;align-items:baseline;gap:0}
+body[data-t="scfab"] .badge h1{font:700 italic 22px var(--font);letter-spacing:.05em;color:#f2f4f2;text-transform:uppercase}
+body[data-t="scfab"] .badge small{font-size:0;letter-spacing:0}
+body[data-t="scfab"] .badge small::before{content:" //CRAFTING & LAGER";font:500 italic 20px var(--font);letter-spacing:.03em;color:#c8d0cd;white-space:pre}
+body[data-t="scfab"] .lcd{background:#1f3231;border:none;border-radius:0;border-left:2px solid #d4d6b5}
+body[data-t="scfab"] .lcd b{color:#e8dc8c}
+/* Menü = senkrechte Reiter am Schirmrand (aktiv senfgelb), in der Blende */
+body[data-t="scfab"] .side{padding:8px;background:#142020;border:none;border-radius:14px;
+  box-shadow:0 0 0 7px #2b2a27,0 0 0 9px #6f6b66,0 0 0 13px #a9493a,0 4px 14px 13px rgba(0,0,0,.45);margin:13px 26px 13px 13px}
+body[data-t="scfab"] .grp{color:#8fa29d;border-bottom-color:#263c39}
+body[data-t="scfab"] .key{background:#1d3c38;border:none;border-bottom:2px solid #2f5a54;border-radius:0;min-height:38px;color:#a9dbd1}
+body[data-t="scfab"] .key:hover{background:#245049}
+body[data-t="scfab"] .key.on{background:#b3a85a;border-bottom-color:#e6dc94;color:#f6eeb4}
+body[data-t="scfab"] .key::before{display:none}
+/* Schirm in dicker Gummi-Blende, außen rotes Gehäuse */
+body[data-t="scfab"] .screen-wrap{position:relative;padding:0;border-radius:16px;background:none;margin:13px}
+body[data-t="scfab"] .crt{border:none;border-radius:14px;
+  box-shadow:0 0 0 7px #2b2a27,0 0 0 9px #6f6b66,0 0 0 13px #a9493a,0 4px 14px 13px rgba(0,0,0,.45),inset 0 0 30px rgba(0,0,0,.5);
+  background:radial-gradient(ellipse 40% 35% at 80% 20%,rgba(70,120,115,.18),transparent 70%),linear-gradient(180deg,#1a2b2a,#142020 30%,#121d1d)}
+body[data-t="scfab"] .crt::before{opacity:.12}
+body[data-t="scfab"] .crt .comm{border-left:2px solid #d4d6b5;color:#a9b7b2}
+/* Flächen: wie die Slots „FRAME / GRIP / BARREL“ */
+body[data-t="scfab"] .win{background:#1c2e2c;border:1px solid #2c4542;border-radius:0}
+body[data-t="scfab"] .pill,body[data-t="scfab"] .win.tight .pill{font:700 15px var(--font);letter-spacing:.06em;color:#d8dcc6;text-transform:uppercase}
+body[data-t="scfab"] .pill::before{width:2px;height:16px;background:#d4d6b5}
+body[data-t="scfab"] .sub{color:#8fa29d}
+body[data-t="scfab"] td.name,body[data-t="scfab"] .pn,body[data-t="scfab"] .plan .n,body[data-t="scfab"] .bp .n,body[data-t="scfab"] .task .t b{color:#e8dc8c}
+/* Tabelle wie „STATISTICS“: Kopf petrol mit heller Kante, Zeilen leicht abgesetzt */
+body[data-t="scfab"] th{color:#e6ece9;background:#24504b;border-bottom:none;font-weight:700}
+body[data-t="scfab"] th:first-child{box-shadow:inset 2px 0 0 #d4d6b5}
+body[data-t="scfab"] td{color:#d6dedb;border-bottom-color:#203432}
+body[data-t="scfab"] tbody tr:nth-child(even) td{background:rgba(255,255,255,.025)}
+/* Knöpfe: Nebenaktion grau-petrol wie „Best material“, Hauptaktion wie „FABRICATE“ */
+body[data-t="scfab"] .crt button.k,body[data-t="scfab"] .modal button.k,body[data-t="scfab"] .mini{background:#3c5752;border:1px solid #3c5752;border-radius:0;color:#f0f4f2}
+body[data-t="scfab"] .crt button.k:hover,body[data-t="scfab"] .modal button.k:hover{background:#4a6a64}
+body[data-t="scfab"] .crt button.k.pri,body[data-t="scfab"] .modal button.k.pri,body[data-t="scfab"] .bottom .key.or,body[data-t="scfab"] .bottom .key.go{
+  background:linear-gradient(225deg,#d6cc84 0 9px,transparent 9px),#3a3d2c;color:#ecdf98;border:2px solid #d6cc84;border-radius:0;
+  clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+body[data-t="scfab"] .crt button.k.pri:hover,body[data-t="scfab"] .modal button.k.pri:hover{background:#d6cc84;color:#1a1a0c}
+body[data-t="scfab"] .crt input,body[data-t="scfab"] .modal input,body[data-t="scfab"] select{background:#1f2f2e;border-color:#2c4542;border-radius:0}
+body[data-t="scfab"] .chips2 span.on,body[data-t="scfab"] .subkeys .key.on{background:#b3a85a;color:#f6eeb4;border-color:#e6dc94;box-shadow:none}
+body[data-t="scfab"] .subkeys .key{background:#1d3c38;color:#a9dbd1;border-color:#2f5a54;border-radius:0}
+body[data-t="scfab"] .modal .box{background:#142020;border:none;border-radius:14px;box-shadow:0 0 0 7px #2b2a27,0 0 0 9px #6f6b66,0 0 0 13px #a9493a,0 24px 70px rgba(0,0,0,.85)}
+body[data-t="scfab"] .modal h3{color:#f2f4f2;font:700 italic 19px var(--font);letter-spacing:.05em;text-transform:uppercase}
+body[data-t="scfab"] .toast{border-color:#d6cc84;border-radius:0}
+
+/* ================= 2) FREIGHT ELEVATOR ================= */
+/* Vorbild: „FREIGHT MANAGER“-Kiosk (Standbilder 1280×720 aus „3.24 Freight Elevator In-Depth Testing“, Farben gemessen):
+   blaugraue Metallblende, Schirm geteilt – links (ELEVATOR) dunkelbraun mit Orange, rechts (WAREHOUSE) dunkel petrol-grau
+   mit Mint; cremeweißes Namensschild mit Schrägkante, runde Klammern, feine Leuchtlinie unten, Strich-Markierungen am Rahmen,
+   Knöpfe flach gefüllt (EXPAND orange, Move to Elevator mint mit Pfeilspitze), zwei grüne LED-Balken unter dem Schirm. */
+body[data-t="sccargo"]{
+  --scr:#232f2f;--scr2:#283534;--grid:#2c3b39;--frame:#3a4c49;--pill:#86e0b0;
+  --txt:#dfe8e5;--dim:#8a9a96;--data:#8fe8bc;--warn:#f2b450;--bad:#ff6a58;--ok:#8fe8bc;--gold:#ffffff;
+  --key:#eaa648;--keyb:#f5c27a;--keyfg:#231405;--key2:#7fd9a8;--key2fg:#0b2418;--bg:#1c2026;
+  --sc-line:#33433f;--sc-line2:#4a605b;--sc-acc:#7fd9a8;--sc-accfg:#0b2418;--sc-acc-soft:rgba(127,217,168,.10);
+  --sc-or:#eaa648;--sc-orbg:#2a1c12;
+  --sc-title:#f2f7f5;--sc-panel:#222d2c;--sc-panel2:#273432;--sc-input:#1b2423;--sc-head:"Rajdhani",sans-serif;
+  background:var(--noise),radial-gradient(ellipse at 50% 0%,#2c3138,#15181c 70%)}
+body[data-t="sccargo"] .console{padding:16px 16px 4px;background:linear-gradient(180deg,#4a5566,#3c4353 60%,#343b48);border-radius:14px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18),inset 0 0 0 1px #2a303a;margin:6px;height:calc(100vh - 12px)}
+/* Gesamtes Pult in blaugrauer Metallblende */
+body[data-t="sccargo"] .plate{background:#1b2122;border:none;border-radius:4px 4px 0 0;padding:6px 14px;margin:0 0 0;
+  box-shadow:inset 0 -1px 0 #eaa648}
+body[data-t="sccargo"] .plate::after{content:"";position:absolute;right:0;bottom:-1px;width:45%;height:1px;background:#7fd9a8;box-shadow:0 0 6px #7fd9a8}
+/* Namensschild: cremeweiß, rechts schräg abgeschnitten, orange Kerbe links */
+body[data-t="sccargo"] .badge{background:linear-gradient(180deg,#eef6f3,#d8e4e0);padding:3px 34px 3px 12px;display:flex;align-items:center;gap:10px;
+  clip-path:polygon(0 0,100% 0,calc(100% - 16px) 100%,0 100%);box-shadow:inset 3px 0 0 #eaa648}
+body[data-t="sccargo"] .badge::before{content:"▥";font:700 18px var(--font);color:#4a5654}
+body[data-t="sccargo"] .badge h1{color:#33403e;font:500 23px var(--font);letter-spacing:.08em;text-transform:uppercase}
+body[data-t="sccargo"] .badge small{display:none}
+body[data-t="sccargo"] .lcd{background:transparent;border:none;border-radius:0}
+body[data-t="sccargo"] .lcd i{color:#eaa648}
+body[data-t="sccargo"] .lcd b{color:#f2f7f5}
+/* Menü = Elevator-Hälfte: dunkelbraun, orange Schrift, Strich-Markierung, orange Linie unten */
+body[data-t="sccargo"] .side{padding:8px 8px 12px;background:linear-gradient(180deg,#2c1d12,#24170e);border:1px solid #3e2c1c;border-radius:0;
+  box-shadow:inset 0 -2px 0 #eaa648,0 4px 10px -4px rgba(234,166,72,.35)}
+body[data-t="sccargo"] .side::before{content:"(ELEVATOR)";display:block;color:#f5cd94;font:700 15px var(--font);letter-spacing:.06em;margin:0 0 6px 2px;
+  text-shadow:0 0 6px rgba(234,166,72,.5)}
+body[data-t="sccargo"] .side::after{content:"";display:block;height:4px;margin:8px 14px 0;background:repeating-linear-gradient(90deg,#6b5034 0 2px,transparent 2px 5px)}
+body[data-t="sccargo"] .grp{color:#eaa648;border-bottom-color:#4a3420;font-weight:700}
+body[data-t="sccargo"] .key{background:#33251a;border:1px solid #4a3420;color:#e8d4b8;border-radius:0}
+body[data-t="sccargo"] .key:hover{border-color:#eaa648}
+body[data-t="sccargo"] .key.on{background:#eaa648;border-color:#eaa648;color:#231405;font-weight:700}
+body[data-t="sccargo"] .key::before{display:none}
+/* Schirm = Warehouse-Hälfte: petrol-grau, Mint-Linie unten; Blende blaugrau mit 2 grünen LED-Balken */
+body[data-t="sccargo"] .screen-wrap{position:relative;padding:0 0 30px;background:none}
+body[data-t="sccargo"] .screen-wrap::after{content:"";position:absolute;left:28px;bottom:7px;width:16px;height:16px;
+  background:linear-gradient(90deg,#9cffb0 0 4px,transparent 4px 12px,#9cffb0 12px 16px);filter:drop-shadow(0 0 5px #4dff8a)}
+body[data-t="sccargo"] .deck{gap:0}
+body[data-t="sccargo"] .crt{border:1px solid #1a2422;border-radius:0;background:linear-gradient(180deg,#263231,#222d2d 60%,#212b2a);
+  box-shadow:inset 0 -2px 0 #7fd9a8,0 4px 10px -4px rgba(127,217,168,.4)}
+body[data-t="sccargo"] .crt::before{opacity:.15}
+body[data-t="sccargo"] .crt .comm{border-left:none;padding-left:0;color:#8fe8bc;letter-spacing:.06em;font-weight:700}
+body[data-t="sccargo"] .crt .comm::before{content:"(WAREHOUSE)";color:#a8f0c8;margin-right:10px;text-shadow:0 0 6px rgba(127,217,168,.5)}
+body[data-t="sccargo"] .win{background:rgba(255,255,255,.025);border:1px solid #33433f;border-radius:0}
+body[data-t="sccargo"] .pill,body[data-t="sccargo"] .win.tight .pill{font:700 18px var(--font);letter-spacing:.04em;color:#f2f7f5;text-transform:uppercase}
+body[data-t="sccargo"] .sub{color:#8a9a96}
+body[data-t="sccargo"] th{color:#eaa648;border-bottom-color:#4a605b;font-weight:700}
+body[data-t="sccargo"] td{color:#dfe8e5;border-bottom-color:#2e3c3a}
+body[data-t="sccargo"] td.name,body[data-t="sccargo"] .pn,body[data-t="sccargo"] .plan .n,body[data-t="sccargo"] .bp .n,body[data-t="sccargo"] .task .t b{color:#ffffff;font-weight:700}
+/* Knöpfe: „SELECT ALL“ = dunkel ohne Rahmen, Hauptaktion = Mint wie „Move to Elevator“ (Pfeilspitze links) */
+body[data-t="sccargo"] .crt button.k,body[data-t="sccargo"] .modal button.k,body[data-t="sccargo"] .mini{border-radius:0;background:#2e3a39;border:1px solid #3a4a47;color:#e6eeeb;text-transform:uppercase;letter-spacing:.04em;font-weight:700}
+body[data-t="sccargo"] .crt button.k:hover,body[data-t="sccargo"] .modal button.k:hover{background:#3a4a47}
+body[data-t="sccargo"] .crt button.k.pri,body[data-t="sccargo"] .modal button.k.pri,body[data-t="sccargo"] .bottom .key.or,body[data-t="sccargo"] .bottom .key.go{
+  background:#7fd9a8;border-color:#7fd9a8;color:#0b2418;border-radius:0;padding-left:20px;
+  clip-path:polygon(10px 0,100% 0,100% 100%,10px 100%,0 50%);box-shadow:none}
+body[data-t="sccargo"] .crt button.k.pri:hover,body[data-t="sccargo"] .modal button.k.pri:hover{background:#a8f0c8}
+body[data-t="sccargo"] .crt input,body[data-t="sccargo"] .modal input,body[data-t="sccargo"] select{background:#1b2423;border-color:#3a4a47;border-radius:0}
+body[data-t="sccargo"] .subkeys .key{background:#2e3a39;border-color:#3a4a47;color:#e6eeeb;border-radius:0}
+body[data-t="sccargo"] .subkeys .key.on{background:#7fd9a8;border-color:#7fd9a8;color:#0b2418}
+body[data-t="sccargo"] .chips2 span.on{background:#7fd9a8;color:#0b2418;border-color:#7fd9a8;box-shadow:none}
+body[data-t="sccargo"] .modal .box{background:#222d2d;border:none;border-radius:0;box-shadow:inset 0 -2px 0 #7fd9a8,0 0 0 10px #4a5566,0 0 0 11px #2a303a,0 24px 70px rgba(0,0,0,.85)}
+body[data-t="sccargo"] .modal h3{display:inline-block;background:linear-gradient(180deg,#eef6f3,#d8e4e0);color:#33403e;border:none;padding:3px 30px 3px 12px;
+  clip-path:polygon(0 0,100% 0,calc(100% - 14px) 100%,0 100%);box-shadow:inset 3px 0 0 #eaa648;letter-spacing:.08em;font:500 19px var(--font);text-transform:uppercase}
+body[data-t="sccargo"] .toast{border-color:#7fd9a8;border-radius:0}
+/* ================= 3) HYSEC HOLO (Überraschung) ================= */
+/* mobiGlas-Hologramm: Glasflächen schweben über dem Horizont von Pyro, Sterne ziehen langsam vorbei */
+body[data-t="scholo"]{background:#02040a}
+body[data-t="scholo"]::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;
+  background:
+    radial-gradient(ellipse 140% 60% at 70% 125%,rgba(255,120,40,.55),rgba(190,50,20,.28) 32%,transparent 58%),
+    radial-gradient(ellipse 120% 52% at 70% 128%,#1a0804 58%,transparent 58.3%),
+    radial-gradient(ellipse 60% 40% at 15% 20%,rgba(60,90,200,.18),transparent 70%),
+    radial-gradient(ellipse 50% 35% at 85% 15%,rgba(150,60,180,.12),transparent 70%),
+    #02040a}
+body[data-t="scholo"]::after{content:"";position:fixed;inset:-50% 0 0 0;z-index:-1;pointer-events:none;opacity:.8;
+  background-image:
+    radial-gradient(1px 1px at 20px 30px,#fff,transparent),radial-gradient(1px 1px at 120px 80px,#cfe8ff,transparent),
+    radial-gradient(1.5px 1.5px at 200px 160px,#fff,transparent),radial-gradient(1px 1px at 260px 40px,#ffe8d0,transparent),
+    radial-gradient(1px 1px at 330px 210px,#fff,transparent),radial-gradient(1.2px 1.2px at 80px 230px,#d0e4ff,transparent),
+    radial-gradient(1px 1px at 380px 120px,#fff,transparent),radial-gradient(.8px .8px at 150px 290px,#fff,transparent);
+  background-size:400px 320px;animation:holostars 240s linear infinite}
+@keyframes holostars{to{transform:translateY(33%)}}
+body[data-t="scholo"].calm::after{animation:none}
+@media (prefers-reduced-motion:reduce){ body[data-t="scholo"]::after{animation:none} }
+body[data-t="scholo"] .plate,body[data-t="scholo"] .crt,body[data-t="scholo"] .key,body[data-t="scholo"] .lcd,body[data-t="scholo"] .modal .box{
+  -webkit-backdrop-filter:blur(12px) saturate(1.3);backdrop-filter:blur(12px) saturate(1.3)}
+body[data-t="scholo"] .plate{border-radius:14px;border-color:var(--sc-line2);background:linear-gradient(180deg,rgba(20,45,80,.55),rgba(8,20,40,.45));
+  box-shadow:0 0 0 1px rgba(127,230,255,.08),0 10px 40px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.12)}
+body[data-t="scholo"] .badge h1{font:800 22px var(--sc-head);letter-spacing:.24em;background:linear-gradient(180deg,#ffffff,#7fe6ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+body[data-t="scholo"] .badge small{color:#7fb8d4}
+body[data-t="scholo"] .lcd{border-radius:10px;background:rgba(10,30,56,.5);border-color:var(--sc-line)}
+body[data-t="scholo"] .lcd b{font:700 22px/1.15 var(--sc-head);color:#fff;text-shadow:0 0 12px rgba(127,230,255,.6)}
+body[data-t="scholo"] .side{gap:6px}
+body[data-t="scholo"] .grp{border-bottom-color:var(--sc-line);color:#7fb8d4}
+body[data-t="scholo"] .key{border-radius:10px;background:rgba(14,34,62,.45);border-color:var(--sc-line)}
+body[data-t="scholo"] .key::before{left:6px;top:50%;bottom:auto;height:14px;margin-top:-7px;width:3px;border-radius:2px}
+body[data-t="scholo"] .key.on{background:linear-gradient(90deg,rgba(95,216,255,.28),rgba(95,216,255,.06));border-color:rgba(127,230,255,.75);
+  box-shadow:0 0 18px rgba(95,216,255,.25),inset 0 0 12px rgba(95,216,255,.12)}
+body[data-t="scholo"] .key.on::before{background:#bff4ff}
+body[data-t="scholo"] .crt{border-radius:18px;border-color:var(--sc-line2);background:linear-gradient(180deg,rgba(10,26,50,.55),rgba(4,12,26,.4));
+  box-shadow:0 0 0 1px rgba(127,230,255,.06),0 20px 60px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.1)}
+body[data-t="scholo"] .crt::before{opacity:.35}
+body[data-t="scholo"] .crt::after{content:"";position:absolute;left:0;right:0;top:0;height:80px;z-index:5;pointer-events:none;border-radius:inherit;
+  background:linear-gradient(180deg,transparent,rgba(127,230,255,.05),transparent);animation:holoscan 9s linear infinite}
+@keyframes holoscan{from{transform:translateY(-80px)}to{transform:translateY(1100px)}}
+body[data-t="scholo"].calm .crt::after{animation:none;display:none}
+body[data-t="scholo"] .win{border-radius:12px;background:linear-gradient(180deg,rgba(18,42,76,.5),rgba(8,22,44,.35));border-color:var(--sc-line);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+body[data-t="scholo"] .pill{font:700 13px var(--sc-head);letter-spacing:.24em}
+body[data-t="scholo"] .pill::before{width:6px;height:6px;border-radius:50%;box-shadow:0 0 8px var(--sc-acc)}
+body[data-t="scholo"] .prow,body[data-t="scholo"] .bp,body[data-t="scholo"] .e2gcard,body[data-t="scholo"] .e2st,body[data-t="scholo"] .slot,body[data-t="scholo"] .vdu{border-radius:10px}
+body[data-t="scholo"] .crt button.k,body[data-t="scholo"] .modal button.k,body[data-t="scholo"] .mini,body[data-t="scholo"] .crt input,body[data-t="scholo"] .crt select,
+body[data-t="scholo"] .modal input,body[data-t="scholo"] .modal select,body[data-t="scholo"] select,body[data-t="scholo"] .tag,body[data-t="scholo"] .chips2 span,body[data-t="scholo"] .fchips span{border-radius:8px}
+body[data-t="scholo"] .crt button.k.pri,body[data-t="scholo"] .modal button.k.pri{background:linear-gradient(180deg,#9aefff,#2bb8e6);box-shadow:0 0 14px rgba(95,216,255,.35)}
+body[data-t="scholo"] td{text-shadow:0 0 8px color-mix(in srgb,currentColor 35%,transparent)}
+body[data-t="scholo"] .modal .box{border-radius:16px;background:rgba(8,22,42,.75)}
+body[data-t="scholo"] .modal h3{font-size:15px}
+body[data-t="scholo"] .toast{border-radius:10px}
+body[data-t="scholo"] .crt .comm{border-left:none;padding-left:0;color:#7fb8d4}
+body[data-t="scholo"] .crt .comm::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok)}
+
+/* Holo: Pyro-Horizont unten links (unter dem Menü sichtbar), Flächen durchsichtiger, Hologramm-Ring hinter dem Schirm */
+body[data-t="scholo"]{--scr:rgba(8,20,38,.22);--scr2:rgba(12,30,56,.34)}
+body[data-t="scholo"]::before{background:
+    radial-gradient(ellipse 70% 62% at 8% 118%,rgba(255,160,70,.95),rgba(235,90,35,.6) 20%,rgba(160,35,20,.28) 38%,transparent 58%),
+    radial-gradient(ellipse 62% 54% at 8% 122%,#140604 66%,rgba(255,140,60,.9) 66.3%,transparent 67%),
+    radial-gradient(ellipse 60% 40% at 80% 25%,rgba(60,90,200,.20),transparent 70%),
+    radial-gradient(ellipse 50% 35% at 55% 0%,rgba(150,60,180,.14),transparent 70%),
+    #02040a}
+body[data-t="scholo"] .console::before{content:"";position:fixed;right:4%;top:52%;width:min(70vh,720px);aspect-ratio:1;transform:translateY(-50%);
+  pointer-events:none;z-index:-1;border-radius:50%;opacity:.32;
+  background:
+    radial-gradient(circle,transparent 0 30%,#7fe6ff 30% 30.5%,transparent 30.5% 44%,#7fe6ff 44% 44.4%,transparent 44.4% 47%,rgba(127,230,255,.6) 47% 48.5%,transparent 48.5%),
+    repeating-conic-gradient(from 0deg,rgba(127,230,255,.7) 0 1.5deg,transparent 1.5deg 7.5deg);
+  -webkit-mask:radial-gradient(circle,#000 0 49%,transparent 49% 53%,#000 53% 55%,transparent 55%);
+  mask:radial-gradient(circle,#000 0 49%,transparent 49% 53%,#000 53% 55%,transparent 55%);
+  animation:holoring 120s linear infinite}
+@keyframes holoring{to{transform:translateY(-50%) rotate(360deg)}}
+body[data-t="scholo"].calm .console::before{animation:none}
+body[data-t="scholo"] .crt{-webkit-backdrop-filter:blur(3px) saturate(1.2);backdrop-filter:blur(3px) saturate(1.2)}
+body[data-t="scholo"] .win{-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+body[data-t="scholo"] .badge h1::after{content:" ◈";-webkit-text-fill-color:#7fe6ff;font-size:.7em}
+
+/* ================= Handy + Tablet (m.html, body.mob) ================= */
+/* gleiche Farben wie am PC, aber flach und ohne Animation (Handy = ohne Flackern) */
+body.mob[data-t^="sc"]{font-size:16px}
+body.mob[data-t^="sc"] .mtop{background:var(--sc-panel);border-bottom:1px solid var(--sc-line2)}
+body.mob[data-t^="sc"] .mname{font:700 17px var(--sc-head);letter-spacing:.14em;color:var(--sc-title)}
+body.mob[data-t^="sc"] .mback{color:var(--sc-acc)}
+body.mob[data-t^="sc"] .mled{font:700 10px var(--font);color:var(--dim)}
+body.mob[data-t^="sc"] .mled i{box-shadow:none;background:#333}
+body.mob[data-t^="sc"] .msegs{background:var(--sc-panel2);border-bottom:1px solid var(--sc-line);gap:6px;padding:4px 8px}
+body.mob[data-t^="sc"] .mseg{background:none;border:none;border-left:2px solid var(--sc-line2);border-radius:0;text-align:left;padding:0 0 0 8px}
+body.mob[data-t^="sc"] .mseg b{font:700 22px/1.05 var(--sc-head);color:var(--sc-title);text-shadow:none;letter-spacing:0}
+body.mob[data-t^="sc"] .mseg i{font:600 9px var(--font);color:var(--dim);letter-spacing:.2em}
+body.mob[data-t^="sc"] .mscr{background:var(--scr);border:none}
+body.mob[data-t^="sc"] .mcomm{font:700 12px var(--font);clip-path:none;border:none;border-left:2px solid var(--sc-acc);background:var(--sc-panel);color:var(--dim);letter-spacing:.14em}
+body.mob[data-t^="sc"] .mhd h3{font:700 17px var(--sc-head);color:var(--sc-title);letter-spacing:.1em}
+body.mob[data-t^="sc"] .mhd h3::before{content:"";display:inline-block;width:3px;height:14px;margin-right:8px;background:var(--sc-acc);vertical-align:-1px}
+body.mob[data-t^="sc"] .mpill{border-radius:0;border-color:var(--sc-line2);color:var(--sc-acc);font-family:var(--font)}
+body.mob[data-t^="sc"] .mchip{border-radius:0;border-color:var(--sc-line2);background:var(--sc-panel)}
+body.mob[data-t^="sc"] .mchip.on{background:var(--sc-acc);border-color:var(--sc-acc);color:var(--sc-accfg)}
+body.mob[data-t^="sc"] .mgrp{font:700 12px var(--font);color:var(--sc-acc);border-bottom:1px solid var(--sc-line)}
+body.mob[data-t^="sc"] .mit,body.mob[data-t^="sc"] .mpart{border-radius:0;border-color:var(--sc-line);background:var(--sc-panel)}
+body.mob[data-t^="sc"] .mpart .mit{background:none}
+body.mob[data-t^="sc"] .mit.sel,body.mob[data-t^="sc"] .mpart.open{border-color:var(--sc-acc)}
+body.mob[data-t^="sc"] .mit .v,body.mob[data-t^="sc"] .mreq .a,body.mob[data-t^="sc"] .mstp em{font-family:var(--sc-head);font-weight:700}
+body.mob[data-t^="sc"] .mic{border-radius:0;font-family:var(--font)}
+body.mob[data-t^="sc"] .mbar2{border-radius:0;border-color:var(--sc-line);background:var(--sc-input)}
+body.mob[data-t^="sc"] .mbar2 i{background:var(--sc-acc)}
+body.mob[data-t^="sc"] .mstp{border-radius:0;border-color:var(--sc-line2)}
+body.mob[data-t^="sc"] .mstp span{background:var(--sc-panel2);color:var(--sc-acc)}
+body.mob[data-t^="sc"] .mscr input,body.mob[data-t^="sc"] .mscr select,body.mob[data-t^="sc"] .mscr textarea,
+body.mob[data-t^="sc"] .modal input,body.mob[data-t^="sc"] .modal select,body.mob[data-t^="sc"] .modal textarea{background:var(--sc-input);color:var(--txt);border:1px solid var(--sc-line2);border-radius:0;font-family:var(--font)}
+body.mob[data-t^="sc"] .qb .units{border-radius:0;border:1px solid var(--sc-line2)}
+body.mob[data-t^="sc"] .qb .units span.on{background:var(--sc-acc);color:var(--sc-accfg)}
+body.mob[data-t^="sc"] .qb .amt{font:700 30px var(--sc-head)!important}
+/* Knöpfe flach */
+body.mob[data-t^="sc"] .mbtn,body.mob[data-t^="sc"] #m-view button.k{background:var(--sc-panel2);border:1px solid var(--sc-line2);border-radius:0;color:var(--txt);box-shadow:none;font-family:var(--font)}
+body.mob[data-t^="sc"] .mbtn.pri,body.mob[data-t^="sc"] .mbtn.go,body.mob[data-t^="sc"] #m-view button.k.pri{background:var(--sc-acc);border-color:var(--sc-acc);color:var(--sc-accfg)}
+body.mob[data-t^="sc"] .mbtn.x,body.mob[data-t^="sc"] #m-view button.k.x{background:transparent;border-color:var(--bad);color:var(--bad)}
+body.mob[data-t^="sc"] .mbtn.dash{background:none;border:1px dashed var(--sc-acc);color:var(--sc-acc)}
+/* Tastenreihe unten */
+body.mob[data-t^="sc"] .mkeys{background:var(--sc-panel);border-top:1px solid var(--sc-line2)}
+body.mob[data-t^="sc"] .mkey{background:var(--sc-panel2);border:1px solid var(--sc-line2);border-radius:0;color:var(--txt);box-shadow:none;font:700 10px var(--font);letter-spacing:.1em}
+body.mob[data-t^="sc"] .mkey.on{background:var(--sc-acc);border-color:var(--sc-acc);color:var(--sc-accfg)}
+body.mob[data-t^="sc"] .mkey.plus{background:var(--sc-panel2);border:2px solid var(--sc-acc);color:var(--sc-acc)}
+/* Fenster als Blatt von unten (Blenden vom PC hier weglassen) */
+body.mob[data-t^="sc"] .modal .box{border:none;border-top:3px solid var(--sc-acc);border-radius:0;box-shadow:0 -10px 40px rgba(0,0,0,.7);background:var(--scr)}
+body.mob[data-t^="sc"] .modal .foot{background:var(--scr)}
+body.mob[data-t^="sc"] .toast{border-radius:0}
+@media (orientation:landscape){
+  body.mob.tab[data-t^="sc"] .mkeys{background:var(--sc-panel);border-right:1px solid var(--sc-line2)}
+  body.mob.tab[data-t^="sc"] .modal .box{border:1px solid var(--sc-line2);border-top:3px solid var(--sc-acc)}
+}
+
+/* Handy · Item Fabricator: roter Gehäuserand, senfgelbe Auswahl, FABRICATE-Knopf */
+body.mob[data-t="scfab"]{background:#142020}
+body.mob[data-t="scfab"] .mtop{background:#142020;border-bottom:3px solid #a9493a}
+body.mob[data-t="scfab"] .mname{font:700 italic 18px var(--font);letter-spacing:.05em}
+body.mob[data-t="scfab"] .mkeys{background:#2b2a27;border-top:3px solid #a9493a}
+body.mob[data-t="scfab"] .mkey{background:#1d3c38;border:none;border-bottom:2px solid #2f5a54;color:#a9dbd1}
+body.mob[data-t="scfab"] .mkey.on{background:#b3a85a;border-bottom-color:#e6dc94;color:#f6eeb4}
+body.mob[data-t="scfab"] .mkey.plus{background:#3a3d2c;border:2px solid #d6cc84;color:#ecdf98}
+body.mob[data-t="scfab"] .mbtn{background:#3c5752;border-color:#3c5752;color:#f0f4f2}
+body.mob[data-t="scfab"] .mbtn.pri,body.mob[data-t="scfab"] .mbtn.go,body.mob[data-t="scfab"] #m-view button.k.pri{background:#3a3d2c;border:2px solid #d6cc84;color:#ecdf98;
+  clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%)}
+body.mob[data-t="scfab"] .mit .tx b,body.mob[data-t="scfab"] .mpart .tx b{color:#e8dc8c}
+body.mob[data-t="scfab"] .mchip.on,body.mob[data-t="scfab"] .qb .units span.on{background:#b3a85a;color:#f6eeb4}
+
+/* Handy · Freight Elevator: Metallkopf mit Namensschild, Zahlen = Elevator (orange), Schirm = Warehouse (mint) */
+body.mob[data-t="sccargo"]{background:#232f2f}
+body.mob[data-t="sccargo"] .mtop{background:linear-gradient(180deg,#4a5566,#3c4353);border-bottom:1px solid #2a303a}
+body.mob[data-t="sccargo"] .mname{flex:0 1 auto;background:linear-gradient(180deg,#eef6f3,#d8e4e0);color:#33403e;font:500 16px var(--font);letter-spacing:.08em;
+  padding:2px 26px 2px 10px;clip-path:polygon(0 0,100% 0,calc(100% - 12px) 100%,0 100%);box-shadow:inset 3px 0 0 #eaa648;margin-right:auto}
+body.mob[data-t="sccargo"] .mback{color:#eef6f3}
+body.mob[data-t="sccargo"] .mled{color:#c8d0d8}
+body.mob[data-t="sccargo"] .msegs{background:#2c1d12;border-bottom:2px solid #eaa648}
+body.mob[data-t="sccargo"] .mseg{border-left-color:#5a3e24}
+body.mob[data-t="sccargo"] .mseg i{color:#eaa648}
+body.mob[data-t="sccargo"] .mscr{background:linear-gradient(180deg,#263231,#222d2d)}
+body.mob[data-t="sccargo"] .mcomm::before{content:"(WAREHOUSE) ";color:#a8f0c8}
+body.mob[data-t="sccargo"] .mcomm{color:#8fe8bc}
+body.mob[data-t="sccargo"] .mbtn.pri,body.mob[data-t="sccargo"] .mbtn.go,body.mob[data-t="sccargo"] #m-view button.k.pri{padding-left:22px;clip-path:polygon(10px 0,100% 0,100% 100%,10px 100%,0 50%)}
+body.mob[data-t="sccargo"] .mkeys{background:linear-gradient(180deg,#4a5566,#3c4353);border-top:2px solid #7fd9a8}
+body.mob[data-t="sccargo"] .mkey{background:#33251a;border-color:#4a3420;color:#e8d4b8}
+body.mob[data-t="sccargo"] .mkey.on{background:#eaa648;border-color:#eaa648;color:#231405}
+body.mob[data-t="sccargo"] .mkey.plus{background:#7fd9a8;border:none;color:#0b2418}
+
+/* Handy · Hysec Holo: Glas über dem Sternfeld, runde Ecken, Sterne stehen still */
+body.mob[data-t="scholo"]::after{animation:none}
+body.mob[data-t="scholo"] .mscr{background:rgba(6,16,32,.55)}
+body.mob[data-t="scholo"] .mtop,body.mob[data-t="scholo"] .msegs,body.mob[data-t="scholo"] .mkeys{background:rgba(8,22,42,.7);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+body.mob[data-t="scholo"] .mname{font:800 15px var(--sc-head);letter-spacing:.24em;background:linear-gradient(180deg,#fff,#7fe6ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+body.mob[data-t="scholo"] .mseg b{font:700 20px var(--sc-head);text-shadow:0 0 10px rgba(127,230,255,.5)}
+body.mob[data-t="scholo"] .mit,body.mob[data-t="scholo"] .mpart,body.mob[data-t="scholo"] .mbtn,body.mob[data-t="scholo"] .mkey,body.mob[data-t="scholo"] .mchip,
+body.mob[data-t="scholo"] .mstp,body.mob[data-t="scholo"] .mcomm,body.mob[data-t="scholo"] #m-view button.k,body.mob[data-t="scholo"] .mscr input,body.mob[data-t="scholo"] .mscr select,
+body.mob[data-t="scholo"] .modal input,body.mob[data-t="scholo"] .modal select{border-radius:10px}
+body.mob[data-t="scholo"] .mit,body.mob[data-t="scholo"] .mpart{background:linear-gradient(180deg,rgba(18,42,76,.5),rgba(8,22,44,.35))}
+body.mob[data-t="scholo"] .mkey.on,body.mob[data-t="scholo"] .mbtn.pri,body.mob[data-t="scholo"] .mbtn.go{background:linear-gradient(180deg,#9aefff,#2bb8e6);box-shadow:0 0 14px rgba(95,216,255,.35);color:#021522}
+body.mob[data-t="scholo"] .modal .box{border-radius:16px 16px 0 0;background:rgba(8,22,42,.85);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+body[data-t="scholo"] .ac-list{background:#061426;-webkit-backdrop-filter:none;backdrop-filter:none}
+
+/* Durchsichtige SC-Designs: feste Leisten brauchen einen deckenden Hintergrund (sonst scheint die Liste durch) */
+body[data-t^="sc"] .vp-sum{background:#0b1626;backdrop-filter:blur(6px)}
+body[data-t="scfab"] .vp-sum{background:#142020}
+body[data-t="sccargo"] .vp-sum{background:#232f2f}
