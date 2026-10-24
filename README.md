@@ -1,96 +1,70 @@
 <p align="center"><img src="docs/bilder/logo.png" width="110" alt="Pliskin Industrie"></p>
 
 <h1 align="center">Pliskin Industrie 1.0.0</h1>
-<p align="center"><b>Crafting · Lager · Logistik für Star Citizen</b><br>
-<a href="#deutsch">Deutsch</a> · <a href="#english">English</a> · <a href="docs/HANDBUCH.md">Handbuch</a> · <a href="../../issues/new/choose">Fehler melden</a></p>
+<p align="center"><b>Crafting · Storage · Logistics for Star Citizen</b><br>
+<a href="README.de.md">🇩🇪 Deutsch</a> · <a href="docs/HANDBUCH.md">Manual (German)</a> · <a href="../../issues/new/choose">Report a bug</a> · <a href="../../releases">Download</a></p>
 
-<p align="center"><img src="docs/bilder/01-heute.webp" width="900" alt="Heute / To-do"></p>
+<p align="center"><img src="docs/bilder/01-heute.webp" width="900" alt="Today / To-do"></p>
 
 ---
 
-## Deutsch
+> The program is available in **English and German** – pick the language on first start or under Settings → Program.
 
-Pliskin Industrie bringt **Blueprints, Crafting-Pläne, Lager, Mining und Fracht-Touren** an einen Ort. Das Programm liest deine Blueprints selbst aus dem Game.log, rechnet aus, was dir für deine Pläne noch fehlt und wo du es am besten findest. Die Spieldaten (Rezepte, Fundorte, Qualität, Schiffe, Karte) stammen direkt aus der `Data.p4k` des Spiels.
+Pliskin Industrie puts **blueprints, crafting plans, storage, mining and cargo tours** in one place. It reads your blueprints straight from the Game.log, works out what your plans are still missing and where to find it best. All game data (recipes, mining locations, quality, ships, map) comes directly from the game's `Data.p4k`.
 
-### Was es kann
+### What it does
 
 | | |
 |---|---|
-| **Heute / To-do** – Was du jetzt craften kannst, was du holen oder minen musst und welche Mission dir einen fehlenden Blueprint bringt. Eine Liste zum Abarbeiten von oben nach unten. | <img src="docs/bilder/01-heute.webp" width="420"> |
-| **Crafting-Pläne** – Bauteile, ganze Rüstungs-Sets, Schiffs-Fittings (SPViewer-Cart einfügen) oder Material-Ziele. Ziel-Qualität wie im Spiel: Mischen = mengengewichteter Durchschnitt, das beste Material zuerst. | <img src="docs/bilder/02-crafting-plaene.webp" width="420"> |
-| **Lager** – Bestand je Ort mit Qualität, Kisten und Einheiten (SCU bis µSCU). Material-Symbole wie im Spiel-Inventar. | <img src="docs/bilder/03-lager.webp" width="420"> |
-| **Lager-Ansicht** – dein Lager in 3D im Freight Elevator, mit echten SCU-Kisten aus den Spieldaten. Kiste auf einen anderen Ort ziehen = Umlagerung planen. | <img src="docs/bilder/04-lager-ansicht.webp" width="420"> |
-| **Tour planen** – Verkaufs-, Umlager- und Contract-Touren mit kürzester Route, Hin- und Rückfracht, Ladeplan ohne Umladen, Karte, Flugzeit und Quantum-Sprit. | <img src="docs/bilder/05-tour.webp" width="420"> |
-| **Material-Atlas** – wo ein Rohstoff vorkommt und wo am ehesten in Top-Qualität („Chance je Stein“), dazu Raffinerien und Verfahren. | <img src="docs/bilder/06-material-atlas.webp" width="420"> |
-| **Mining-Ausflug** – mehrere Materialien wählen, Pliskin sucht die Orte, an denen du möglichst viel davon zusammen bekommst, mit Entfernung von deiner Home-Station. | <img src="docs/bilder/07-mining-ausflug.webp" width="420"> |
-| **Blueprint-Katalog** – alle Blueprints mit Werten bei Q0 / Q500 / Q1000, Skins, Sets und eigenen Bildern aus den Spielmodellen. Status: hab ich, fehlt, erspielbar. | <img src="docs/bilder/08-katalog.webp" width="420"> |
-| **Schiffe** – Cargo-Grids von rund 100 Schiffen aus den Spieldaten, Tür-Seite, Quantum-Antrieb, Reichweite. | <img src="docs/bilder/09-schiffe.webp" width="420"> |
-| **Erfassung per Taste** – Maus über eine Kiste im Spiel, Taste drücken (Standard **Pause**): Material, Qualität und Menge werden aus dem Tooltip gelesen und gesammelt, bis du bestätigst. Auch vom Handy aus auslösbar. | |
-| **Handy & Tablet** – eigene Oberfläche fürs Handy (Server-Modus, siehe unten). | <img src="docs/bilder/11-handy.webp" width="200"> |
+| **Today / To-do** – what you can craft right now, what you need to fetch or mine, and which mission rewards a missing blueprint. One list to work through from top to bottom. | <img src="docs/bilder/01-heute.webp" width="420"> |
+| **Crafting plans** – parts, whole armor sets, ship fittings (paste an SPViewer cart) or material goals. Target quality like in game: mixing = weighted average by amount, best material first. | <img src="docs/bilder/02-crafting-plaene.webp" width="420"> |
+| **Storage** – stock per location with quality, crates and units (SCU down to µSCU). Material icons like the in-game inventory. | <img src="docs/bilder/03-lager.webp" width="420"> |
+| **Storage view** – your storage in 3D inside the freight elevator, with real SCU crates from the game data. Drag a crate to another location to plan a transfer. | <img src="docs/bilder/04-lager-ansicht.webp" width="420"> |
+| **Tour planner** – sales, transfer and contract tours with the shortest route, round trips, a loading plan that never needs restacking, map, flight time and quantum fuel. | <img src="docs/bilder/05-tour.webp" width="420"> |
+| **Material atlas** – where a resource spawns and where you are most likely to find top quality (“chance per rock”), plus refineries and methods. | <img src="docs/bilder/06-material-atlas.webp" width="420"> |
+| **Mining trip** – pick several materials, Pliskin finds the places where you get most of them together, with distance from your home station. | <img src="docs/bilder/07-mining-ausflug.webp" width="420"> |
+| **Blueprint catalog** – every blueprint with stats at Q0 / Q500 / Q1000, skins, sets and own renders from the game models. Status: owned, missing, obtainable. Mark blueprints as owned by hand. | <img src="docs/bilder/08-katalog.webp" width="420"> |
+| **Ships** – cargo grids of about 100 ships from the game data, door side, quantum drive, range. | <img src="docs/bilder/09-schiffe.webp" width="420"> |
+| **Capture by hotkey** (default **Pause**) – crate tooltip in the inventory/Freight Manager, a crate in the tractor beam (size from its weight) or a blueprint in the Fabrication Kiosk: Pliskin reads material, quality, amount or the blueprint name and collects everything until you confirm. Can also be triggered from your phone. | |
+| **Phone & tablet** – a dedicated phone UI (server mode, see below). | <img src="docs/bilder/11-handy.webp" width="200"> |
 
-**7 Designs:** SC Holo, SC Item Fabricator, SC Freight Elevator sowie Wing Commander III Victory, WC IV Lexington, WC IV Intrepid und Prophecy Midway.
+**7 designs:** SC Holo, SC Item Fabricator, SC Freight Elevator, plus Wing Commander III Victory, WC IV Lexington, WC IV Intrepid and Prophecy Midway.
 
 <p align="center"><img src="docs/bilder/10-design-wc3v.webp" width="290"> <img src="docs/bilder/10-design-wc4i.webp" width="290"> <img src="docs/bilder/10-design-sccargo.webp" width="290"></p>
 
-### Herunterladen und starten
-1. Unter **Releases** die Datei für dein System laden:
+### Download and start
+1. Get the file for your system under **[Releases](../../releases)**:
    - Windows: `Pliskin-Industrie-v1.0.0-windows.exe`
    - Linux: `Pliskin-Industrie-v1.0.0-linux-x86_64`
-2. **Windows:** Doppelklick. Windows warnt evtl. („Der Computer wurde durch Windows geschützt“), weil das Programm nicht signiert ist → *Weitere Informationen* → *Trotzdem ausführen*. Die Datei lässt sich mit `SHA256SUMS.txt` aus dem Release prüfen.
-   **Linux:** `chmod +x Pliskin-Industrie-*-linux-x86_64` und starten. Fehlen Fenster-Bausteine (Qt), öffnet Pliskin sich automatisch im Browser.
-3. Beim ersten Start: Sprache (Deutsch/English), Design und **leer starten** oder **Demo ansehen** wählen.
+2. **Windows:** double-click. Windows may warn (“Windows protected your PC”) because the program is not signed → *More info* → *Run anyway*. You can verify the file with `SHA256SUMS.txt` from the release.
+   **Linux:** `chmod +x Pliskin-Industrie-*-linux-x86_64` and run it. If window components (Qt) are missing, Pliskin opens in your browser instead.
+3. On first start choose language (English/Deutsch), design and **start empty** or **try the demo**.
 
-Deine Daten liegen nur bei dir: Windows `%LOCALAPPDATA%\PliskinIndustrie`, Linux `~/.local/share/PliskinIndustrie` (mit täglicher Sicherung). Ins Internet geht nichts automatisch – Preise von UEX oder Fundorte von SCMDB holst du nur auf Knopfdruck.
+Your data stays on your machine: Windows `%LOCALAPPDATA%\PliskinIndustrie`, Linux `~/.local/share/PliskinIndustrie` (with daily backups). Nothing is fetched from the internet automatically – UEX prices or SCMDB data only when you press the button.
 
-### Server-Modus (Handy, Laptop)
-Einstellungen → Programm → *Server-Modus*: Pliskin öffnet sich für dein Heimnetz. Handy oder Laptop öffnen die angezeigte Adresse (z. B. `http://192.168.0.10:8770`) im Browser und arbeiten mit denselben Daten. Nur fürs Heimnetz gedacht (kein Passwort).
+### Server mode (phone, laptop)
+Settings → Program → *Server mode*: Pliskin opens up to your home network. Your phone or laptop opens the address shown (e.g. `http://192.168.0.10:8770`) in the browser and works with the same data. Home network only (no password).
 
-### Erfassungs-Taste im Spiel
-Läuft Star Citizen mit Administrator-Rechten, gibt Windows Tastendrücke nicht an normale Programme weiter. Dann Pliskin auch als Administrator starten (Einstellungen → Programm → „Als Administrator neu starten“) – oder die Erfassung vom Handy aus auslösen.
+### Capture key in game
+If Star Citizen runs with administrator rights, Windows does not pass key presses to normal programs. Then start Pliskin as administrator too (Settings → Program → “Restart as administrator”) – or trigger the capture from your phone.
 
 ### Updates
-Pliskin prüft beim Start, ob es eine neue Version gibt (abschaltbar). Unter Einstellungen → Programm lässt sich jede Version – auch eine ältere – installieren. Die bisherige Programmdatei bleibt als Sicherung daneben liegen, deine Daten bleiben unverändert.
+Pliskin checks for a new version on start (can be muted). Under Settings → Program any version – including older ones – can be installed. The previous program file is kept next to it as a backup, your data stays untouched.
 
-### Hilfe und Fehler melden
-- Im Programm: **Hilfe** (mit Rundgang und Demo-Modus) und **Hilfe → Kontakt & Fehler melden**.
-- Ausführliches [Handbuch](docs/HANDBUCH.md).
-- [Fehler melden oder Wunsch einreichen](../../issues/new/choose) – oder per Mail an **pliskinindustrie@gmail.com**.
+### Help and bug reports
+- In the program: **Help** (with a guided tour and demo mode) and **Help → Contact & bug reports**.
+- Detailed [manual](docs/HANDBUCH.md) (German for now).
+- [Report a bug or request a feature](../../issues/new/choose) – or mail **pliskinindustrie@gmail.com**.
 
-### Aus dem Quelltext bauen
-Python 3.12, dann `bauen/windows.bat` bzw. `bauen/linux.sh`. Ohne Bau starten: `pip install -r requirements-windows.txt` (bzw. `-linux`), dann `python hysec_industrie.py`.
-Neue Version: `VERSION` in `hysec_industrie.py` erhöhen, Tag `v<Version>` pushen – GitHub baut beide Programme und hängt sie ans Release (`.github/workflows/release.yml`).
+### Building from source
+Python 3.12, then `bauen/windows.bat` or `bauen/linux.sh`. Run without building: `pip install -r requirements-windows.txt` (or `-linux`), then `python hysec_industrie.py`.
+New version: bump `VERSION` in `hysec_industrie.py`, push tag `v<version>` – GitHub Actions builds both programs and attaches them to the release (`.github/workflows/release.yml`).
 
-### Datenquellen und Dank
-Spieldaten aus der `Data.p4k` (Patch steht im Programm unten). Optional auf Knopfdruck: UEX Corp (Handelspreise), SCMDB (Fundorte, Raffinerie-Boni). Shader- und Modell-Logik für die Katalog-Bilder nach dem Open-Source-Projekt [StarBreaker](https://github.com/diogotr7/StarBreaker) (MIT).
+### Data sources and credits
+Game data from the `Data.p4k` (patch shown at the bottom of the program). Optional, on button press: UEX Corp (trade prices), SCMDB (mining locations, refinery bonuses). Shader and model logic for the catalog renders based on the open-source project [StarBreaker](https://github.com/diogotr7/StarBreaker) (MIT).
 
-### Lizenz
-Der Quellcode steht unter der **GNU AGPL-3.0** (siehe [LICENSE](LICENSE)): Du darfst ihn frei nutzen, ändern und weitergeben. Wer eine veränderte Fassung weitergibt **oder als Online-Dienst für andere betreibt**, muss den eigenen Quellcode ebenfalls unter AGPL-3.0 offenlegen.
-Spieldaten, Modelle und daraus erzeugte Bilder gehören Cloud Imperium Games und fallen nicht unter diese Lizenz.
+### License
+The source code is licensed under the **GNU AGPL-3.0** (see [LICENSE](LICENSE)): you may use, change and share it freely. Anyone distributing a modified version **or running it as an online service for others** must publish their source code under AGPL-3.0 as well.
+Game data, models and renders derived from them belong to Cloud Imperium Games and are not covered by this license.
 
-Pliskin Industrie ist ein Fan-Projekt und steht in keiner Verbindung zu Cloud Imperium Games. Star Citizen® ist eine Marke von Cloud Imperium Rights LLC.
-
----
-
-## English
-
-Pliskin Industrie puts **blueprints, crafting plans, storage, mining and cargo tours** in one place. It reads your blueprints from Game.log, works out what your plans are still missing and where to find it. Game data (recipes, mining locations, quality, ships, map) comes straight from the game's `Data.p4k`.
-
-**Features:** To-do list · crafting plans with target quality (weighted average, best material first) · storage with qualities, crates and units · 3D freight elevator view with real SCU crates and drag & drop transfers · tour planner (shortest route, round trips, loading plan, map, fuel) · material atlas, refineries · mining trip planner · blueprint catalog with stats at Q0/Q500/Q1000, skins, sets and own renders · ship cargo grids · hotkey capture of in-game crate tooltips · phone and tablet UI · 7 designs (Star Citizen and Wing Commander inspired).
-
-### Download and start
-1. Get the file for your system under **Releases** (Windows `.exe`, Linux `…-linux-x86_64`).
-2. **Windows:** double-click. Windows may warn because the program is not signed → *More info* → *Run anyway*. Verify with `SHA256SUMS.txt`.
-   **Linux:** `chmod +x` the file and run it. If window components (Qt) are missing, Pliskin opens in your browser instead.
-3. On first start choose language, design and **start empty** or **try the demo**.
-
-Your data stays on your machine: Windows `%LOCALAPPDATA%\PliskinIndustrie`, Linux `~/.local/share/PliskinIndustrie` (daily backups). Nothing is fetched from the internet automatically.
-
-**Server mode** (Settings → Program) opens Pliskin to your home network for phones and laptops (home network only, no password).
-**Capture hotkey:** if Star Citizen runs as administrator, start Pliskin as administrator too (Settings → Program), or trigger the capture from your phone.
-**Updates:** checked on start (can be muted); any version can be installed under Settings → Program.
-
-**Help & bug reports:** in the program under *Help → Contact*, via [GitHub issues](../../issues/new/choose) or by mail to **pliskinindustrie@gmail.com**. The detailed manual ([docs/HANDBUCH.md](docs/HANDBUCH.md)) is in German for now.
-
-**License:** source code under the **GNU AGPL-3.0** ([LICENSE](LICENSE)) – free to use, change and share; anyone distributing a modified version **or running it as an online service for others** must publish their source under AGPL-3.0 too. Game data, models and renders derived from them belong to Cloud Imperium Games and are not covered.
-
-Fan project, not affiliated with Cloud Imperium Games. Star Citizen® is a trademark of Cloud Imperium Rights LLC. Rendering logic based on StarBreaker (MIT).
+Pliskin Industrie is a fan project and not affiliated with Cloud Imperium Games. Star Citizen® is a trademark of Cloud Imperium Rights LLC.

@@ -783,3 +783,9 @@ body.mob .mit .msym{width:38px;height:38px;margin:0 10px 0 0;flex:0 0 auto}
 .la-tab .la-zeile{cursor:pointer}
 .la-tab .la-zeile:hover td{background:rgba(255,255,255,.05)}
 .la-tab .la-zeile.on td{background:rgba(47,191,85,.14);box-shadow:inset 0 0 0 1px rgba(47,191,85,.45)}
+/* Erfassung: Blueprint-Zeile (Fabricator-Tooltip) */
+.erfrow.bp{grid-template-columns:minmax(150px,230px) minmax(220px,2fr) 170px auto}
+.erfrow.bp .erff.k b.ok{color:var(--ok,#5fd38a)}
+body.mob .erfrow.bp{grid-template-columns:1fr 1fr}
+body.mob .erfrow.bp .erff.bpn{grid-column:1/-1}
+@media (max-width:1300px){.erfrow.bp{grid-template-columns:200px 1fr 150px auto}.erfrow.bp .erfx{grid-column:auto;grid-row:auto}}

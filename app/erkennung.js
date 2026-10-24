@@ -271,6 +271,76 @@ const ERK = (() => {
     if (b != null && b > 1 && b < 2) return { v: norm(b - 1), sicher: false };   // „1.978“ = „0.978“ (Null als Eins gelesen)
     return { v: b ?? a, sicher: false };
   }
+  // Blueprint-Tooltip im Fabricator („Arbor MHV Mining Laser“): heller Text auf Petrol → Rot-Kanal, ×4, Schwelle
+  async function bpLesen(src) {
+    const I = await bild(src), s = document.createElement('canvas'); s.width = I.w; s.height = I.h;
+    const sg = s.getContext('2d'), id = sg.createImageData(I.w, I.h);
+    for (let i = 0; i < I.d.length; i += 4) { const g = 255 - Math.max(0, Math.min(255, (I.d[i] - 30) * 255 / 110)); id.data[i] = id.data[i + 1] = id.data[i + 2] = g; id.data[i + 3] = 255; }
+    sg.putImageData(id, 0, 0);
+    const k = 4, c = document.createElement('canvas'); c.width = I.w * k + 40; c.height = I.h * k + 40;
+    const g = c.getContext('2d', { willReadFrequently: true }); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height);
+    g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high'; g.drawImage(s, 20, 20, I.w * k, I.h * k);
+    const d = g.getImageData(0, 0, c.width, c.height);
+    for (let i = 0; i < d.data.length; i += 4) { const v = d.data[i] < 128 ? 0 : 255; d.data[i] = d.data[i + 1] = d.data[i + 2] = v; }
+    g.putImageData(d, 0, 0);
+    return nameLesen(c.toDataURL('image/png'));
+  }
+  // Kiste im Traktorstrahl: Zeile „100.0% TITANIUM [AVG 295Q]“ (hellblau) + darunter „1.2t“ (weiß)
+  function maske(I, test, [fx0, fy0, fx1, fy1] = [0, 0, 1, 1], k = 4) {   // Ausschnitt (Anteile) → schwarz auf weiß, weich vergrößert, Schwelle
+    const x0 = Math.round(I.w * fx0), y0 = Math.round(I.h * fy0), w = Math.round(I.w * fx1) - x0, h = Math.round(I.h * fy1) - y0;
+    const s = document.createElement('canvas'); s.width = w; s.height = h;
+    const sg = s.getContext('2d'), id = sg.createImageData(w, h);
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      const i = ((y0 + y) * I.w + x0 + x) * 4, o = (y * w + x) * 4, v = test(I.d[i], I.d[i + 1], I.d[i + 2]) ? 0 : 255;
+      id.data[o] = id.data[o + 1] = id.data[o + 2] = v; id.data[o + 3] = 255;
+    }
+    sg.putImageData(id, 0, 0);
+    const c = document.createElement('canvas'); c.width = w * k + 40; c.height = h * k + 40;
+    const g = c.getContext('2d', { willReadFrequently: true }); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height);
+    g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high'; g.drawImage(s, 20, 20, w * k, h * k);
+    const d = g.getImageData(0, 0, c.width, c.height);
+    for (let i = 0; i < d.data.length; i += 4) { const v = d.data[i] < 140 ? 0 : 255; d.data[i] = d.data[i + 1] = d.data[i + 2] = v; }
+    g.putImageData(d, 0, 0);
+    return c.toDataURL('image/png');
+  }
+  const blau = (r, g, b) => b > 190 && g > 150 && r < 175 && b - r > 60 && b - g > 15;   // nur das Hellblau, nicht das Grün von „ATTACHING …“
+  async function traktorLesen(src) {
+    const I = await bild(src), w = await tess();
+    await w.setParameters({ tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.%[]() ', tessedit_pageseg_mode: '6' });
+    const z1 = (await w.recognize(maske(I, (r, g, b) => b > 190 && g > 150 && r < 175 && b - r > 60, [0, 0, 1, 1], 3))).data.text || '';
+    await w.setParameters({ tessedit_pageseg_mode: '7' });
+    const z2 = (await w.recognize(maske(I, blau, [0, 0, 1, 0.45]))).data.text || '';
+    await w.setParameters({ tessedit_char_whitelist: '0123456789.t', tessedit_pageseg_mode: '6' });
+    const tt = (await w.recognize(maske(I, (r, g, b) => r > 175 && g > 175 && b > 175 && Math.abs(r - b) < 45, [0, 0.38, 0.75, 1]))).data.text || '';
+    await w.setParameters({ tessedit_char_whitelist: '', tessedit_pageseg_mode: '7' });
+    // Material = Wörter vor „AVG“; Qualität = 3 Ziffern nach AVG (das „Q“ wird oft als 0 gelesen). Zwei Lesarten, beide zählen.
+    const teil = zz => {
+      const z = zz.replace(/\s+/g, ' ').trim(), m = z.match(/([A-Z][A-Z ]{2,}?)\s*[\[(]?\s*AV[GE6C]?\s*(\d{2,5})/);
+      let q = null; if (m) { const d = m[2]; q = d.startsWith('1000') ? 1000 : d.length >= 3 ? +d.slice(0, 3) : null; if (q > 1000) q = null; }
+      const mat = (m ? m[1] : z.replace(/\bAV[GE]\b.*$/, '')).replace(/\b(ATTACHING|ATTACHE|TO|TQ|TA|CARGO|GRID|GR)\b|[^A-Z ]/g, ' ').replace(/\s+/g, ' ').trim();
+      return { z, q, mat };
+    };
+    const A = teil(z1), B = teil(z2), z = A.z + ' | ' + B.z;
+    const q = A.q != null && B.q != null && A.q !== B.q ? A.q : (A.q ?? B.q);
+    const tm = tt.replace(/\s+/g, '').match(/(\d{1,2})[.,](\d)t?/) || tt.replace(/\s+/g, '').match(/[.,](\d)t/);
+    const t = !tm ? null : tm.length === 3 ? +(tm[1] + '.' + tm[2]) : +('1.' + tm[1]);
+    return { roh: z, mat: A.mat || B.mat, mats: [A.mat, B.mat].filter(Boolean), q, qSicher: A.q != null && A.q === B.q, t, tRoh: tt.replace(/\s+/g, ' ').trim() };
+  }
+  // Kistengröße aus dem Gewicht: volle Kiste wiegt fest (kisten.json „masse“), Anzeige = abgeschnitten auf 0,1 t
+  function kisteAusGewicht(t, masse) {
+    if (t == null || !masse) return null;
+    let best = null, bd = 1e9;
+    for (const [scu, kg] of Object.entries(masse)) { const d = Math.abs(Math.floor(kg / 100) / 10 - t); if (d < bd) { bd = d; best = +scu; } }
+    return best != null && bd <= Math.max(0.15, t * 0.25) ? best : null;   // Lesefehler (5.8 statt 5.0) noch zuordnen, Größen liegen je ×2 auseinander
+  }
+  // Blueprint-Name aus der Lesart: erst genau, dann ähnlichster ganzer Name (Tippfehler ≤ 25 %)
+  function bpFinden(roh, liste) {
+    const n = x => (x || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim(), r = n(roh);
+    if (r.length < 3) return null;
+    let best = null, bs = 1e9;
+    for (const b of liste) { const l = n(b.name); if (l === r) return b; const d = lev(r, l) / Math.max(l.length, 1); if (d < bs) { bs = d; best = b; } }
+    return bs <= 0.25 ? best : null;
+  }
   const vorladen = () => tess().catch(() => null);
-  return { qLesen, felder, bild, vorladen, mengeKombi, KISTEN, erkenne, lerne, zerlege, nameLesen, mengeLesen, naechster, lies };
+  return { traktorLesen, kisteAusGewicht, bpLesen, bpFinden, qLesen, felder, bild, vorladen, mengeKombi, KISTEN, erkenne, lerne, zerlege, nameLesen, mengeLesen, naechster, lies };
 })();

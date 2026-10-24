@@ -58,6 +58,23 @@ async function erfVerarbeiten() {
     for (const it of ERF.d.items) {
       if (it.res || !it.img) continue;
       let res;
+      if (/^traktor-/.test(it.name || it.id)) {   // Kiste im Traktorstrahl: Material + Ø-Qualität + Gewicht → Kistengröße
+        try {
+          const r = await ERK.traktorLesen(it.img), mat = erfMat(r.mats.length ? r.mats : [r.mat]);
+          const masse = mat && (kstRes(mat.id) || {}).masse, k = ERK.kisteAusGewicht(r.t, masse);
+          res = { art: 'traktor', matRoh: r.mat || r.roh, rohs: r.mats, mat: mat ? mat.id : '', matErkannt: mat ? mat.name : '', matName: mat ? mat.name : r.mat, q: r.q, amt: k, loc: erfOrt(it.loc),
+            hinweis: k ? `Traktorstrahl: ${F(r.t, 1)} t = volle ${k}-SCU-Kiste (Menge angenommen, angebrochene Kisten bitte anpassen)` : `Traktorstrahl: Gewicht ${r.t != null ? F(r.t, 1) + ' t' : 'nicht gelesen'} – Kistengröße bitte eintragen`,
+            unsicher: { mat: !mat, q: !r.qSicher, amt: !k } };
+        } catch (e) { res = { art: 'traktor', fehler: e.message, loc: erfOrt(it.loc) }; }
+        it.res = res; call('erfassung_setzen', it.id, res); erfZeichnen(); continue;
+      }
+      if (erfIstBp(it)) {   // Blueprint-Tooltip aus dem Fabricator
+        try {
+          const roh = await ERK.bpLesen(it.img), b = ERK.bpFinden(roh, R.blueprints || []);
+          res = { art: 'bp', roh, bp: b ? b.id : '', bpName: b ? b.name : roh, unsicher: { bp: !b } };
+        } catch (e) { res = { art: 'bp', fehler: e.message, bp: '', bpName: '' }; }
+        it.res = res; call('erfassung_setzen', it.id, res); erfZeichnen(); continue;
+      }
       try {
         const r = await ERK.erkenne(it.img, T);
         if (!r.ok) res = { fehler: r.error, loc: erfOrt(it.loc) };
@@ -87,11 +104,26 @@ function erfZeichnen() {
   const k = document.querySelector('[data-lt="scan"]'); if (k) k.textContent = '📷 Erfassung' + (erfOffen() ? ' · ' + erfOffen() : '');
 }
 
+const erfIstBp = it => /^bp-/.test(it.name || it.id || '');
+function bpChoices(q) {
+  q = q.toLowerCase();
+  return (R.blueprints || []).filter(b => !q || b.name.toLowerCase().includes(q)).slice(0, 40).map(b => ({ label: b.name, value: b.id, hint: isOwned(b.id) ? '✓ hab ich schon' : (b.type_de || b.type || '') }));
+}
+function erfBpZeile(it, img, zeit) {
+  const r = it.res, u = r.unsicher || {}, schon = r.bp && isOwned(r.bp);
+  return `<div class="erfrow bp ${r.fehler ? 'bad' : ''}" data-id="${esc(it.id)}">
+    <div class="erfimg">${img}</div>
+    <div class="erff bpn"><label>Blueprint</label><span><input data-f="bp" class="${u.bp ? 'unsicher' : ''}" value="${esc(r.bpName || '')}" placeholder="${esc(r.roh ? '„' + r.roh + '“?' : 'Blueprint-Name')}"></span></div>
+    <div class="erff k"><label>Status</label><b class="${schon ? '' : r.bp ? 'ok' : 'warn'}">${schon ? '✓ hab ich schon' : r.bp ? '→ wird „hab ich“' : '?'}</b></div>
+    <div class="erfx"><span class="dim erfzeit">${zeit}</span><button class="k sm x" data-weg="${esc(it.id)}" title="Verwerfen">✕</button></div>
+    ${r.fehler ? `<div class="erfhint bad">${esc(r.fehler)}</div>` : ''}</div>`;
+}
 function erfZeile(it) {
   const r = it.res;
   const img = it.img ? `<img src="${it.img}" alt="" title="Drüberfahren/Antippen = groß">` : '<span class="dim">kein Bild</span>';
   const zeit = new Date(it.ts * 1000).toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
   if (!r) return `<div class="erfrow" data-id="${esc(it.id)}"><div class="erfimg">${img}</div><div class="dim">wird gelesen …</div><span class="dim erfzeit">${zeit}</span></div>`;
+  if (r.art === 'bp') return erfBpZeile(it, img, zeit);
   const u = r.unsicher || {}, k = erfKiste(r.amt);
   return `<div class="erfrow ${r.fehler ? 'bad' : ''}" data-id="${esc(it.id)}">
     <div class="erfimg">${img}</div>
@@ -107,12 +139,15 @@ function erfZeile(it) {
 function erfHtml() {
   const items = ERF.d.items || [], key = (ERF.key && ERF.key.hotkey) || 'Pause';
   const scu = items.reduce((a, it) => a + (it.res && it.res.amt > 0 ? +it.res.amt : 0), 0);
+  const nBp = items.filter(erfIstBp).length, nK = items.length - nBp;
   const unsicher = items.filter(it => it.res && (it.res.fehler || Object.values(it.res.unsicher || {}).some(Boolean))).length;
-  const head = `<span class="pill">📷 Erfassung</span><span class="sub">${items.length} ${items.length === 1 ? 'Kiste' : 'Kisten'} · ${F(scu, 3)} SCU${unsicher ? ` · <span class="warn">${unsicher} prüfen</span>` : ''}</span>`;
+  const head = `<span class="pill">📷 Erfassung</span><span class="sub">${nK} ${nK === 1 ? 'Kiste' : 'Kisten'} · ${F(scu, 3)} SCU${nBp ? ` · ${nBp} Blueprint${nBp === 1 ? '' : 's'}` : ''}${unsicher ? ` · <span class="warn">${unsicher} prüfen</span>` : ''}</span>`;
   if (!erfOk()) return `<div id="erf" class="win tight">${head}<div class="hint">Die Erfassung braucht den Pliskin-Server (Pi oder fertiges Programm).</div></div>`;
   const fern = `<div class="row2" style="margin:6px 0"><button class="k sm pri" id="erf-fern">📷 Jetzt am PC erfassen</button><span class="erfpc ${ERF.pc ? 'ok' : 'dim'}" style="font:12px var(--vdu)">${erfPcText()}</span><span class="dim" id="erf-fernw" style="font:12px var(--vdu)"></span></div>`;
   const how = fern + `<div class="hint">So geht's: Im Spiel Inventar oder Freight Manager öffnen, Maus über eine Kiste halten (Tooltip sichtbar) und <b>${esc(key)}</b> drücken – jeder Druck = eine Kiste.
-    Hoher Ton = erfasst, tiefer Ton = kein Tooltip gefunden. Hier prüfen, dann „Passt – einlagern“. ${ERF.key ? '' : '<br>Die Taste gibt es im Programm (Pliskin Industrie.exe) auf dem Spiele-PC.'}
+    Hoher Ton = erfasst, tiefer Ton = kein Tooltip gefunden.
+    <b>Traktorstrahl:</b> Kiste mit dem Multi-Tool festhalten (Anzeige „100.0% TITANIUM [AVG 295Q]“ + Gewicht) und Taste drücken – die Kistengröße kommt aus dem Gewicht.
+    <b>Blueprints:</b> im Fabrication Kiosk mit der Maus über einen Blueprint fahren (Name erscheint) und dieselbe Taste drücken → wird hier als „hab ich“ vorgeschlagen. Hier prüfen, dann „Passt – einlagern“. ${ERF.key ? '' : '<br>Die Taste gibt es im Programm (Pliskin Industrie.exe) auf dem Spiele-PC.'}
     <span class="unsicher" style="padding:0 4px">gelb</span> = bitte kurz prüfen.<br>
     <b>Wichtig:</b> Läuft Star Citizen (bzw. der RSI-Launcher) als Administrator, kommt die Taste im Spiel nur an, wenn Pliskin auch als Administrator läuft
     (Einstellungen → Programm → „Als Administrator neu starten“). Alternativ vom Handy auslösen: „+“ → 📷 Kiste am PC erfassen.</div>`;
@@ -120,7 +155,7 @@ function erfHtml() {
   return `<div id="erf" class="win tight">${head}${how}
     <div class="row2" style="margin:8px 0"><span class="dim" style="font:12px var(--vdu)">Ort für alle:</span><span><input id="erf-ort" placeholder="Lagerort" style="width:240px"></span><button class="k sm" id="erf-ort-go">Übernehmen</button></div>
     <div class="erflist">${items.slice().reverse().map(erfZeile).join('')}</div>
-    <div class="foot" style="margin-top:10px"><button class="k x" id="erf-alle-weg">Alle verwerfen</button>${APP && APP.edition === 'release' ? '' : '<button class="k" id="erf-lern" title="Korrigierte Werte als Lernmuster übernehmen, aber nichts ins Lager buchen (nur private Ausgabe – Gelerntes kommt mit ins Release)">Nur lernen</button>'}<button class="k pri" id="erf-go">Passt – ${items.length} ${items.length === 1 ? 'Kiste' : 'Kisten'} einlagern</button></div></div>`;
+    <div class="foot" style="margin-top:10px"><button class="k x" id="erf-alle-weg">Alle verwerfen</button>${APP && APP.edition === 'release' ? '' : '<button class="k" id="erf-lern" title="Korrigierte Werte als Lernmuster übernehmen, aber nichts ins Lager buchen (nur private Ausgabe – Gelerntes kommt mit ins Release)">Nur lernen</button>'}<button class="k pri" id="erf-go">Passt – ${[nK ? nK + ' ' + (nK === 1 ? 'Kiste' : 'Kisten') + ' einlagern' : '', nBp ? nBp + ' Blueprint' + (nBp === 1 ? '' : 's') + ' übernehmen' : ''].filter(Boolean).join(' + ')}</button></div></div>`;
 }
 function erfBind(root) {
   const el = $('#erf', root) || $('#erf'); if (!el) return;
@@ -128,9 +163,11 @@ function erfBind(root) {
   const setz = (it, f, v) => { it.res = it.res || {}; it.res[f] = v; if (it.res.unsicher) it.res.unsicher[f] = false; call('erfassung_setzen', it.id, it.res); };
   $$('.erfrow input[data-f="mat"]', el).forEach(i => attachAC(i, materialChoices, p => { const it = item(i); setz(it, 'mat', p.value); it.res.matName = p.label; i.classList.remove('unsicher'); }));
   $$('.erfrow input[data-f="loc"]', el).forEach(i => attachAC(i, locationChoices, p => setz(item(i), 'loc', p.label)));
+  $$('.erfrow input[data-f="bp"]', el).forEach(i => attachAC(i, bpChoices, p => { const it = item(i); setz(it, 'bp', p.value); it.res.bpName = p.label; i.classList.remove('unsicher'); erfZeichnenSofort(); }));
   $$('.erfrow input', el).forEach(i => i.onchange = () => {
     const it = item(i), f = i.dataset.f;
-    if (f === 'mat') { const m = erfMat(i.value) || { id: i.dataset.value || ('uex:' + i.value.trim()), name: i.value.trim() }; setz(it, 'mat', m.id); it.res.matName = m.name; }
+    if (f === 'bp') { const b = ERK.bpFinden(i.value, R.blueprints || []); setz(it, 'bp', b ? b.id : ''); it.res.bpName = b ? b.name : i.value.trim(); if (!b) { i.classList.add('unsicher'); return; } }
+    else if (f === 'mat') { const m = erfMat(i.value) || { id: i.dataset.value || ('uex:' + i.value.trim()), name: i.value.trim() }; setz(it, 'mat', m.id); it.res.matName = m.name; }
     else if (f === 'q') setz(it, 'q', i.value === '' ? null : Math.max(0, Math.min(1000, Math.round(num(i.value)))));
     else if (f === 'amt') setz(it, 'amt', num(i.value) > 0 ? num(i.value) : null);
     else setz(it, 'loc', i.value.trim());
@@ -155,10 +192,21 @@ function erfBind(root) {
     const w = $('#erf-fernw'); try { await erfFernFoto(t => w && (w.textContent = t)); } catch (e) { const w2 = $('#erf-fernw'); if (w2) w2.textContent = '⚠ ' + e.message; }
   };
 }
+function erfZeichnenSofort() { const el = $('#erf'); if (el) { el.outerHTML = erfHtml(); erfBind($('#erf').parentElement); } }
 async function erfEinlagern(nurLernen) {
-  const items = ERF.d.items.filter(it => it.res);
+  if (ERF.d.items.some(it => !it.res)) { toast('Es wird noch gelesen – kurz warten'); return; }
+  const bps = ERF.d.items.filter(it => it.res.art === 'bp');
+  if (bps.some(it => !it.res.bp)) { toast('Bei einem Blueprint fehlt noch der Name'); return; }
+  let neuBp = 0;
+  if (!nurLernen) for (const it of bps) if (!isOwned(it.res.bp)) { S.owned[it.res.bp] = { src: 'bild', ts: now() }; neuBp++; hist('Blueprint per Erfassung: ' + (BP[it.res.bp] || {}).name); }
+  if (bps.length && ERF.d.items.length === bps.length) {   // nur Blueprints
+    await call('erfassung_fertig', bps.map(it => it.id), null, !!nurLernen);
+    if (!nurLernen) toast(`${neuBp} Blueprint${neuBp === 1 ? '' : 's'} als „hab ich“ übernommen${bps.length > neuBp ? ` (${bps.length - neuBp} hattest du schon)` : ''}`);
+    save(); await erfLaden(true); render(); return;
+  }
+  if (bps.length) await call('erfassung_fertig', bps.map(it => it.id), null, !!nurLernen);
+  const items = ERF.d.items.filter(it => it.res && it.res.art !== 'bp');
   const fehlt = items.filter(it => !it.res.mat || !(it.res.amt > 0));
-  if (items.length < ERF.d.items.length) { toast('Es wird noch gelesen – kurz warten'); return; }
   if (fehlt.length) { toast(`${fehlt.length} ${fehlt.length === 1 ? 'Kiste hat' : 'Kisten haben'} noch kein Material oder keine Menge`); return; }
   const ohneOrt = nurLernen ? 0 : items.filter(it => !(it.res.loc || '').trim()).length;
   if (ohneOrt && !await ask(`${ohneOrt} ${ohneOrt === 1 ? 'Kiste hat' : 'Kisten haben'} keinen Lagerort. Trotzdem einlagern?`, 'Einlagern')) return;
@@ -182,14 +230,14 @@ async function erfEinlagern(nurLernen) {
   S.settings.erfNamen = S.settings.erfNamen || {};
   for (const it of items) { const r = it.res; if (r.rohs && r.matName && r.matName !== r.matErkannt) for (const x of r.rohs) { const k = (x || '').toLowerCase().trim(); if (k.length >= 2) S.settings.erfNamen[k] = r.matName; } }
   // bestätigte Werte = Lernmuster (Text genau wie im Tooltip: „0.898SCU“, „4SCU“)
-  const lernen = items.filter(it => it.res.q != null && it.res.amt > 0 && !it.res.fehler)
+  const lernen = items.filter(it => it.res.art !== 'traktor' && it.res.q != null && it.res.amt > 0 && !it.res.fehler)
     .map(it => ({ id: it.id, q: String(it.res.q), a: (it.res.amt < 1 ? (+it.res.amt).toFixed(3) : String(+it.res.amt)) + 'SCU' }));
   await call('erfassung_fertig', items.map(it => it.id), lernen, !!nurLernen);
   ERF.T = null;
   if (nurLernen) toast(`${lernen.length} Kisten als Lernmuster übernommen – nichts eingelagert`);
   else {
     setComm(`EINGELAGERT · ${items.length} KISTEN`);
-    toast(`${items.length} ${items.length === 1 ? 'Kiste' : 'Kisten'} eingelagert (${gruppen.size} ${gruppen.size === 1 ? 'Posten' : 'Posten'})`);
+    toast(`${items.length} ${items.length === 1 ? 'Kiste' : 'Kisten'} eingelagert (${gruppen.size} Posten)${neuBp ? ` · ${neuBp} Blueprint${neuBp === 1 ? '' : 's'} übernommen` : ''}`);
   }
   save(); await erfLaden(true); render();
 }

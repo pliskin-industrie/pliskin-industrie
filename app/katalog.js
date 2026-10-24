@@ -305,7 +305,11 @@ function kDetail(ctx) {
   }
   ctx.id = id;
   const k = kOf(id), b = BP[id] || {};
-  h += `<div class="row2" style="margin-top:6px">${kBadges(id, k.st)}</div><div class="hint" style="margin-top:2px">${KST_HELP[k.st]}${(k.ev || []).length ? ' Event: ' + k.ev.map(esc).join(', ') + '.' : ''}</div>
+  const own = isOwned(id), ownSrc = own && S.owned[id].src === 'log' ? 'laut Log' : own && S.owned[id].src === 'bild' ? 'per Erfassung' : 'von Hand';
+  const setOpen = e.kind === 'set' ? e.setIds.filter(x => kCraft(x) && !isOwned(x)).length : 0;
+  const ownRow = kCraft(id) ? `<div class="row2 kown" style="margin-top:6px">${own ? `<span class="tag ok">✓ hab ich · ${ownSrc}</span><button class="k sm x" id="kd-unown">Blueprint entfernen</button>`
+    : `<button class="k sm pri" id="kd-own">✓ Blueprint hab ich</button>`}${setOpen ? `<button class="k sm" id="kd-ownset">✓ ganzes Set hab ich (${setOpen})</button>` : ''}</div>` : '';
+  h += `${ownRow}<div class="row2" style="margin-top:6px">${kBadges(id, k.st)}</div><div class="hint" style="margin-top:2px">${KST_HELP[k.st]}${(k.ev || []).length ? ' Event: ' + k.ev.map(esc).join(', ') + '.' : ''}</div>
     ${(b.pools || []).filter(p => W && W.pools[p]).map(p => scLinks(p, 3)).join('')}
     ${!kCraft(id) ? `<div class="hint" style="margin-top:8px">Kein Blueprint → keine Rezept- und Qualitätswerte.</div>` : `<div class="flbl">Werte${e.kind === 'set' ? ' · ' + esc(kName(id)) : ''} · Basis und mit Material-Qualität</div>
     <div class="kqrow">Qualität <input type="range" id="kd-q" min="0" max="1000" step="10" value="${ctx.q}"><b id="kd-qv">${ctx.q}</b></div>
@@ -328,6 +332,18 @@ function kBindDetail(ctx) {
   if (q) q.oninput = () => { ctx.q = +q.value; $('#kd-qv', el).textContent = ctx.q; $('#kd-qa', el).textContent = ctx.q; $('#kd-tab', el).innerHTML = kStatTable(ctx.id, ctx.q); };
   const n = $('#kd-n', el); if (n) n.oninput = () => { ctx.n = Math.max(1, Math.round(num(n.value)) || 1); };
   const mo = $('#kd-more', el); if (mo) mo.onclick = () => openBpDetail(ctx.id);
+  const setOwn = (ids, an) => {   // Blueprints von Hand hinzufügen / entfernen (Log-Sync fügt geloggte wieder hinzu)
+    ids.forEach(x => { if (an) S.owned[x] = { src: 'hand', ts: now() }; else delete S.owned[x]; });
+    hist((an ? 'Blueprint von Hand hinzugefügt: ' : 'Blueprint entfernt: ') + ids.map(kName).join(', '));
+    save(); toast(an ? '✓ ' + (ids.length > 1 ? ids.length + ' Blueprints' : kName(ids[0])) + ' – hab ich' : 'Blueprint entfernt'); if (ctx.modal) render(); else { kRe(ctx); const l = $('#lcd-bp'); if (l) l.textContent = Object.keys(S.owned).length; }
+  };
+  const ow = $('#kd-own', el); if (ow) ow.onclick = () => setOwn([ctx.id], true);
+  const uo = $('#kd-unown', el); if (uo) uo.onclick = () => {
+    const log = S.owned[ctx.id] && S.owned[ctx.id].src === 'log';
+    if (log && !confirm('Laut Game.log hast du diesen Blueprint. Trotzdem entfernen? (Beim nächsten Log-Sync kommt er wieder.)')) return;
+    setOwn([ctx.id], false);
+  };
+  const os = $('#kd-ownset', el); if (os) os.onclick = () => setOwn(e.setIds.filter(x => kCraft(x) && !isOwned(x)), true);
   const addB = $('#kd-add', el); if (!addB) return;
   addB.onclick = async () => {
     let plan = ctx.plan;

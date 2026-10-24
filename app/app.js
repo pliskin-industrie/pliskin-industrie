@@ -1112,7 +1112,7 @@ function renderBlueprints() {
     <div class="chips2">${[['all', 'Alle'], ['own', 'Hab ich (' + owned + ')'], ['plan', 'In Plänen (' + inPlan.size + ')'], ['miss', 'Fehlen']].map(([k, l]) => `<span data-bf="${k}" class="${ui.bpFilter === k ? 'on' : ''}">${l}</span>`).join('')}</div>
     <div class="scroll"><table class="ptab"><tr><th class="l">Name</th><th class="l">Typ</th><th>Gr.</th><th class="l">Hersteller</th><th class="l">Status</th><th class="l">Quelle</th><th></th></tr>
     ${shown.map(b => `<tr class="clickrow" data-bp="${b.id}"><td class="name">${esc(b.name)}</td><td class="l dim">${esc(b.type_de || '')}</td><td>${b.size ?? ''}</td><td class="l dim">${esc(b.maker || '')}</td>
-      <td class="l">${isOwned(b.id) ? `<span class="tag ok">✓ ${S.owned[b.id].src === 'hand' ? 'von Hand' : 'Log'}</span>` : '<span class="tag">fehlt</span>'}${inPlan.has(b.id) ? ' <span class="tag warn">im Plan</span>' : ''}</td>
+      <td class="l">${isOwned(b.id) ? `<span class="tag ok">✓ ${S.owned[b.id].src === 'hand' ? 'von Hand' : S.owned[b.id].src === 'bild' ? 'Erfassung' : 'Log'}</span>` : '<span class="tag">fehlt</span>'}${inPlan.has(b.id) ? ' <span class="tag warn">im Plan</span>' : ''}</td>
       <td class="l dim" style="font-size:12px">${b.pools && b.pools.length ? b.pools.length + ' Missions-Pool(s)' : '–'}</td><td><button class="k sm" data-addbp="${b.id}">+ Plan</button></td></tr>`).join('')}
     </table></div>${list.length > shown.length ? `<div class="hint">${list.length - shown.length} weitere – Suche eingrenzen.</div>` : ''}${!list.length ? '<div class="empty">Nichts gefunden.</div>' : ''}</div>`;
   const el = $('#bp'); el.innerHTML = h;
@@ -1149,7 +1149,7 @@ function openBpDetail(id) {
   };
   openModal(`<h3>${esc(b.name)}</h3>
     <div class="dim" style="font-family:var(--vdu)">${esc(b.type_de || '')}${b.size ? ' · Größe ' + b.size : ''}${b.maker ? ' · ' + esc(b.maker) : ''} · Herstellzeit ${fmtDur(craftTime(b))}${b.name_de && b.name_de !== b.name && !/NOT FOUND/i.test(b.name_de) ? ' · DE: ' + esc(b.name_de) : ''}</div>
-    <div style="margin:8px 0">${isOwned(id) ? `<span class="tag ok">✓ hab ich (${S.owned[id].src === 'hand' ? 'von Hand' : 'laut Log, ' + fmtTime(S.owned[id].ts)})</span>` : '<span class="tag bad">✗ fehlt noch</span>'}</div>
+    <div style="margin:8px 0">${isOwned(id) ? `<span class="tag ok">✓ hab ich (${S.owned[id].src === 'hand' ? 'von Hand' : S.owned[id].src === 'bild' ? 'per Erfassung' : 'laut Log, ' + fmtTime(S.owned[id].ts)})</span>` : '<span class="tag bad">✗ fehlt noch</span>'}</div>
     <div class="form"><div class="fld"><label>Qualität des Materials (zeigt die Wirkung)</label><input id="bd-q" type="range" min="0" max="1000" step="10" value="${S.settings.defaultQ}" style="width:260px"></div><b id="bd-qv" class="green" style="font:20px var(--vdu)">${S.settings.defaultQ}</b></div>
     <div id="bd-slots">${draw(S.settings.defaultQ)}</div>
     <div class="slot"><div class="sn">Blueprint bekommt man aus diesen Missionen</div>${(b.pools || []).map(p => poolDetail(p) + (typeof scLinks === 'function' ? scLinks(p, 4) : '')).join('') || '<div class="dim">Keine Missions-Belohnung bekannt (evtl. Standard-Blueprint oder andere Quelle).</div>'}<div class="dim" style="font-size:12px;margin-top:4px">Quelle: Spieldaten ${esc(R.patch || '')} (Missions-Verträge) · Rang = Ruf-Stufe beim Auftraggeber · Links: SCMDB</div></div>

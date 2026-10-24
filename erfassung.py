@@ -68,6 +68,79 @@ def tooltip_box(w, h, bgra):
     return (max(0, x0 - 40), max(0, yc - 125), min(w, x0 + 360), min(h, yc + 40))
 
 
+def _petrol(r, g, b):
+    return r < 16 and 50 <= g <= 76 and 50 <= b <= 76 and abs(g - b) < 9
+
+
+def bp_box(w, h, bgra):
+    """Blueprint-Tooltip im Fabrication Kiosk (Name in petrolfarbenem Kasten neben der Maus) → (x0, y0, x1, y1) oder None.
+    Zeilen mit langem petrolfarbenem Lauf sammeln; Text-Zeilen dazwischen dürfen fehlen; gleiche rechte Kante = ein Kasten."""
+    s = h / 1125.0
+    minrun, maxgap = int(150 * s), 6 * s
+    rows = []
+    for y in range(0, h, 2):
+        o = y * w * 4
+        best, st, gap, last = (0, 0), None, 0, 0
+        for x in range(0, w, 2):
+            i = o + x * 4
+            if _petrol(bgra[i + 2], bgra[i + 1], bgra[i]):
+                if st is None: st = x
+                last, gap = x, 0
+            elif st is not None:
+                gap += 1
+                if gap > maxgap:
+                    if last - st > best[1] - best[0]: best = (st, last)
+                    st, gap = None, 0
+        if st is not None and last - st > best[1] - best[0]: best = (st, last)
+        if best[1] - best[0] >= minrun:
+            rows.append((best[0], best[1], y))
+    boxes, cur = [], None
+    for r in rows + [None]:
+        if r and cur and r[2] - cur[3] <= 24 * s and abs(r[1] - cur[1]) < 10 * s:
+            cur = (min(cur[0], r[0]), max(cur[1], r[1]), cur[2], r[2])
+        else:
+            if cur: boxes.append(cur)
+            cur = (r[0], r[1], r[2], r[2]) if r else None
+    boxes = [b for b in boxes if 22 * s <= b[3] - b[2] <= 70 * s]
+    if not boxes:
+        return None
+    b = max(boxes, key=lambda b: (b[1] - b[0]) * (b[3] - b[2]))
+    return (max(0, b[0] - 4), max(0, b[2] - 4), min(w, b[1] + 6), min(h, b[3] + 6))
+
+
+def _hudblau(r, g, b):
+    return b > 200 and g > 170 and r < 170 and b - r > 70
+
+
+def traktor_box(w, h, bgra):
+    """Traktorstrahl-Anzeige („100.0% TITANIUM [AVG 295Q]“, darunter „1.2t“) in der Bildmitte → (x0, y0, x1, y1) oder None.
+    Hellblaue Textzeile suchen (Mitte des Bildes), Ausschnitt links bis zum Kreis/Gewicht, unten bis unter die Tonnen-Zeile."""
+    xa, xb, ya, yb = int(w * .30), int(w * .88), int(h * .30), int(h * .78)
+    rows = {}
+    for y in range(ya, yb, 2):
+        o = y * w * 4
+        n = 0
+        for x in range(xa, xb, 2):
+            i = o + x * 4
+            if _hudblau(bgra[i + 2], bgra[i + 1], bgra[i]): n += 1
+        if n: rows[y] = n
+    if not rows: return None
+    ym = max(rows, key=rows.get)
+    if rows[ym] < 40 * w / 2560: return None
+    t = b = ym
+    while rows.get(t - 2, 0) >= rows[ym] * 0.15: t -= 2
+    while rows.get(b + 2, 0) >= rows[ym] * 0.15: b += 2
+    xs = []
+    for y in range(t, b + 1, 2):
+        o = y * w * 4
+        xs += [x for x in range(xa, xb, 2) if _hudblau(bgra[o + x * 4 + 2], bgra[o + x * 4 + 1], bgra[o + x * 4])]
+    if not xs: return None
+    xs.sort(); x0, x1 = xs[int(len(xs) * .01)], xs[int(len(xs) * .99)]
+    zh = b - t + 2
+    if x1 - x0 < 8 * zh or zh > 0.05 * h: return None   # keine Textzeile
+    return (max(0, x0 - int(3.5 * zh)), max(0, t - zh // 2), min(w, x1 + zh), min(h, b + int(2.2 * zh)))
+
+
 def ausschnitt(w, h, bgra, box):
     x0, y0, x1, y1 = box
     cw = x1 - x0
@@ -174,23 +247,27 @@ class Warteschlange:
         while True:
             w, h, px, stamp = self.q.get()
             try:
-                box = tooltip_box(w, h, px)
+                box, art = traktor_box(w, h, px), "traktor"   # Kiste im Traktorstrahl (zuerst: violette Holo-Kisten im Hintergrund täuschen sonst den Kisten-Tooltip)
+                if not box:
+                    box, art = tooltip_box(w, h, px), "kiste"
+                if not box:
+                    box, art = bp_box(w, h, px), "bp"   # kein Kisten-Tooltip → Blueprint im Fabricator?
                 if not box:
                     os.makedirs(self.ziel_dir, exist_ok=True)   # zur Fehlersuche ganzes Bild behalten
                     with open(os.path.join(self.ziel_dir, "ohne-tooltip-%s.png" % stamp), "wb") as f:
                         f.write(png_bytes(w, h, px))
                     ton(False)
-                    if self.melden: self.melden("Kein Tooltip gefunden – Maus über eine Kiste halten", False)
+                    if self.melden: self.melden("Nichts gefunden – Maus über Kiste/Blueprint halten oder Kiste im Traktorstrahl", False)
                     continue
                 cw, ch, cut = ausschnitt(w, h, px, box)
                 data = png_bytes(cw, ch, cut)
                 threading.Thread(target=ton, args=(True,), daemon=True).start()   # Ton sofort, Senden läuft weiter
                 loc = self.ort() if self.ort else None
-                ok, extra = (self.senden("kiste-%s.png" % stamp, data, loc) if self.senden else (True, "gespeichert"))
+                ok, extra = (self.senden("%s-%s.png" % (art, stamp), data, loc) if self.senden else (True, "gespeichert"))
                 if not ok:
                     ton(False)
                 rest = self.q.qsize()
-                if self.melden: self.melden("Kiste erfasst – " + extra + (" · noch %d in der Schlange" % rest if rest else ""), ok)
+                if self.melden: self.melden(("Blueprint" if art == "bp" else "Kiste (Traktorstrahl)" if art == "traktor" else "Kiste") + " erfasst – " + extra + (" · noch %d in der Schlange" % rest if rest else ""), ok)
             except Exception as e:
                 ton(False)
                 if self.melden: self.melden("Erfassung fehlgeschlagen: %s" % e, False)
