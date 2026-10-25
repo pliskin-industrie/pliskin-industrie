@@ -3,7 +3,7 @@
    zeichnet nur die Bildschirme neu (To-do, Plaene, Lager, Mehr …). */
 
 const M = { view: 'todo', back: [], todoKind: 'all', lagerQ: '', planTab: 'parts', openPart: null };
-const TAB = !!window.HYSEC_TABLET;
+const TAB = !!window.PLISKIN_TABLET;
 const ROOTS = TAB ? ['todo', 'plans', 'lager', 'bp', 'mehr'] : ['todo', 'plans', 'lager', 'mehr'];
 /* Tablet quer: Liste links, Details rechts */
 const wide = () => TAB && innerWidth > innerHeight && innerWidth >= 700;
@@ -465,13 +465,13 @@ window.MOBILE.init = () => {
   setTimeout(() => { const k = $('#m-keys').getBoundingClientRect(); dbg('handy-masse', 'inner=' + innerHeight, 'vv=' + (window.visualViewport ? Math.round(visualViewport.height) : '-'), 'tasten-unten=' + Math.round(k.bottom), 'tablet=' + TAB); }, 800);
   $('#m-title').onclick = () => { if (M.back.length) mBack(); };
   // Zurueck-Taste am Handy: erst Fenster schliessen, dann eine Seite zurueck
-  history.pushState({ hysec: 1 }, '');
+  history.pushState({ pliskin: 1 }, '');
   window.addEventListener('popstate', () => {
     if ($('#modal').classList.contains('on')) closeModal();
     else if (M.back.length) mBack();
     else if (M.view !== 'todo') mGo('todo');
     else { history.back(); return; }
-    history.pushState({ hysec: 1 }, '');
+    history.pushState({ pliskin: 1 }, '');
   });
   // Antippen ausserhalb schliesst das Fenster (Handy hat kein mousedown-Gefuehl)
   $('#modal').addEventListener('click', e => { if (e.target.id === 'modal') closeModal(); });

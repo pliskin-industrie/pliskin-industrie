@@ -9,6 +9,13 @@ async function progInit() {
   if (APP.desktop) { try { PROG = await call('prog_get'); } catch (e) { PROG = null; } }
   document.querySelectorAll('.app-ver').forEach(e => { e.textContent = APP.version; });
   document.querySelectorAll('.app-ver-s').forEach(e => { e.textContent = String(APP.version).split('.').slice(0, 2).join('.'); });
+  // Vorschau der Entwicklungs-Kopie (Port 8775, Daten in vorschaudaten/): deutlich kennzeichnen, damit niemand sie mit Live verwechselt
+  if (/vorschaudaten/.test(APP.dataDir || '') && !document.getElementById('vorschau-schild')) {
+    const v = document.createElement('div'); v.id = 'vorschau-schild'; v.setAttribute('data-notr', '');
+    v.textContent = 'VORSCHAU · nächster Bau · Daten nur Kopie';
+    v.style.cssText = 'position:fixed;left:50%;top:0;transform:translateX(-50%);z-index:99;background:#c0392b;color:#fff;font:700 12px sans-serif;padding:3px 12px;border-radius:0 0 6px 6px;letter-spacing:.06em;pointer-events:none';
+    document.body.appendChild(v);
+  }
   // Bestehende Nutzer (schon Daten da) überspringen die Ersteinrichtung
   if (S.settings.setupDone == null && !progEmpty()) S.settings.setupDone = true;
 }

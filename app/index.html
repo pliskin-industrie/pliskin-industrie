@@ -14,14 +14,14 @@
 <link rel="stylesheet" href="logo.css">
 <link rel="stylesheet" href="fitting.css">
 <script>
-/* Handy erkannt -> Handy-Oberflaeche (m.html). Nicht in der Hysec-App, nicht wenn "PC-Ansicht" gewaehlt. */
+/* Handy erkannt -> Handy-Oberflaeche (m.html). Nicht in der Pliskin-App, nicht wenn "PC-Ansicht" gewaehlt. */
 (function () {
   var ua = navigator.userAgent;
   var tablet = (/Android/.test(ua) && !/Mobile/.test(ua)) || /iPad/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
   var small = tablet || Math.min(screen.width, screen.height) < 600;
   var app = /[?&]app=1\b/.test(location.search) || location.hostname === '127.0.0.1' || location.protocol === 'file:';
   var pc = false; try { pc = localStorage.getItem('hysec-view') === 'pc'; } catch (e) { /* egal */ }
-  window.HYSEC_SMALL = small && !app;
+  window.PLISKIN_SMALL = small && !app;
   if (small && !app && !pc) location.replace('m.html');
 })();
 </script>
@@ -32,7 +32,7 @@
   <span class="serial">LP-<span class="app-ver-s">0.8</span></span>
 
   <div class="plate">
-    <div class="badge"><img class="plogo" src="logo.svg" alt=""><div class="btxt"><h1>Pliskin Industrie</h1><small>LONY PLISKIN · CRAFTING · LOGISTIK · V<span class="app-ver">0.8.0</span></small></div></div>
+    <div class="badge"><img class="plogo" src="logo.svg" alt=""><div class="btxt"><h1>Pliskin Industrie</h1><small>LONY PLISKIN · CRAFTING · LOGISTIK · V<span class="app-ver">0.8.1</span></small></div></div>
     <div class="grill"></div>
     <div class="inds">
       <div class="ind" title="Log-Sync"><i id="ind-auto" class="amb"></i>AUTO</div>
@@ -122,7 +122,7 @@
 <script src="i18n.js"></script>
 <script>
 /* Auf dem Handy in der PC-Ansicht: kleiner Knopf zurueck zur Handy-Oberflaeche */
-if (window.HYSEC_SMALL) {
+if (window.PLISKIN_SMALL) {
   var hb = document.createElement('div');
   hb.textContent = '▯ Handy-Ansicht';
   hb.style.cssText = 'position:fixed;left:10px;bottom:10px;z-index:80;padding:10px 14px;border-radius:8px;border:2px solid #111;background:linear-gradient(180deg,#f6aa40,#d88a20);color:#2a1804;font:700 14px sans-serif;box-shadow:0 2px 0 #000';

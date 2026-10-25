@@ -1,8 +1,8 @@
-"""Pliskin Industrie (frueher Hysec Industrie) – eingebauter Webserver.
+"""Pliskin Industrie – eingebauter Webserver.
 
 Zwei Einsaetze, derselbe Code:
-- Server-Betrieb auf dem Pi:  python3 hysec_server.py   (Port 8770, Daten in serverdaten/)
-- Im Programm (Release-Ausgabe, hysec_industrie.py): laeuft im Hintergrund nur fuer das eigene Fenster
+- Server-Betrieb auf dem Pi:  python3 pliskin_server.py   (Port 8770, Daten in serverdaten/)
+- Im Programm (Release-Ausgabe, pliskin_industrie.py): laeuft im Hintergrund nur fuer das eigene Fenster
   (127.0.0.1) oder – mit „Server-Modus“ in den Einstellungen – fuer das ganze Heimnetz (0.0.0.0).
 
 Game-Logs: Im Programm liest es der Server direkt; auf dem Pi schickt die Pliskin-App vom Spiele-PC die Blueprints.
@@ -20,18 +20,18 @@ import traceback
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 if __name__ == "__main__":
-    os.environ.setdefault("HYSEC_DATA", os.path.join(HERE, "serverdaten"))
+    os.environ.setdefault("PLISKIN_DATA", os.environ.get("HYSEC_DATA") or os.path.join(HERE, "serverdaten"))
 sys.path.insert(0, HERE)
-import hysec_industrie as core  # noqa: E402
+import pliskin_industrie as core  # noqa: E402
 
-PORT = int(os.environ.get("HYSEC_PORT", "8770"))
+PORT = int(os.environ.get("PLISKIN_PORT") or os.environ.get("HYSEC_PORT") or "8770")
 # Aufrufe, die nur vom eigenen Rechner kommen duerfen (Server-Modus, Updates) – nicht von Geraeten im Heimnetz
 NUR_LOKAL = {"prog_set", "update_install", "open_data_dir"}
 
 
 def debug():
-    """Fehlersuche an: Datei serverdaten/debug.flag anlegen (oder HYSEC_DEBUG setzen)."""
-    return bool(os.environ.get("HYSEC_DEBUG") or os.path.exists(os.path.join(core.DATA, "debug.flag")))
+    """Fehlersuche an: Datei serverdaten/debug.flag anlegen (oder PLISKIN_DEBUG setzen)."""
+    return bool(os.environ.get("PLISKIN_DEBUG") or os.path.exists(os.path.join(core.DATA, "debug.flag")))
 
 
 def make_calls(api, desktop=False, info=None):

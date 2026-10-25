@@ -1,6 +1,6 @@
 <p align="center"><img src="docs/bilder/logo.png" width="110" alt="Pliskin Industrie"></p>
 
-<h1 align="center">Pliskin Industrie 0.8.0</h1>
+<h1 align="center">Pliskin Industrie 0.8.1</h1>
 <p align="center"><b>Crafting · Lager · Logistik für Star Citizen</b><br>
 <a href="README.md">🇬🇧 English</a> · <a href="docs/HANDBUCH.md">Handbuch</a> · <a href="../../issues/new/choose">Fehler melden</a></p>
 
@@ -8,7 +8,7 @@
 
 ---
 
-> **Version 0.8.0 – Vorab-Version.** Pliskin Industrie wird von **einer einzigen Person** in der Freizeit gebaut. Wie schnell neue Funktionen dazukommen und Fehler behoben werden, hängt von Zeit und Möglichkeiten ab – aber es wird laufend weiter daran gearbeitet. Rückmeldungen, Fehlerberichte und Screenshots sind sehr willkommen.
+> **Version 0.8.1 – Vorab-Version.** Pliskin Industrie wird von **einer einzigen Person** in der Freizeit gebaut. Wie schnell neue Funktionen dazukommen und Fehler behoben werden, hängt von Zeit und Möglichkeiten ab – aber es wird laufend weiter daran gearbeitet. Rückmeldungen, Fehlerberichte und Screenshots sind sehr willkommen.
 >
 > Pliskin Industrie gibt es auf **Deutsch und Englisch** – die Sprache wählst du beim ersten Start oder unter Einstellungen → Programm.
 
@@ -45,8 +45,8 @@ Pliskin Industrie bringt **Blueprints, Crafting-Pläne, Lager, Mining und Fracht
 
 ### Herunterladen und starten
 1. Unter **Releases** die Datei für dein System laden:
-   - Windows: `Pliskin-Industrie-v0.8.0-windows.exe`
-   - Linux: `Pliskin-Industrie-v0.8.0-linux-x86_64`
+   - Windows: `Pliskin-Industrie-v0.8.1-windows.exe`
+   - Linux: `Pliskin-Industrie-v0.8.1-linux-x86_64`
 2. **Windows:** Doppelklick. Windows warnt evtl. („Der Computer wurde durch Windows geschützt“), weil das Programm nicht signiert ist → *Weitere Informationen* → *Trotzdem ausführen*. Die Datei lässt sich mit `SHA256SUMS.txt` aus dem Release prüfen.
    **Linux:** `chmod +x Pliskin-Industrie-*-linux-x86_64` und starten. Fehlen Fenster-Bausteine (Qt), öffnet Pliskin sich automatisch im Browser.
 3. Beim ersten Start: Sprache (Deutsch/English), Design und **leer starten** oder **Demo ansehen** wählen.
@@ -68,8 +68,8 @@ Pliskin prüft beim Start, ob es eine neue Version gibt (abschaltbar). Unter Ein
 - [Fehler melden oder Wunsch einreichen](../../issues/new/choose) – oder per Mail an **pliskinindustrie@gmail.com**.
 
 ### Aus dem Quelltext bauen
-Python 3.12, dann `bauen/windows.bat` bzw. `bauen/linux.sh`. Ohne Bau starten: `pip install -r requirements-windows.txt` (bzw. `-linux`), dann `python hysec_industrie.py`.
-Neue Version: `VERSION` in `hysec_industrie.py` erhöhen, Tag `v<Version>` pushen – GitHub baut beide Programme und hängt sie ans Release (`.github/workflows/release.yml`).
+Python 3.12, dann `bauen/windows.bat` bzw. `bauen/linux.sh`. Ohne Bau starten: `pip install -r requirements-windows.txt` (bzw. `-linux`), dann `python pliskin_industrie.py`.
+Neue Version: `VERSION` in `pliskin_industrie.py` erhöhen, Tag `v<Version>` pushen – GitHub baut beide Programme und hängt sie ans Release (`.github/workflows/release.yml`).
 
 ### Datenquellen und Dank
 Spieldaten aus der `Data.p4k` (Patch steht im Programm unten). Optional auf Knopfdruck: UEX Corp (Handelspreise), SCMDB (Fundorte, Raffinerie-Boni). Blueprint-Listen in Missionen: [StarStrings von MrKraken](https://github.com/MrKraken/StarStrings) (optional, separat installieren). Shader- und Modell-Logik für die Katalog-Bilder nach dem Open-Source-Projekt [StarBreaker](https://github.com/diogotr7/StarBreaker) (MIT).

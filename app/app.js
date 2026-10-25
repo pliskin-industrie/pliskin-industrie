@@ -1,7 +1,7 @@
 'use strict';
-/* Pliskin Industrie (früher Hysec Industrie) – Programmlogik: Pläne, Blueprints, Lager, Log-Sync, Einstellungen.
+/* Pliskin Industrie – Programmlogik: Pläne, Blueprints, Lager, Log-Sync, Einstellungen.
    Weitere Teile: etappe2.js (Schiffe, Contracts, Tour), verkauf.js, wissen.js (Datenbank), heute.js (To-do), hilfe.js (Hilfe, Demo) */
-const APP_VERSION = '0.8.0';
+const APP_VERSION = '0.8.1';
 // Demo-Modus: Testdaten statt eigener Daten, nichts wird gespeichert (gilt nur für dieses Browser-Fenster)
 let DEMO = false; try { DEMO = sessionStorage.getItem('pliskin-demo') === '1'; } catch (e) { /* egal */ }
 
@@ -70,6 +70,7 @@ let dataDir = '';
 const fallback = {
   async load() {
     const recipes = await fetch('data/rezepte.json').then(r => r.json()).catch(() => ({}));
+    // Speicher-Schlüssel „hysec“/„hysec-view“ bleiben absichtlich (früherer Name) – sonst wären gespeicherte Browser-Daten weg
     let store = null; try { store = JSON.parse(localStorage.getItem('hysec') || 'null'); } catch (e) { /* leer */ }
     return { store, recipes, version: 'Browser-Test', dataDir: 'Browser-Speicher' };
   },
@@ -80,7 +81,7 @@ const fallback = {
   async uex() { return { ts: 0, commodities: [], prices: [], terminals: [], error: 'Browser-Testmodus' }; },
   async scmdb() { return fetch('data/scmdb.json').then(r => r.ok ? r.json() : null).catch(() => null); },
   async scmdb_sync() { return { ok: false, info: 'Browser-Testmodus' }; },
-  async export_backup(s) { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(s, null, 1)], { type: 'application/json' })); a.download = 'hysec-sicherung.json'; a.click(); return 'Download'; },
+  async export_backup(s) { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(s, null, 1)], { type: 'application/json' })); a.download = 'pliskin-sicherung.json'; a.click(); return 'Download'; },
   async import_backup() {
     return new Promise(res => {
       const i = document.createElement('input'); i.type = 'file'; i.accept = '.json,application/json';
@@ -91,7 +92,7 @@ const fallback = {
   async open_data_dir() { return false; }
 };
 /* Betriebsart: 'server' = Daten auf dem Pi, 'app' = Programmfenster mit eigenen Daten, 'test' = nur Browser.
-   LOCAL = laeuft in der Hysec-App auf einem PC und darf dort Dateien lesen (Game-Logs). */
+   LOCAL = laeuft in der Pliskin-App auf einem PC und darf dort Dateien lesen (Game-Logs). */
 let MODE = 'test', LOGSRC = '', LOCAL = false;
 const SERVER_CALLS = new Set(['load', 'save', 'rev', 'sync_logs', 'uex', 'scmdb', 'scmdb_sync', 'default_live_dir', 'app_info', 'prog_get', 'prog_set', 'updates', 'update_install',
   'erfassung_stand', 'erfassung_liste', 'erfassung_setzen', 'erfassung_fertig', 'erfassung_lernen', 'erfassung_ausloesen']);
@@ -1414,7 +1415,7 @@ function ssBox() {
     how: `In mission descriptions: <b>[X]</b> = owned · <b>${ges}</b> = missing and part of a plan · <b>${fehlt}</b> = missing. Missions with a wanted blueprint get <b>${ges}</b> in the title.
         The game reads the file only on start – changes show up after the next game start. Before the first change of a new StarStrings file Pliskin keeps a backup next to it.`,
     farbe: 'Colour of ' + ges + ':', opt: [['EM2', 'green (default)'], ['EM4', 'blue like [BP]'], ['EM1', 'no colour']], go: 'Write now', noch: 'not written yet',
-    stat: s => `${fmtTime(s.ts)} · ${s.x} owned · ${s.g} wanted · ${s.f} missing · ${s.titel} titles${s.geaendert ? ' · written' : ' · up to date'}`,
+    stat: s => `${fmtTime(s.ts)} · ${s.x} owned · ${s.g} wanted · ${s.f} missing · ${s.titel} titles${s.geaendert ? ' · written' : ' · up to date'}${s.fassung === 'hysec' ? ' · Hysec version detected' : ''}`,
     err: e => /keine StarStrings/.test(e) ? 'no StarStrings file (MrKraken) found – install StarStrings first' : e
   } : {
     sub: 'Blueprint-Häkchen im Spiel (deine global.ini)',
@@ -1424,7 +1425,7 @@ function ssBox() {
     how: `In den Missionsbeschreibungen: <b>[X]</b> = hab ich · <b>${ges}</b> = fehlt und steckt in einem Plan · <b>${fehlt}</b> = fehlt. Missionen mit gesuchtem Blueprint bekommen im Titel <b>${ges}</b>.
         Das Spiel liest die Datei nur beim Start – Änderungen siehst du ab dem nächsten Spielstart. Vor der ersten Änderung einer neuen StarStrings-Datei legt Pliskin daneben eine Sicherung an.`,
     farbe: 'Farbe von ' + ges + ':', opt: [['EM2', 'grün (Standard)'], ['EM4', 'blau wie [BP]'], ['EM1', 'ohne Farbe']], go: 'Jetzt schreiben', noch: 'noch nicht geschrieben',
-    stat: s => `${fmtTime(s.ts)} · ${s.x} hab ich · ${s.g} gesucht · ${s.f} fehlt · ${s.titel} Titel${s.geaendert ? ' · geschrieben' : ' · war aktuell'}`,
+    stat: s => `${fmtTime(s.ts)} · ${s.x} hab ich · ${s.g} gesucht · ${s.f} fehlt · ${s.titel} Titel${s.geaendert ? ' · geschrieben' : ' · war aktuell'}${s.fassung === 'hysec' ? ' · Hysec-Fassung erkannt' : ''}`,
     err: e => e
   };
   return `<div class="win tight" id="lg-ss" data-notr style="margin-top:10px"><span class="pill">StarStrings</span><span class="sub">${T.sub}</span>
@@ -1437,7 +1438,7 @@ function ssBox() {
 function renderLog() {
   const el = $('#log');
   const srcBox = !localUI()
-    ? `<div class="hint" style="margin-top:0">Die Game-Logs liegen auf deinem Spiele-PC. <b>Öffne dort die PC-App</b> (Hysec Industrie.exe) und drück <b>⟳ Log-Sync</b> – die gefundenen Blueprints landen dann hier auf dem Pi und sind auf allen Geräten sichtbar.</div><button class="k pri" id="lg-go" style="display:none"></button>`
+    ? `<div class="hint" style="margin-top:0">Die Game-Logs liegen auf deinem Spiele-PC. <b>Öffne dort die PC-App</b> (Pliskin Industrie.exe) und drück <b>⟳ Log-Sync</b> – die gefundenen Blueprints landen dann hier auf dem Pi und sind auf allen Geräten sichtbar.</div><button class="k pri" id="lg-go" style="display:none"></button>`
     : `<div class="form"><div class="fld" style="flex:1;min-width:320px"><label>Spielordner (LIVE)</label><input id="lg-dir" value="${esc(S.settings.logDir)}" placeholder="G:\\Star Citizen\\StarCitizen\\LIVE"></div>
         <button class="k" id="lg-pick">Ordner wählen</button><button class="k pri" id="lg-go">⟳ Jetzt synchronisieren</button></div>`;
   el.innerHTML = `<div class="win tight"><span class="pill">Log-Sync</span>
@@ -1636,17 +1637,17 @@ async function boot() {
   setTimeout(progUpdateCheck, 2500);
 }
 let BOOTED = false;
-/* In der Hysec-App (pywebview) kommt die Erlaubnis zum lokalen Lesen oft erst NACH dem Start der Seite:
+/* In der Pliskin-App (pywebview) kommt die Erlaubnis zum lokalen Lesen oft erst NACH dem Start der Seite:
    dann Log-Sync nachholen. */
 window.addEventListener('pywebviewready', () => {
   if (LOCAL || !BOOTED || !(window.pywebview && window.pywebview.api && typeof window.pywebview.api.sync_logs === 'function')) return;
   LOCAL = true;
-  setComm('HYSEC-APP ERKANNT · LOG-SYNC VON DIESEM PC MÖGLICH');
+  setComm('PLISKIN-APP ERKANNT · LOG-SYNC VON DIESEM PC MÖGLICH');
   render();
   if (S.settings.autoSync && S.settings.logDir) syncNow('Start');
 });
 
-/* Start: In der Hysec-App (?app=1 oder lokales Fenster) erst warten, bis die Bruecke zum PC
+/* Start: In der Pliskin-App (?app=1 oder lokales Fenster) erst warten, bis die Bruecke zum PC
    wirklich fertig ist (Methoden vorhanden) – sonst haengt der Start. Im Browser sofort los. */
 {
   let started = false;

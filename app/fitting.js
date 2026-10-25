@@ -114,7 +114,9 @@ function boxTxt(b){if(b.kind==='gun'){const[t,s]=gunTxt(b.g);return{i:b.n===b.g?
 function modus(){const t=document.body.dataset.t||'',R=RI(),f=t==='wc5m'||t==='scholo',cl=R.clip.includes(f?(R.paints?.[0]||'std'):pk(cur));// solange der Clip noch fehlt: Standbilder
  if(/^wc4/.test(t))return cl?['clip',0]:['drei',0];if(t==='wc5m'||t==='scholo')return cl?['clip',1]:['drei',1];if(t==='wc3v')return['drei',1];return['drei',0]}
 const ANS={comp:{PowerPlant:'topl',Cooler:'topl',Shield:'topl',QuantumDrive:'sidel',Radar:'sidel'},cm:'sidel'};
-function ansicht(b){if(b.kind==='comp')return ANS.comp[b.t]||'topl';if(b.kind==='cm')return'sidel';return'persp'}
+// Hauptansicht: WC III zeigt Einsitzer direkt von vorne (wie das WC-III-Loadout), alle anderen Designs schräg
+function hauptV(){const t=document.body.dataset.t||'';return t==='wc3v'&&RI().views&&RI().views.vorne?'vorne':'persp'}
+function ansicht(b){if(b.kind==='comp')return ANS.comp[b.t]||'topl';if(b.kind==='cm')return'sidel';return hauptV()}
 function punkt(b){return b.kind==='gun'?b.g.path:b.kind==='turret'?b.n.path:b.kind==='pdc'||b.kind==='cm'||b.kind==='rack'?b.ns[0].path:b.n.path}
 const RI=()=>D.ships[cur].R||{views:{},ov:{},ovpos:{},base:[],clip:[]};
 const ovKey=(pf,ck)=>(pf+'__'+ck).toLowerCase().replace(/[^a-z0-9]+/g,'_');
@@ -193,16 +195,16 @@ function buehne(BX){const A=fit.querySelector('#ART'),BL=fit.querySelector('#BL'
  const box=(b,i)=>{const t=boxTxt(b);const grp=b.kind==='turret'||b.kind==='pdc'||(b.ns&&b.ns.length>1);return`<div class="f-slot ${punkt(b)===S.cur?'f-on':''} ${grp?'f-grp':''}" data-slot="${esc(punkt(b))}"><i>${i+1} · ${esc(t.i)}</i><b>${esc(t.t)}</b><small>${esc(t.s)}</small></div>`};
  if(m==='clip'){const has=R.clip.length;A.className='f-art f-artc';A.innerHTML=has?`<img src="${RB+sk}/clip2_${p}.webp" alt="">`:'<div class="f-vdu f-dim">Clip wird noch gerechnet …</div>';
   const half=Math.ceil(BX.length/2);BL.innerHTML=BX.slice(0,half).map((b,i)=>box(b,i)).join('');BR.innerHTML=BX.slice(half).map((b,i)=>box(b,i+half)).join('');return}
- A.className='f-art f-art3';A.innerHTML=['persp','topl','sidel'].map(v=>`<div class="f-v f-v${v[0]}" data-v="${v}">${R.base.includes(p+'__'+v)?`<img class="f-b" src="${RB+sk}/${p}__${v}.webp" alt="">`:'<div class="f-vdu f-dim" style="padding:30px">Bild wird noch gerechnet …</div>'}</div>`).join('');
+ A.className='f-art f-art3';A.innerHTML=[hauptV(),'topl','sidel'].map(v=>`<div class="f-v f-v${v==='vorne'?'p':v[0]}" data-v="${v}">${R.base.includes(p+'__'+v)?`<img class="f-b" src="${RB+sk}/${p}__${v}.webp" alt="">`:'<div class="f-vdu f-dim" style="padding:30px">Bild wird noch gerechnet …</div>'}</div>`).join('');
  // eingeblendete Waffen / Racks (aktuelle Auswahl)
  const ovs=[];for(const pf in R.ov){const n=alle().find(x=>x.path===pf);if(!n)continue;const c=clsOf(n);if(!c)continue;let ck=c;
   if(/Launcher$/.test((I[c]||{}).t||'')){const k=kids(n).find(x=>['Missile','Bomb'].includes((x.types[0]||[])[0]));if(!k||!clsOf(k))continue;ck=c+'+'+clsOf(k)}
-  for(const v of['persp','topl','sidel']){const key=ovKey(pf,ck)+'__'+v,pos=R.ovpos[key];if(pos)ovs.push([v,key,pos])}}
+  for(const v of[hauptV(),'topl','sidel']){const key=ovKey(pf,ck)+'__'+v,pos=R.ovpos[key];if(pos)ovs.push([v,key,pos])}}
  for(const[v,key,pos]of ovs){const V_=R.views[v],cont=A.querySelector(`[data-v="${v}"]`);if(!cont||!V_)continue;const im=document.createElement('img');im.className='f-o';im.src=`${RB+sk}/ov/${key}.webp`;
   im.style.left=pos[0]/V_.w*100+'%';im.style.top=pos[1]/V_.h*100+'%';im.style.width=pos[2]/V_.w*100+'%';cont.appendChild(im)}
  // Punkte + Kästchen je Ansicht, Spalten nach Höhe sortiert
  const L=[],Rr=[],pts={};
- BX.forEach((b,i)=>{const v=ansicht(b),V_=R.views[v];const pp=V_&&(V_.ports[punkt(b)]||V_.ports[punkt(b).split('/')[0]]);const y=(v==='sidel'?2:v==='topl'?1:0)*1000+(pp?pp[1]/V_.h*100:50);(v==='persp'?L:Rr).push({b,i,y});
+ BX.forEach((b,i)=>{const v=ansicht(b),V_=R.views[v];const pp=V_&&(V_.ports[punkt(b)]||V_.ports[punkt(b).split('/')[0]]);const y=(v==='sidel'?2:v==='topl'?1:0)*1000+(pp?pp[1]/V_.h*100:50);(v===hauptV()?L:Rr).push({b,i,y});
   if(pp&&showMk){(pts[v]=pts[v]||[]).push({b,i,x:pp[0]/V_.w,y:pp[1]/V_.h})}});
  for(const v in pts){const cont=A.querySelector(`[data-v="${v}"]`);if(!cont)continue;const W_=cont.clientWidth||400,H_=cont.clientHeight||300,arr=pts[v];
   for(let it=0;it<40;it++){let moved=0;for(let a=0;a<arr.length;a++)for(let c=a+1;c<arr.length;c++){const dx=(arr[c].x-arr[a].x)*W_,dy=(arr[c].y-arr[a].y)*H_,d=Math.hypot(dx,dy);if(d<20){const k=(20-d)/2/(d||1),ux=d?dx:1,uy=d?dy:0;arr[a].x-=ux*k/W_;arr[a].y-=uy*k/H_;arr[c].x+=ux*k/W_;arr[c].y+=uy*k/H_;moved=1}}if(!moved)break}

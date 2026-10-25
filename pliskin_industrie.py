@@ -27,7 +27,7 @@ except ImportError:  # pragma: no cover
     webview = None
 
 APP_NAME = "Pliskin Industrie"
-VERSION = "0.8.0"
+VERSION = "0.8.1"
 UEX_BASE = "https://api.uexcorp.uk/2.0"
 UEX_AGENT = "pliskin-industrie/%s (Star-Citizen-Tool)" % VERSION
 UEX_MAX_AGE = 6 * 3600          # Preise hoechstens alle 6 Stunden neu laden
@@ -53,15 +53,20 @@ GITHUB_REPO = os.environ.get("PLISKIN_GITHUB") or ED.get("github", "")   # z. B.
 
 
 def data_dir():
-    # Server auf dem Pi setzt HYSEC_DATA; das Programm nutzt den Benutzer-Datenordner des Systems
-    d = os.environ.get("HYSEC_DATA")
+    # Server auf dem Pi setzt PLISKIN_DATA; das Programm nutzt den Benutzer-Datenordner des Systems
+    d = os.environ.get("PLISKIN_DATA") or os.environ.get("HYSEC_DATA")
     if not d:
-        name = "HysecIndustrie" if EDITION == "privat" else "PliskinIndustrie"   # Lony Pliskins Programm behaelt seinen alten Ordner
         if os.name == "nt":
             root = os.environ.get("LOCALAPPDATA") or os.path.expanduser("~")
         else:
             root = os.environ.get("XDG_DATA_HOME") or os.path.join(os.path.expanduser("~"), ".local", "share")
-        d = os.path.join(root, name)
+        d = os.path.join(root, "PliskinIndustrie")
+        alt = os.path.join(root, "HysecIndustrie")   # früherer Name: einmalig umziehen, alter Ordner bleibt als Sicherung liegen
+        if not os.path.exists(d) and os.path.isdir(alt):
+            try:
+                shutil.copytree(alt, d)
+            except Exception:
+                pass
     os.makedirs(os.path.join(d, "cache"), exist_ok=True)
     os.makedirs(os.path.join(d, "sicherungen"), exist_ok=True)
     return d
@@ -127,7 +132,7 @@ class Api:
         return (read_json(STORE, None) or {}).get("_rev", 0)
 
     def export_backup(self, store):
-        res = self._window.create_file_dialog(webview.SAVE_DIALOG, save_filename="hysec-sicherung-%s.json" % time.strftime("%Y-%m-%d"),
+        res = self._window.create_file_dialog(webview.SAVE_DIALOG, save_filename="pliskin-sicherung-%s.json" % time.strftime("%Y-%m-%d"),
                                              file_types=("Sicherung (*.json)",))
         if not res:
             return None
@@ -480,7 +485,7 @@ def find_pi():
             with urllib.request.urlopen(req, timeout=3) as r:
                 if r.status == 200:
                     globals()["PI_BASE"] = u
-                    return u + "?app=1"   # Seite weiss: laeuft in der Hysec-App (darf lokal lesen)
+                    return u + "?app=1"   # Seite weiss: laeuft in der Pliskin-App (darf lokal lesen)
         except Exception:
             continue
     return None
@@ -518,8 +523,8 @@ def erfassung_senden(name, data, loc=None):
     b64 = base64.b64encode(data).decode("ascii")
     if not PI_BASE:
         try:
-            import hysec_server
-            res = hysec_server.erfassung_neu(name, b64, loc)
+            import pliskin_server
+            res = pliskin_server.erfassung_neu(name, b64, loc)
             return bool(res.get("ok")), "in der Liste (%s offen)" % res.get("offen", "?")
         except Exception as e:
             return False, "nicht gespeichert (%s)" % e
@@ -566,8 +571,8 @@ def erfassung_starten(win):
                     with urllib.request.urlopen(req, timeout=4) as r:
                         res = json.loads(r.read() or b"{}")
                 else:
-                    import hysec_server
-                    res = hysec_server.erfassung_auftrag()
+                    import pliskin_server
+                    res = pliskin_server.erfassung_auftrag()
                 if res.get("los"):
                     hk.ausloesen()
             except Exception:
@@ -591,13 +596,13 @@ def erfassung_starten(win):
 
 
 def single_instance():
-    """Nur ein Hysec-Fenster: zwei Fenster teilen sich den Browser-Speicher und blockieren sich.
+    """Nur ein Pliskin-Fenster: zwei Fenster teilen sich den Browser-Speicher und blockieren sich.
     Laeuft schon eins, wird es nach vorne geholt und dieser Start beendet."""
     if os.name != "nt":
         return True
     import ctypes
     k32, u32 = ctypes.windll.kernel32, ctypes.windll.user32
-    handle = k32.CreateMutexW(None, False, "HysecIndustrie_EinFenster")
+    handle = k32.CreateMutexW(None, False, "PliskinIndustrie_EinFenster")
     if k32.GetLastError() == 183:  # ERROR_ALREADY_EXISTS
         hwnd = u32.FindWindowW(None, APP_NAME)
         if hwnd:
@@ -610,7 +615,7 @@ def single_instance():
 
 def start_local():
     """Release-Ausgabe: eigenen Server im Hintergrund starten (nur dieses Fenster oder – Server-Modus – ganzes Heimnetz)."""
-    import hysec_server
+    import pliskin_server
     api = Api()
 
     def run():
@@ -619,7 +624,7 @@ def start_local():
         want = int(cfg.get("port") or 8770) if cfg.get("server") else (SERVER["port"] or 0)
         for port in (want, 0):   # Port belegt -> freien nehmen
             try:
-                srv, p = hysec_server.start(api, host, port, os.path.join(base_dir(), "app"), desktop=True, info=lambda: app_info(True))
+                srv, p = pliskin_server.start(api, host, port, os.path.join(base_dir(), "app"), desktop=True, info=lambda: app_info(True))
                 SERVER.update(srv=srv, port=p, host=host)
                 return p
             except OSError:
@@ -674,6 +679,6 @@ def main():
 
 
 if __name__ == "__main__":
-    # Der eingebaute Server importiert „hysec_industrie“ – dieselbe Modul-Instanz verwenden (sonst zwei getrennte Zustände)
-    sys.modules.setdefault("hysec_industrie", sys.modules["__main__"])
+    # Der eingebaute Server importiert „pliskin_industrie“ – dieselbe Modul-Instanz verwenden (sonst zwei getrennte Zustände)
+    sys.modules.setdefault("pliskin_industrie", sys.modules["__main__"])
     main()

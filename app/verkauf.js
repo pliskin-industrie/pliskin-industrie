@@ -1,6 +1,6 @@
-/* Hysec Industrie – Verkaufstour (Lager-Tour): Ware aus dem Lager auswählen, Käufer aus UEX-Preisen finden,
+/* Pliskin Industrie – Verkaufstour (Lager-Tour): Ware aus dem Lager auswählen, Käufer aus UEX-Preisen finden,
    in Runden aufteilen (Schiff voll → nächste Runde), Stopp „verkauft“ → Lager wird ausgebucht.
-   Nutzt Tour-Ablauf, Ladeplan und Karte aus etappe2.js (Lager-Tour = S.stour). Skizze: skizzen/hysec-verkaufstour-prototyp.html */
+   Nutzt Tour-Ablauf, Ladeplan und Karte aus etappe2.js (Lager-Tour = S.stour). Skizze: archiv/skizzen-hysec/hysec-verkaufstour-prototyp.html */
 
 const SALE_SYS = ['Stanton', 'Pyro', 'Nyx'];
 const saleUi = () => {

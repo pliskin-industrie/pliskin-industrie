@@ -18,7 +18,7 @@
 <script>
 window.MOBILE = {};
 /* Tablet: Android ohne "Mobile" in der Kennung, iPad, oder grosser Touch-Bildschirm */
-window.HYSEC_TABLET = (function () {
+window.PLISKIN_TABLET = (function () {
   var ua = navigator.userAgent;
   return (/Android/.test(ua) && !/Mobile/.test(ua)) || /iPad/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)
     || Math.min(screen.width, screen.height) >= 600;
@@ -26,7 +26,7 @@ window.HYSEC_TABLET = (function () {
 </script>
 </head>
 <body data-t="wc3v" class="mob">
-<script>if (window.HYSEC_TABLET) document.body.classList.add('tab');</script>
+<script>if (window.PLISKIN_TABLET) document.body.classList.add('tab');</script>
 <div class="mapp">
   <div class="mtop">
     <span class="mback" id="m-back" hidden>◂</span>

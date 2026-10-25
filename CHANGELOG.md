@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.1
+- StarStrings: Blueprint-Markierungen passen jetzt zum aktuellen StarStrings von MrKraken (erkennt die installierte Fassung selbst) / StarStrings marks work with the current MrKraken release (detects the installed version).
+- Fitting: WC III zeigt Einsitzer direkt von vorne, alle anderen Designs schräg; Dreh-Ansicht dreht halb so schnell; Polaris-Drehansicht für alle Paints / WC III front view for single-seaters, slower turntable, Polaris turntable for all paints.
+
 ## 0.8.0
 Erste öffentliche Vorab-Version / first public early-access version.
 - Schiffs-Fitting (im Aufbau): Gladius, Golem, Polaris – Waffen, Racks/Raketen, Türme, Komponenten, Mining-Köpfe/Module/Gadgets, Paints, Flight Blades, Pips; Ausstattung → Crafting-Plan / Ship fitting (work in progress), loadout → crafting plan.

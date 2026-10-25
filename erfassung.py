@@ -204,7 +204,7 @@ def grab():
         u32.ReleaseDC(None, sdc)
 
 
-TON = {"name": "wc4_lock", "vol": 50, "dir": None}   # setzt hysec_industrie.py aus programm.json
+TON = {"name": "wc4_lock", "vol": 50, "dir": None}   # setzt pliskin_industrie.py aus programm.json
 
 
 def ton(ok=True):

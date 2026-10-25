@@ -106,7 +106,7 @@ Ein Plan ist eine Liste von Bauteilen mit Anzahl und Mindest-Qualität. Pliskin 
 **Geschätzt** sind die Flugzeiten (ohne Ausrichten und Sprungtunnel) und die Quantum-Reichweite. Die Formel nutzt den Verbrauch aus den Spieldaten, ist aber nicht im Spiel nachgemessen.
 
 ## Betrieb (Technik)
-- `hysec_server.py` liefert die Oberfläche aus `app/` aus und speichert die Daten in `serverdaten/daten.json` mit täglicher Sicherung.
+- `pliskin_server.py` liefert die Oberfläche aus `app/` aus und speichert die Daten in `serverdaten/daten.json` mit täglicher Sicherung.
 - Nach einem neuen Patch (auf dem Pi, mit der Data.p4k): `werkzeuge/wissen_export.py` (Fundorte, Qualität, Raffinerien, Missionen → `app/data/wissen.json`; Orte + Waren → `app/data/orte.json`), `werkzeuge/werte_export.py` + `katalog_export.py` (Katalog-Werte), wie bisher `rezepte_export.py`, `schiffe_export.py`, `karte_export.py`, `missionen_export.py`.
 - Pliskin holt **nichts von selbst** aus dem Internet. UEX und SCMDB nur per Knopf unter Einstellungen → Datenquellen (Zwischenspeicher `<Daten>/cache/uex.json` bzw. `scmdb.json`; `scmdb_abgleich.py` macht den SCMDB-Abruf).
 - `demo_erzeugen.py` erzeugt die Beispiel-Daten für den Demo-Modus (`app/data/demo.json`).
