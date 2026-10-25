@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="wc-gehaeuse2.css">
 <link rel="stylesheet" href="sc-designs.css">
 <link rel="stylesheet" href="logo.css">
+<link rel="stylesheet" href="fitting.css">
 <script>
 /* Handy erkannt -> Handy-Oberflaeche (m.html). Nicht in der Hysec-App, nicht wenn "PC-Ansicht" gewaehlt. */
 (function () {
@@ -28,10 +29,10 @@
 <body data-t="wc3v">
 <div class="console">
   <i class="screw tl"></i><i class="screw tr"></i><i class="screw bl"></i><i class="screw br"></i>
-  <span class="serial">LP-<span class="app-ver-s">1.1</span></span>
+  <span class="serial">LP-<span class="app-ver-s">0.8</span></span>
 
   <div class="plate">
-    <div class="badge"><img class="plogo" src="logo.svg" alt=""><div class="btxt"><h1>Pliskin Industrie</h1><small>LONY PLISKIN · CRAFTING · LOGISTIK · V<span class="app-ver">1.0.0</span></small></div></div>
+    <div class="badge"><img class="plogo" src="logo.svg" alt=""><div class="btxt"><h1>Pliskin Industrie</h1><small>LONY PLISKIN · CRAFTING · LOGISTIK · V<span class="app-ver">0.8.0</span></small></div></div>
     <div class="grill"></div>
     <div class="inds">
       <div class="ind" title="Log-Sync"><i id="ind-auto" class="amb"></i>AUTO</div>
@@ -69,7 +70,8 @@
       <div class="grp">Crafting</div>
       <div class="key" data-tab="plan">Crafting-Pläne</div>
       <div class="grp">Schiffe</div>
-      <div class="key" data-tab="ships">Schiffe</div>
+      <div class="key" data-tab="ships">Meine Schiffe</div>
+      <div class="key" data-tab="fit">Fitting</div>
       <div class="grp">Wissen</div>
       <div class="key" data-tab="db">Datenbank</div>
       <div class="grp">System</div>
@@ -89,6 +91,7 @@
         <section class="screen" id="orte"></section>
         <section class="screen" id="plan"></section>
         <section class="screen" id="ships"></section>
+        <section class="screen" id="fit"></section>
         <section class="screen" id="db"></section>
         <section class="screen" id="log"></section>
         <section class="screen" id="opt"></section>
@@ -114,6 +117,7 @@
 <script src="programm.js"></script>
 <script src="erkennung.js"></script>
 <script src="erfassung.js"></script>
+<script src="fitting.js"></script>
 <script src="i18n_en.js"></script>
 <script src="i18n.js"></script>
 <script>

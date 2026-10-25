@@ -27,7 +27,7 @@ except ImportError:  # pragma: no cover
     webview = None
 
 APP_NAME = "Pliskin Industrie"
-VERSION = "1.0.0"
+VERSION = "0.8.0"
 UEX_BASE = "https://api.uexcorp.uk/2.0"
 UEX_AGENT = "pliskin-industrie/%s (Star-Citizen-Tool)" % VERSION
 UEX_MAX_AGE = 6 * 3600          # Preise hoechstens alle 6 Stunden neu laden
@@ -229,6 +229,18 @@ class Api:
                 old["error"] = str(e)
                 return old
             return {"ts": 0, "error": str(e), "commodities": [], "prices": [], "terminals": []}
+
+    # ---------- StarStrings (MrKraken): Blueprint-Häkchen in die global.ini ----------
+    def starstrings_schreiben(self, status, live_dir=None, farbe=None, sprache=None):
+        try:
+            import starstrings
+        except ImportError:
+            return {"ok": False, "error": "starstrings.py fehlt"}
+        live = live_dir or (read_json(PROG, {}) or {}).get("logDir") or self.default_live_dir()
+        try:
+            return starstrings.schreiben(live, status or {}, farbe or "EM2", sprache or "de")
+        except Exception as e:
+            return {"ok": False, "error": str(e)}
 
     # ---------- Erfassungs-Taste (nur im Programm) ----------
     def hotkey_get(self, log_dir=None):

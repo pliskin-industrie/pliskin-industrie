@@ -1,7 +1,7 @@
 'use strict';
 /* Pliskin Industrie (früher Hysec Industrie) – Programmlogik: Pläne, Blueprints, Lager, Log-Sync, Einstellungen.
    Weitere Teile: etappe2.js (Schiffe, Contracts, Tour), verkauf.js, wissen.js (Datenbank), heute.js (To-do), hilfe.js (Hilfe, Demo) */
-const APP_VERSION = '1.0.0';
+const APP_VERSION = '0.8.0';
 // Demo-Modus: Testdaten statt eigener Daten, nichts wird gespeichert (gilt nur für dieses Browser-Fenster)
 let DEMO = false; try { DEMO = sessionStorage.getItem('pliskin-demo') === '1'; } catch (e) { /* egal */ }
 
@@ -188,7 +188,17 @@ function indexRecipes() {
     BP[b.id] = b;
     const k = (b.name || '').trim().toLowerCase();
     (BPN[k] = BPN[k] || []).push(b.id);
+    const m = k.match(/^\w+\/(\d+)\/([a-d]) (.+)$/);   // „Civ/3/A 7CA 'Nargun'“ → auch „7ca 'nargun'|3|a“
+    if (m) { const k2 = m[3] + '|' + m[1] + '|' + m[2]; (BPN[k2] = BPN[k2] || []).push(b.id); }
   }
+}
+// Blueprint-IDs zu einem Namen aus dem Game.log – auch mit StarStrings (MrKraken), das Bauteile umbenennt:
+// „7CA 'Nargun' [Civilian S03 A]“ statt „Civ/3/A 7CA 'Nargun'“
+function bpIds(name) {
+  const k = String(name || '').trim().toLowerCase();
+  if (BPN[k]) return BPN[k];
+  const m = k.match(/^(.*?)\s*\[[a-z]+ s0*(\d+) ([a-d])\]$/);
+  return m ? BPN[m[1].trim() + '|' + m[2] + '|' + m[3]] : undefined;
 }
 const resName = id => (RES[id] && RES[id].name) || (String(id).startsWith('uex:') ? id.slice(4) : String(id).replace(/_/g, ' '));
 const resUnit = id => (RES[id] && RES[id].item) ? 'Stk' : 'SCU';
@@ -1346,7 +1356,7 @@ function bindCalc(el) {
 function applyLogHits(hits, source, files) {
   const added = [];
   for (const h of hits) {
-    const ids = BPN[h.name.toLowerCase()];
+    const ids = bpIds(h.name);
     if (!ids) continue;
     for (const id of ids) {
       if (!S.owned[id] || S.owned[id].src !== 'log') {
@@ -1355,7 +1365,7 @@ function applyLogHits(hits, source, files) {
       }
     }
   }
-  const unknown = [...new Set(hits.filter(h => !BPN[h.name.toLowerCase()]).map(h => h.name))];
+  const unknown = [...new Set(hits.filter(h => !bpIds(h.name)).map(h => h.name))];
   S.syncLog.unshift({ ts: now(), source, files, added: [...new Set(added)], unknown });
   S.syncLog = S.syncLog.slice(0, 50);
   if (added.length) { hist(`Log-Sync: ${added.length} neue Blueprints (${added.slice(0, 5).join(', ')}${added.length > 5 ? ' …' : ''})`); setComm('LOG-SYNC · ' + added.length + ' NEUE BLUEPRINTS: ' + added.slice(0, 3).join(', ').toUpperCase()); }
@@ -1371,6 +1381,58 @@ async function syncNow(source = 'Sync-Knopf') {
   const added = applyLogHits(r.hits, source, r.files);
   toast(added.length ? added.length + ' neue Blueprints erkannt' : 'Keine neuen Blueprints');
   save(); render();
+  starStrings();
+}
+/* Blueprint-Häkchen in die StarStrings-global.ini schreiben (braucht MrKrakens StarStrings im Spielordner) (Missionsbeschreibungen [X] / [Gesucht] / [Fehlt],
+   Titel mit [BP] → „[Gesucht]“, Farbe wählbar). Das Spiel liest die Datei nur beim Start → gilt ab dem nächsten Spielstart. */
+let SSTAT = null;
+const ssApi = () => window.pywebview && window.pywebview.api && typeof window.pywebview.api.starstrings_schreiben === 'function' ? window.pywebview.api : null;
+// Im Spiel färben nur EM2 (grün) und EM4 (in Missionen blau); EM1/EM3 bleiben normal → alte Einstellung EM3 wird grün
+function ssFarbe() { const v = S.settings.ssFarbe; return v === 'EM4' || v === 'EM1' ? v : 'EM2'; }
+async function starStrings(force) {
+  const api = ssApi();
+  if (!api || DEMO || !S.settings.logDir || (S.settings.starstrings === false && !force)) return;
+  const geplant = new Set(); for (const p of S.plans) for (const it of p.items || []) if (it.bp) geplant.add(it.bp);
+  const st = {}, n = x => String(x || '').replace(/^[A-Za-z]{2,4}\/\d\/[A-D] /, '').trim().toLowerCase();
+  for (const b of R.blueprints || []) {   // gleicher Name mehrfach (Größen/Varianten): hab ich > gesucht > fehlt
+    const k = n(b.name), v = isOwned(b.id) ? 'x' : geplant.has(b.id) ? 'g' : 'f';
+    if (!st[k] || v === 'x' || (v === 'g' && st[k] === 'f')) st[k] = v;
+  }
+  try { SSTAT = Object.assign(await api.starstrings_schreiben(st, S.settings.logDir, ssFarbe(), S.settings.lang === 'en' ? 'en' : 'de'), { ts: now() }); }
+  catch (e) { SSTAT = { ok: false, error: e.message || String(e), ts: now() }; }
+  if (force) toast(SSTAT.ok ? (SSTAT.geaendert ? 'StarStrings aktualisiert – gilt ab dem nächsten Spielstart' : 'StarStrings schon aktuell') : 'StarStrings: ' + SSTAT.error);
+  if ($('#lg-ss')) renderLog();
+}
+// StarStrings-Kasten im Log-Sync – zweisprachig (data-notr: nicht noch einmal übersetzen)
+function ssBox() {
+  const en = S.settings.lang === 'en', ges = en ? '[Wanted]' : '[Gesucht]', fehlt = en ? '[Missing]' : '[Fehlt]';
+  const T = en ? {
+    sub: 'Blueprint marks in game (your global.ini)',
+    need: 'Requires <b>StarStrings by MrKraken</b> – the extended language file with blueprint lists in mission descriptions. Install it first: ',
+    none: 'Without StarStrings Pliskin changes nothing.',
+    auto: 'Write to global.ini after every log sync and on start',
+    how: `In mission descriptions: <b>[X]</b> = owned · <b>${ges}</b> = missing and part of a plan · <b>${fehlt}</b> = missing. Missions with a wanted blueprint get <b>${ges}</b> in the title.
+        The game reads the file only on start – changes show up after the next game start. Before the first change of a new StarStrings file Pliskin keeps a backup next to it.`,
+    farbe: 'Colour of ' + ges + ':', opt: [['EM2', 'green (default)'], ['EM4', 'blue like [BP]'], ['EM1', 'no colour']], go: 'Write now', noch: 'not written yet',
+    stat: s => `${fmtTime(s.ts)} · ${s.x} owned · ${s.g} wanted · ${s.f} missing · ${s.titel} titles${s.geaendert ? ' · written' : ' · up to date'}`,
+    err: e => /keine StarStrings/.test(e) ? 'no StarStrings file (MrKraken) found – install StarStrings first' : e
+  } : {
+    sub: 'Blueprint-Häkchen im Spiel (deine global.ini)',
+    need: 'Braucht <b>StarStrings von MrKraken</b> – die erweiterte Sprachdatei mit Blueprint-Listen in den Missionsbeschreibungen. Erst dort installieren: ',
+    none: 'Ohne StarStrings ändert Pliskin nichts.',
+    auto: 'Nach jedem Log-Sync und beim Start in die global.ini schreiben',
+    how: `In den Missionsbeschreibungen: <b>[X]</b> = hab ich · <b>${ges}</b> = fehlt und steckt in einem Plan · <b>${fehlt}</b> = fehlt. Missionen mit gesuchtem Blueprint bekommen im Titel <b>${ges}</b>.
+        Das Spiel liest die Datei nur beim Start – Änderungen siehst du ab dem nächsten Spielstart. Vor der ersten Änderung einer neuen StarStrings-Datei legt Pliskin daneben eine Sicherung an.`,
+    farbe: 'Farbe von ' + ges + ':', opt: [['EM2', 'grün (Standard)'], ['EM4', 'blau wie [BP]'], ['EM1', 'ohne Farbe']], go: 'Jetzt schreiben', noch: 'noch nicht geschrieben',
+    stat: s => `${fmtTime(s.ts)} · ${s.x} hab ich · ${s.g} gesucht · ${s.f} fehlt · ${s.titel} Titel${s.geaendert ? ' · geschrieben' : ' · war aktuell'}`,
+    err: e => e
+  };
+  return `<div class="win tight" id="lg-ss" data-notr style="margin-top:10px"><span class="pill">StarStrings</span><span class="sub">${T.sub}</span>
+      <div class="hint">${T.need}<a href="https://github.com/MrKraken/StarStrings" target="_blank" rel="noopener">github.com/MrKraken/StarStrings</a>. ${T.none}</div>
+      <label class="dim" style="display:flex;gap:6px;align-items:center;margin-top:6px;font:13px var(--vdu)"><input type="checkbox" id="lg-ssan" ${S.settings.starstrings !== false ? 'checked' : ''}> ${T.auto}</label>
+      <div class="hint">${T.how}</div>
+      <label class="dim" style="display:flex;gap:6px;align-items:center;margin-top:6px;font:13px var(--vdu)">${T.farbe} <select id="lg-ssfarbe">${T.opt.map(([k, l]) => `<option value="${k}" ${ssFarbe() === k ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
+      <div class="row2" style="margin-top:6px"><button class="k sm" id="lg-ssgo">${T.go}</button><span class="dim" style="font:12px var(--vdu)">${SSTAT ? (SSTAT.ok ? T.stat(SSTAT) : '<span class="bad">' + esc(T.err(SSTAT.error)) + '</span>') : T.noch}</span></div></div>`;
 }
 function renderLog() {
   const el = $('#log');
@@ -1381,6 +1443,7 @@ function renderLog() {
   el.innerHTML = `<div class="win tight"><span class="pill">Log-Sync</span>
     ${srcBox}
     <label class="dim" style="display:flex;gap:6px;align-items:center;margin-top:8px;font:13px var(--vdu)"><input type="checkbox" id="lg-auto" ${S.settings.autoSync ? 'checked' : ''}> Beim Start automatisch einlesen</label>
+    ${ssApi() ? ssBox() : ''}
     <div class="scroll" style="margin-top:12px"><table class="ptab"><tr><th class="l">Zeitpunkt</th><th class="l">Quelle</th><th>Logs</th><th class="l">Ergebnis</th></tr>
     ${S.syncLog.map(x => `<tr><td class="l">${fmtTime(x.ts)}</td><td class="l dim">${esc(x.source)}</td><td>${x.files || 0}</td><td class="l ${x.error ? 'bad' : x.added.length ? 'green' : 'dim'}">${x.error ? esc(x.error) : x.added.length ? '+' + x.added.length + ' · ' + esc(x.added.slice(0, 6).join(', ')) + (x.added.length > 6 ? ' …' : '') : 'nichts Neues'}${x.unknown && x.unknown.length ? ` <span class="warn">· unbekannt: ${esc(x.unknown.join(', '))}</span>` : ''}</td></tr>`).join('') || '<tr><td colspan="4" class="empty">Noch kein Sync.</td></tr>'}
     </table></div>
@@ -1392,6 +1455,9 @@ function renderLog() {
   }
   $('#lg-go', el).onclick = () => { if (localUI()) S.settings.logDir = $('#lg-dir', el).value.trim(); syncNow(); };
   $('#lg-auto', el).onchange = e => { S.settings.autoSync = e.target.checked; save(); };
+  const ssan = $('#lg-ssan', el); if (ssan) ssan.onchange = e => { S.settings.starstrings = e.target.checked; save(); if (e.target.checked) starStrings(true); };
+  const ssgo = $('#lg-ssgo', el); if (ssgo) ssgo.onclick = () => starStrings(true);
+  const ssf = $('#lg-ssfarbe', el); if (ssf) ssf.onchange = e => { S.settings.ssFarbe = e.target.value; save(); starStrings(true); };
   const drop = $('#lg-drop', el);
   drop.ondragover = e => { e.preventDefault(); drop.style.borderColor = 'var(--pill)'; };
   drop.ondragleave = () => drop.style.borderColor = '';
@@ -1520,7 +1586,7 @@ function render() {
   compute(); renderHeader();
   if (current === 'bp') { current = 'db'; S.ui.dbTab = 'bps'; }   // Blueprints stehen jetzt in der Datenbank
   ({ plan: renderPlans, todo: renderTodo, lager: renderLager, ctr: renderContracts, tour: renderTour, ships: renderShips, log: renderLog, opt: renderOpt,
-     db: renderDb, orte: renderOrte, help: renderHelp })[current]();
+     db: renderDb, orte: renderOrte, help: renderHelp, fit: () => window.FIT && window.FIT.show() })[current]();
   if (typeof demoBanner === 'function') demoBanner();
 }
 
@@ -1559,7 +1625,8 @@ async function boot() {
   // Beim Start: Logs einlesen und Preise holen (im Hintergrund)
   BOOTED = true;
   if (!LOCAL && window.pywebview && window.pywebview.api && typeof window.pywebview.api.sync_logs === 'function') { LOCAL = true; render(); }
-  if (S.settings.autoSync && LOCAL && S.settings.logDir && !DEMO) syncNow('Start');
+  if (S.settings.autoSync && LOCAL && S.settings.logDir && !DEMO) syncNow('Start');   // schreibt danach auch StarStrings
+  else setTimeout(() => starStrings(), 1500);
   wInit().then(render);
   fetch('data/missionen.json').then(r => r.json()).then(j => { MISS = j.pools || {}; render(); }).catch(() => { /* ohne Missionsdaten */ });
   loadOrte().then(render);

@@ -1,6 +1,14 @@
 # Changelog
 
-## 1.0.0
+## 0.8.0
+Erste öffentliche Vorab-Version / first public early-access version.
+- Schiffs-Fitting (im Aufbau): Gladius, Golem, Polaris – Waffen, Racks/Raketen, Türme, Komponenten, Mining-Köpfe/Module/Gadgets, Paints, Flight Blades, Pips; Ausstattung → Crafting-Plan / Ship fitting (work in progress), loadout → crafting plan.
+- StarStrings (MrKraken): Blueprint-Häkchen in Missionsbeschreibungen, [Gesucht] grün / StarStrings blueprint marks, [Gesucht] in green.
+- Log-Sync erkennt Bauteil-Namen im StarStrings-Format („7CA 'Nargun' [Civilian S03 A]“) / Log sync understands StarStrings component names.
+- Gecraftete Generatoren: Qualität ändert die Pips im Fitting / Crafted power plants: quality changes pips in the fitting.
+- Menü „Schiffe“ heißt jetzt „Meine Schiffe“, Cargo-Grid-Einstellung im Fitting / “Ships” renamed to “My ships”.
+
+### Vorher (intern 1.0.0) / earlier (internal 1.0.0)
 - Fertiges Programm für Windows und Linux – kein Server, kein Browser nötig / Standalone program for Windows and Linux.
 - Server-Modus (Einstellungen → Programm): Handy, Laptop und andere PCs im Heimnetz greifen zu / Server mode for your home network.
 - Updates über GitHub: Hinweis bei neuer Version (abschaltbar), jede Version wählbar / Updates via GitHub, any version selectable.
