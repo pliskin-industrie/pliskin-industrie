@@ -789,3 +789,6 @@ body.mob .mit .msym{width:38px;height:38px;margin:0 10px 0 0;flex:0 0 auto}
 body.mob .erfrow.bp{grid-template-columns:1fr 1fr}
 body.mob .erfrow.bp .erff.bpn{grid-column:1/-1}
 @media (max-width:1300px){.erfrow.bp{grid-template-columns:200px 1fr 150px auto}.erfrow.bp .erfx{grid-column:auto;grid-row:auto}}
+
+/* Desktop-Ansicht auf dem Handy (index.html): feste Breite, Seite wischbar/zoombar; Fitting bleibt dreispaltig */
+html.desk-wide body{min-width:1500px}

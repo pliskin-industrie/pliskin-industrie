@@ -119,6 +119,8 @@ const HELP = [
     <li>Server-Modus (nur im fertigen Programm): öffnet Pliskin für dein Heimnetz. Handy, Laptop und andere PCs öffnen die angezeigte Adresse im Browser und arbeiten mit denselben Daten. Der Rechner muss dafür laufen. Kein Passwort – nur fürs Heimnetz.</li>
     <li>Updates: Beim Start weist Pliskin auf eine neue Version hin (abschaltbar oder pro Version überspringbar). Unter Einstellungen → Programm lässt sich jede Version installieren, auch eine ältere. Deine Daten bleiben dabei unverändert.</li>
     <li>Demo-Modus: lädt fertige Beispiel-Daten, damit du dir schnell einen Überblick verschaffen kannst. Im Demo-Modus wird nichts gespeichert; beenden über den Knopf im Demo-Banner.</li></ul>`],
+  ['Erfassung (Kiste per Taste oder Handy)', `<ul><li>Der Handy-Auslöser geht im fertigen Programm nur mit eingeschaltetem Server-Modus, weil das Handy den PC erreichen muss.</li>
+    <li>Die Taste kommt im Spiel nur an, wenn Pliskin dieselben Rechte hat wie Star Citizen (läuft Star Citizen bzw. der RSI-Launcher als Administrator, muss Pliskin auch als Administrator laufen).</li></ul>`],
   ['Woher die Daten kommen', `<ul><li><b>Spieldaten</b> (Data.p4k, Patch %PATCH%): Rezepte, Schiffe, Cargo-Grids, Quantum-Antriebe, Karte, Orte mit Ausstattung (Tanken, Raffinerie, Handel …), Waren, Fundorte, Qualitäts-Verteilung, Missions-Belohnungen. Pliskin liest sie selbst aus – bei jedem neuen Patch neu.</li>
     <li><b>Nicht in den Spieldateien</b> (schickt der Spiel-Server): Handelspreise und Raffinerie-Boni. Dafür gibt es <b>eigene Einträge</b> (Datenbank → ✎ Eigene Daten) – die gehen immer vor.</li>
     <li><b>UEX Corp</b> (optional, nur auf Knopfdruck in den Einstellungen): Handelspreise, von Spielern gemeldet, können veraltet sein.</li>

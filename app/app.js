@@ -1,7 +1,7 @@
 'use strict';
 /* Pliskin Industrie – Programmlogik: Pläne, Blueprints, Lager, Log-Sync, Einstellungen.
    Weitere Teile: etappe2.js (Schiffe, Contracts, Tour), verkauf.js, wissen.js (Datenbank), heute.js (To-do), hilfe.js (Hilfe, Demo) */
-const APP_VERSION = '0.8.1';
+const APP_VERSION = '0.8.2';
 // Demo-Modus: Testdaten statt eigener Daten, nichts wird gespeichert (gilt nur für dieses Browser-Fenster)
 let DEMO = false; try { DEMO = sessionStorage.getItem('pliskin-demo') === '1'; } catch (e) { /* egal */ }
 

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Pliskin Industrie 0.8.1 fuer Linux bauen -> dist/Pliskin-Industrie-linux-x86_64
+# Pliskin Industrie 0.8.2 fuer Linux bauen -> dist/Pliskin-Industrie-linux-x86_64
 set -e
 cd "$(dirname "$0")/.."
 python3 -m pip install -r requirements-linux.txt pyinstaller

@@ -410,7 +410,7 @@ function mMehr() {
   $$('[data-go]', el).forEach(b => b.onclick = () => mGo(b.dataset.go));
   $$('[data-soon]', el).forEach(b => b.onclick = () => toast('Kommt in Etappe 2'));
   $('#mm-theme', el).onclick = () => mSheet('Design', THEMES.map(([k, l]) => ({ label: (k === S.settings.theme ? '● ' : '') + l, cls: k === S.settings.theme ? 'pri' : '', fn: () => { S.settings.theme = k; applyTheme(); save(); render(); } })));
-  $('#mm-pc', el).onclick = () => { try { localStorage.setItem('hysec-view', 'pc'); } catch (e) { /* egal */ } location.href = './'; };
+  $('#mm-pc', el).onclick = () => { try { localStorage.setItem('hysec-view', 'pc'); } catch (e) { /* egal */ } location.href = './?desktop=1'; };
 }
 function mHist() {
   $('#m-view').innerHTML = `<div class="mhd"><h3>Historie</h3></div>` +

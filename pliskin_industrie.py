@@ -27,7 +27,7 @@ except ImportError:  # pragma: no cover
     webview = None
 
 APP_NAME = "Pliskin Industrie"
-VERSION = "0.8.1"
+VERSION = "0.8.2"
 UEX_BASE = "https://api.uexcorp.uk/2.0"
 UEX_AGENT = "pliskin-industrie/%s (Star-Citizen-Tool)" % VERSION
 UEX_MAX_AGE = 6 * 3600          # Preise hoechstens alle 6 Stunden neu laden

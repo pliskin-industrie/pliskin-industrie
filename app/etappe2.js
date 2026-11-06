@@ -647,10 +647,12 @@ function placeCrates(G, items, doors, minB, maxB) {
   while (items.length) {
     const it = items.shift();
     const want = maxB > minB ? 1 - (it.bis - minB) / (maxB - minB) : .5;
-    let best = null;
+    let best = null, hochNoetig = false;
+    for (let pass = 0; pass < 2 && !best; pass++) { hochNoetig = pass === 1;
     G.forEach((g, gi) => {
       const idx = (x, y, z) => (z * g.y + y) * g.x + x, door = doors[gi] ?? 0;
-      for (const [w, l, h] of perms3(BOXG[it.s] || [1, 1, 1]).filter(d => fitsMaxDim(d, g.max)))
+      const bg = BOXG[it.s] || [1, 1, 1], pm = perms3(bg).filter(d => fitsMaxDim(d, g.max)), flach = pm.filter(d => d[2] === bg[2]);
+      for (const [w, l, h] of (flach.length && !hochNoetig ? flach : pm))
         for (let z = 0; z + h <= g.z; z++) for (let y = 0; y + l <= g.y; y++) for (let x = 0; x + w <= g.x; x++) {
           let ok = true;
           for (let a = 0; a < w && ok; a++) for (let b = 0; b < l && ok; b++) for (let c = 0; c < h && ok; c++) if (g.occ[idx(x + a, y + b, z + c)] >= 0) ok = false;
@@ -660,7 +662,7 @@ function placeCrates(G, items, doors, minB, maxB) {
           const sc = z * 3 + Math.abs(atDoor - want) * 10 + gi * 4 + (x + y) * .001;
           if (!best || sc < best.sc) best = { sc, gi, x, y, z, w, l, h };
         }
-    });
+    }); }
     if (best) {
       const g = G[best.gi], idx = (x, y, z) => (z * g.y + y) * g.x + x, id = ++CRATE_ID;
       for (let a = 0; a < best.w; a++) for (let b = 0; b < best.l; b++) for (let c = 0; c < best.h; c++) g.occ[idx(best.x + a, best.y + b, best.z + c)] = id;
@@ -695,6 +697,8 @@ function packTour(I, grids, doors) {
 const shadeHex = (hex, f) => { const n = parseInt(hex.slice(1), 16); return `rgb(${[n >> 16, n >> 8 & 255, n & 255].map(v => Math.max(0, Math.min(255, Math.round(v * f))))})`; };
 /* Echte SCU-Kisten (gerendert aus den Spieldaten, data/modelle/kiste_<key>_x|z.webp): Bild je Ware + Größe */
 const KIMG = {};
+// Wartende zuerst herausnehmen, dann aufrufen – sonst gehen beim Neuzeichnen neu eingetragene Wartende verloren (→ gemischt Farbbox/Bild)
+const KIMG_FERTIG = () => { const w = KIMG._warte || []; KIMG._warte = []; w.forEach(f => f()); };
 function kisteBild(ware, size, lang) {
   if (!KISTEN || !KISTEN.res || S.settings.kistenBilder === false) return null;
   const r = kstRes(ware) || kstRes('uex:' + ware);
@@ -704,21 +708,34 @@ function kisteBild(ware, size, lang) {
     if (!(size in KISTEN._std)) { const c = {}; for (const v of Object.values(KISTEN.res)) { const k = v.kisten && v.kisten[String(size)]; if (k) c[k] = (c[k] || 0) + 1; } KISTEN._std[size] = Object.keys(c).sort((a, b) => c[b] - c[a])[0] || null; }
     key = KISTEN._std[size];
   }
+  if (!key && +size < 1) key = r && r.kisten && r.kisten['1'];   // 1/8-Kiste ohne eigenes Modell (nur 36 Waren haben eins): 1-SCU-Kiste
   if (!key) return null;
   const url = `data/modelle/kiste_${key}_${lang}.webp`;
   let im = KIMG[url];
-  if (!im) { im = KIMG[url] = new Image(); im.src = url; im.onload = () => { (KIMG._warte || []).forEach(f => f()); KIMG._warte = []; }; }
+  if (!im) { im = KIMG[url] = new Image(); im.src = url; im.onload = KIMG_FERTIG; }
   return im.complete && im.naturalWidth ? { im, wh: (KISTEN.groesse && KISTEN.groesse[key]) || im.naturalWidth } : (KIMG._warte = KIMG._warte || [], null);
 }
 // Material-Symbol (Stein) für Aufdrucke auf den Kisten
 function symBild(mat) {
   const r = kstRes(mat) || kstRes('uex:' + mat); if (!r || !r.symbol) return null;
   const url = 'data/' + r.symbol; let im = KIMG[url];
-  if (!im) { im = KIMG[url] = new Image(); im.src = url; im.onload = () => { (KIMG._warte || []).forEach(f => f()); KIMG._warte = []; }; }
-  return im.complete && im.naturalWidth ? im : null;
+  if (!im) { im = KIMG[url] = new Image(); im.src = url; im.onload = KIMG_FERTIG; }
+  if (im.complete && im.naturalWidth) return im;
+  (KIMG._warte = KIMG._warte || []); return null;
+}
+// Zeichenreihenfolge der Kisten-Bilder: A vor B, wenn A ganz hinter/unter B liegt (topologisch; die alte Summe x1+y1 stimmte bei langen Kisten nicht)
+function isoReihenfolge(bild) {
+  const L = [...bild.entries()], n = L.length, behind = (a, b) => a[1].r[1] <= b[1].r[0] || a[1].r[3] <= b[1].r[2] || a[1].r[5] <= b[1].r[4];
+  const nach = L.map(() => []), grad = new Array(n).fill(0);
+  for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) if (i !== j && behind(L[i], L[j]) && !behind(L[j], L[i])) { nach[i].push(j); grad[j]++; }
+  const q = L.map((_, i) => i).filter(i => !grad[i]).sort((a, b) => L[a][1].tiefe - L[b][1].tiefe), out = [], done = new Set();
+  while (q.length) { const i = q.shift(); out.push(L[i]); done.add(i); for (const j of nach[i]) if (!--grad[j]) q.push(j); q.sort((a, b) => L[a][1].tiefe - L[b][1].tiefe); }
+  L.forEach((e, i) => { if (!done.has(i)) out.push(e); });   // Zyklen (selten): Rest nach Tiefe
+  return out;
 }
 function drawIso(cv, g, boxes, o = {}) {
   if (!g) return;
+  cv._iso = { g, boxes, o };   // Neuzeichnen nach Bild-Laden immer mit dem neuesten Stand (nicht mit altem Ebenen-Regler o. Ä.)
   const R = (((o.rot || 0) % 4) + 4) % 4, W = R % 2 ? g.y : g.x, L = R % 2 ? g.x : g.y, maxLayer = o.layer || g.z;
   const rot = (x, y) => [[x, y], [g.y - 1 - y, x], [g.x - 1 - x, g.y - 1 - y], [y, g.x - 1 - x]][R];
   const rc = (x, y) => [[x, y], [g.y - y, x], [g.x - x, g.y - y], [y, g.x - x]][R];
@@ -731,7 +748,7 @@ function drawIso(cv, g, boxes, o = {}) {
   const c = cv.getContext('2d'); c.setTransform(dpr, 0, 0, dpr, ox * dpr, oy * dpr);
   const cell = new Map(), key = (x, y, z) => x + ',' + y + ',' + z;
   for (const b of boxes) for (let a = 0; a < b.w; a++) for (let d = 0; d < b.l; d++) for (let e = 0; e < b.h; e++) {
-    if (bilder ? b.z >= maxLayer : b.z + e >= maxLayer) continue;   // mit Kistenbildern: ganze Kisten ab der Ebene ausblenden statt anschneiden
+    if (bilder ? b.z + b.h > maxLayer : b.z + e >= maxLayer) continue;   // mit Kistenbildern: ganze Kisten ab der Ebene ausblenden statt anschneiden
     const [rx, ry] = rot(b.x + a, b.y + d); cell.set(key(rx, ry, b.z + e), b);
   }
   const poly = (pts, fill, stroke) => { c.beginPath(); pts.forEach(([x, y], i) => i ? c.lineTo(x, y) : c.moveTo(x, y)); c.closePath(); if (fill) { c.fillStyle = fill; c.fill(); } if (stroke) { c.strokeStyle = stroke; c.stroke(); } };
@@ -758,7 +775,7 @@ function drawIso(cv, g, boxes, o = {}) {
     const kb = kisteBild(b.mat || b.ware, b.s, (x1 - x0) >= (y1 - y0) ? 'x' : 'z');
     if (kb) bild.set(b, { ...kb, c: [(x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2], r: [x0, x1, y0, y1, z0, z1], tiefe: x1 + y1 + z0 * .01 });
   }
-  if (bilder && boxes.some(b => !bild.has(b)) && KIMG._warte) KIMG._warte.push(() => drawIso(cv, g, boxes, o));   // Bilder laden noch → gleich neu zeichnen
+  if (bilder && boxes.some(b => !bild.has(b)) && KIMG._warte) { if (!cv._isoW) { cv._isoW = true; KIMG._warte.push(() => { cv._isoW = false; if (cv.isConnected && cv._iso) drawIso(cv, cv._iso.g, cv._iso.boxes, cv._iso.o); }); } }   // Bilder laden noch → gleich neu zeichnen
   for (const [x, y, z, b] of cells) {
     if (bild.has(b)) {   // nur Trefferflächen (Hover/Antippen), gemalt wird unten das Bild
       const top = [P(x, y, z + 1), P(x + 1, y, z + 1), P(x + 1, y + 1, z + 1), P(x, y + 1, z + 1)];
@@ -792,7 +809,7 @@ function drawIso(cv, g, boxes, o = {}) {
   c.globalAlpha = 1;
   if (bild.size) {
     const f = cx / (1.25 * Math.SQRT1_2 * (KISTEN.ppm || 48));   // Bild-Pixel → Grid-Pixel (1 Feld = 1,25 m)
-    for (const [b, k] of [...bild.entries()].sort((a, d) => a[1].tiefe - d[1].tiefe)) {
+    for (const [b, k] of isoReihenfolge(bild)) {
       const [px, py] = P(...k.c), sz = k.wh * f;
       c.save();
       // Aura: o.auraOf(b) = Farbe je Kiste (z. B. Umlagerung), sonst gewählte Kisten; o.alphaOf(b) = Durchsichtigkeit (z. B. „kommt von“)
@@ -807,7 +824,7 @@ function drawIso(cv, g, boxes, o = {}) {
       const sy = o.symbole === false ? null : symBild(b.mat || b.ware);
       if (sy) {
         const [mx, my, mz] = k.c, [x0, x1, y0, y1, z0, z1] = k.r, kf = b.s < 1 ? .45 : 1;
-        const face = (cxp, cyp, ax, ay, bx, by, d) => { c.save(); c.globalAlpha *= .92; c.transform(ax * d, ay * d, bx * d, by * d, cxp, cyp); c.drawImage(sy, -.5, -.5, 1, 1); c.restore(); };
+        const face = (cxp, cyp, ax, ay, bx, by, d) => { c.save(); c.globalAlpha *= .92; c.transform(ax * d, ay * d, bx * d, by * d, cxp, cyp); const as = sy.naturalWidth / sy.naturalHeight, sw = as >= 1 ? 1 : as, sh = as >= 1 ? 1 / as : 1; c.drawImage(sy, -sw / 2, -sh / 2, sw, sh); c.restore(); };
         const T = P(mx, my, z1), dT = Math.min(x1 - x0, y1 - y0) * .55 * kf;
         face(T[0], T[1], cx, cy, -cx, cy, dT);
         const X = P(x1, my, mz), dX = Math.min(y1 - y0, z1 - z0) * .5 * kf;

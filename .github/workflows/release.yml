@@ -1,5 +1,5 @@
 # Baut Pliskin Industrie fuer Windows und Linux und haengt beide Dateien an das GitHub-Release.
-# Ausloesen: Tag „v<Version>“ pushen (muss zu VERSION in pliskin_industrie.py passen), z. B. v0.8.1
+# Ausloesen: Tag „v<Version>“ pushen (muss zu VERSION in pliskin_industrie.py passen), z. B. v0.8.2
 name: Release bauen
 on:
   push:

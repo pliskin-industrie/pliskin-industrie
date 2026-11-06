@@ -103,12 +103,16 @@ function laPacken(kisten) {
     for (const gap of [2, 1, 0]) { for (const gg of grids) if (versuche(gg, ks, gap)) { ok = true; break; } if (ok) break; }
     if (ok) continue;
     // eng: einzeln in Lücken der vorhandenen Elevators (stapeln), Rest in einen neuen Elevator
-    const rest = [];
+    let rest = [];
     for (const k of ks) { let p = null, gg = null; for (const x of grids) { p = bester(x, k, { x: 0, y: 0, w: x.x, l: x.y }); if (p) { gg = x; break; } } if (p) setze(gg, k, p); else rest.push(k); }
-    if (rest.length) {
-      if (grids.length >= LA_MAX_GRIDS) { ueber += rest.length; continue; }
+    while (rest.length) {   // so viele neue Elevators öffnen, bis alles drin ist (früher: nur einer, der Rest ging verloren)
+      if (grids.length >= LA_MAX_GRIDS) { ueber += rest.length; break; }
       const g = neu();
-      if (!versuche(g, rest, 0)) for (const k of rest) { const p = bester(g, k, { x: 0, y: 0, w: g.x, l: g.y }); if (p) setze(g, k, p); else ueber++; }
+      if (versuche(g, rest, 0)) break;
+      const nxt = [];
+      for (const k of rest) { const p = bester(g, k, { x: 0, y: 0, w: g.x, l: g.y }); if (p) setze(g, k, p); else nxt.push(k); }
+      if (nxt.length === rest.length) { grids.pop(); ueber += nxt.length; break; }   // passt gar nichts → Abbruch
+      rest = nxt;
     }
   }
   return { grids: grids.filter(x => x.boxes.length), ueber, zugross };

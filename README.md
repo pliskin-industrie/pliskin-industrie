@@ -1,6 +1,6 @@
 <p align="center"><img src="docs/bilder/logo.png" width="110" alt="Pliskin Industrie"></p>
 
-<h1 align="center">Pliskin Industrie 0.8.1</h1>
+<h1 align="center">Pliskin Industrie 0.8.2</h1>
 <p align="center"><b>Crafting · Storage · Logistics for Star Citizen</b><br>
 <a href="README.de.md">🇩🇪 Deutsch</a> · <a href="docs/HANDBUCH.md">Manual (German)</a> · <a href="../../issues/new/choose">Report a bug</a> · <a href="../../releases">Download</a></p>
 
@@ -8,7 +8,7 @@
 
 ---
 
-> **Version 0.8.1 – early access.** Pliskin Industrie is built by **one person** in their spare time. How fast features grow and bugs get fixed depends on time and resources – but work on it continues. Feedback, bug reports and screenshots are very welcome.
+> **Version 0.8.2 – early access.** Pliskin Industrie is built by **one person** in their spare time. How fast features grow and bugs get fixed depends on time and resources – but work on it continues. Feedback, bug reports and screenshots are very welcome.
 >
 > The program is available in **English and German** – pick the language on first start or under Settings → Program.
 
@@ -26,7 +26,7 @@ Pliskin Industrie puts **blueprints, crafting plans, storage, mining and cargo t
 | **Material atlas** – where a resource spawns and where you are most likely to find top quality (“chance per rock”), plus refineries and methods. | <img src="docs/bilder/06-material-atlas.webp" width="420"> |
 | **Mining trip** – pick several materials, Pliskin finds the places where you get most of them together, with distance from your home station. | <img src="docs/bilder/07-mining-ausflug.webp" width="420"> |
 | **Blueprint catalog** – every blueprint with stats at Q0 / Q500 / Q1000, skins, sets and own renders from the game models. Status: owned, missing, obtainable. Mark blueprints as owned by hand. | <img src="docs/bilder/08-katalog.webp" width="420"> |
-| **Ship fitting (new, work in progress)** – a loadout configurator in the style of the Wing Commander loadout screens: weapons, missile racks and missiles, turrets, components, mining heads with modules and gadgets, paints and flight blades, power pips, cooling, radar, signatures. Changed weapons show up on the ship renders. One click turns the loadout into a **crafting plan** – that is the main purpose. So far only **Gladius, Golem and Polaris**; values come from the game data but are partly simplified or estimated – **no guarantee that every number matches the game**. | <img src="docs/bilder/12-fitting.webp" width="420"> |
+| **Ship fitting (new, work in progress)** – a loadout configurator in the style of the Wing Commander loadout screens: weapons, missile racks and missiles, turrets, components, mining heads with modules and gadgets, paints and flight blades, power pips, cooling, radar, signatures. Changed weapons show up on the ship renders. One click turns the loadout into a **crafting plan** – that is the main purpose. Now **210 ships**, missing images show “Bild folgt” (image coming); values come from the game data but are partly simplified or estimated – **no guarantee that every number matches the game**. | <img src="docs/bilder/12-fitting.webp" width="420"> |
 | **StarStrings blueprint marks** – if you use [MrKraken's StarStrings](https://github.com/MrKraken/StarStrings), Pliskin marks the blueprint lists in mission descriptions: **[X]** owned, **[Gesucht]** (wanted – missing and part of a plan, green), **[Fehlt]** missing. Missions with a wanted blueprint get **[Gesucht]** in the title. StarStrings must be installed first; Pliskin only changes that file and keeps a backup. | |
 | **Ships** – cargo grids of about 100 ships from the game data, door side, quantum drive, range. | <img src="docs/bilder/09-schiffe.webp" width="420"> |
 | **Capture by hotkey** (default **Pause**) – crate tooltip in the inventory/Freight Manager, a crate in the tractor beam (size from its weight) or a blueprint in the Fabrication Kiosk: Pliskin reads material, quality, amount or the blueprint name and collects everything until you confirm. Can also be triggered from your phone. | |
@@ -37,7 +37,7 @@ Pliskin Industrie puts **blueprints, crafting plans, storage, mining and cargo t
 <p align="center"><img src="docs/bilder/10-design-wc3v.webp" width="290"> <img src="docs/bilder/10-design-wc4i.webp" width="290"> <img src="docs/bilder/10-design-sccargo.webp" width="290"></p>
 
 ### Work in progress (known gaps)
-- **Ship fitting:** only 3 ships so far (Gladius, Golem, Polaris) – the other ships follow step by step (every ship needs its own renders). Not every value is exact yet (e.g. effects of crafted quality on some stats, power/cooling formulas are estimates). Phone view of the fitting is still missing.
+- **Ship fitting:** 210 ships are in, some still lack images (“Bild folgt”). Not every value is exact yet (e.g. effects of crafted quality on some stats, power/cooling formulas are estimates). Phone view of the fitting is still missing.
 - **Image recognition:** crate tooltips, tractor beam and blueprints work; refinery terminal and shop prices are not done yet.
 - **English:** newer screens may still contain a few German words; the manual is German only for now.
 - **Contracts from the Game.log** and live trade prices are planned.
@@ -45,8 +45,8 @@ Pliskin Industrie puts **blueprints, crafting plans, storage, mining and cargo t
 
 ### Download and start
 1. Get the file for your system under **[Releases](../../releases)**:
-   - Windows: `Pliskin-Industrie-v0.8.1-windows.exe`
-   - Linux: `Pliskin-Industrie-v0.8.1-linux-x86_64`
+   - Windows: `Pliskin-Industrie-v0.8.2-windows.exe`
+   - Linux: `Pliskin-Industrie-v0.8.2-linux-x86_64`
 2. **Windows:** double-click. Windows may warn (“Windows protected your PC”) because the program is not signed → *More info* → *Run anyway*. You can verify the file with `SHA256SUMS.txt` from the release.
    **Linux:** `chmod +x Pliskin-Industrie-*-linux-x86_64` and run it. If window components (Qt) are missing, Pliskin opens in your browser instead.
 3. On first start choose language (English/Deutsch), design and **start empty** or **try the demo**.
