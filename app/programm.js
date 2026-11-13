@@ -47,7 +47,35 @@ function progBoxHtml() {
       <div class="flbl" style="margin-top:10px">${L2('Server-Modus', 'Server mode')}</div>${server}
       ${typeof erfKeyHtml === 'function' ? erfKeyHtml() : ''}
       <div class="flbl" style="margin-top:10px">${L2('Updates', 'Updates')}</div>
-      <label class="dim" style="display:flex;gap:6px;align-items:center;font:13px var(--vdu)"><input type="checkbox" id="pg-hint" ${st.updHint !== false ? 'checked' : ''}> ${L2('Beim Start auf neue Version hinweisen', 'Notify me about new versions on start')}</label>${upd}</div>`;
+      <label class="dim" style="display:flex;gap:6px;align-items:center;font:13px var(--vdu)"><input type="checkbox" id="pg-hint" ${st.updHint !== false ? 'checked' : ''}> ${L2('Beim Start auf neue Version hinweisen', 'Notify me about new versions on start')}</label>${upd}</div>${internBoxHtml()}`;
+}
+/* ---------------- Einstellungen: „Intern vs. Release“ (nur Ausgabe „privat“, im Release unsichtbar) ---------------- */
+// Hier pflegen: Funktionen, die nur in der privaten Ausgabe laufen. Neue interne Schalter einfach ergänzen.
+const NUR_INTERN = [
+  { de: '„Nur lernen“ in der Erfassung (Kisten als Lernmuster übernehmen, ohne einzulagern)', en: '“Learn only” in capture (keep crates as training samples without storing them)' },
+  { de: 'Pi-Server für alle Geräte statt Update über GitHub', en: 'Raspberry Pi server for all devices instead of updates via GitHub' },
+];
+const istIntern = () => APP.edition === 'privat';
+let NEU_SEIT_REL;   // undefined = noch nicht geladen, '' = keine Patch Notes
+async function neuSeitRelLaden() {
+  try {
+    const r = await fetch('data/CHANGELOG.md', { cache: 'no-store' });
+    const t = r.ok ? await r.text() : '';
+    const m = t.match(/^## +(.+)\n([\s\S]*?)(?=^## |$(?![\s\S]))/m);   // erster Abschnitt = Stand seit dem letzten Release
+    NEU_SEIT_REL = m ? m[2].split('\n').filter(z => /^\s*- /.test(z)).map(z => z.replace(/^\s*- /, '').trim()) : [];
+  } catch (e) { NEU_SEIT_REL = []; }
+  if ($('#pg-intern')) $('#pg-intern').outerHTML = internBoxHtml();
+}
+function internBoxHtml() {
+  if (!istIntern()) return '';
+  if (NEU_SEIT_REL === undefined) setTimeout(neuSeitRelLaden, 0);
+  const neu = NEU_SEIT_REL === undefined ? `<div class="hint">${L2('Wird geladen …', 'Loading …')}</div>`
+    : NEU_SEIT_REL.length ? `<ul class="dim" style="margin:4px 0 0 18px;padding:0;font:13px var(--vdu)">${NEU_SEIT_REL.map(z => `<li>${esc(z)}</li>`).join('')}</ul>`
+    : `<div class="hint">${L2('Noch keine Patch Notes seit dem letzten Release.', 'No patch notes since the last release yet.')}</div>`;
+  return `<div class="win tight" id="pg-intern"><span class="pill">${L2('Intern vs. Release', 'Internal vs. release')}</span><span class="sub">${L2('nur in der privaten Ausgabe sichtbar', 'only visible in the private edition')}</span>
+      <div class="flbl">${L2('Läuft gerade', 'Running now')}</div><div class="dim" style="font:13px var(--vdu)">Pliskin Industrie <b>${esc(APP.version)}</b> · ${L2('Ausgabe', 'Edition')} <b>${esc(APP.edition)}</b></div>
+      <div class="flbl" style="margin-top:10px">${L2('Nur intern', 'Internal only')}</div><ul class="dim" style="margin:4px 0 0 18px;padding:0;font:13px var(--vdu)">${NUR_INTERN.map(f => `<li>${esc(L2(f.de, f.en))}</li>`).join('')}</ul>
+      <div class="flbl" style="margin-top:10px">${L2('Neu seit dem letzten Release', 'New since the last release')}</div>${neu}</div>`;
 }
 function progBoxBind(el) {
   if (typeof erfKeyBind === 'function') erfKeyBind(el);

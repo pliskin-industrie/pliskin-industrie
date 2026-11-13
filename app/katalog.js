@@ -16,8 +16,9 @@ const KST = { start: '★ Start-Blueprint', miss: '🎯 Mission', event: '⏳ nu
 const KST_HELP = {
   start: 'Hat jeder von Anfang an.', miss: 'Gibt es als Belohnung aus Missionen (siehe Links).',
   event: 'Hängt an einem Missions-Pool, für den es derzeit keine aktive Mission gibt – meist nur während eines Events.',
-  none: 'Hängt in Patch ' + '4.10.2' + ' an keiner Mission – derzeit nicht erspielbar (Blueprint ist im Spiel, aber nicht zu bekommen).',
-  nocraft: 'Gibt es im Spiel (Shop, Beute, Belohnung oder Event), aber in Patch 4.10.2 ohne Blueprint – kann nicht gecraftet werden. Steht hier, damit du siehst, was es gibt.' };
+  get none() { return 'Hängt in Patch ' + kPatch() + ' an keiner Mission – derzeit nicht erspielbar (Blueprint ist im Spiel, aber nicht zu bekommen).'; },
+  get nocraft() { return 'Gibt es im Spiel (Shop, Beute, Belohnung oder Event), aber in Patch ' + kPatch() + ' ohne Blueprint – kann nicht gecraftet werden. Steht hier, damit du siehst, was es gibt.'; } };
+const kPatch = () => (K && K.version) || (typeof R !== 'undefined' && R && R.patch) || '?';   // Patch der Spieldaten (Auftrag 69)
 const KLASSE = { Light: 'Leicht', Medium: 'Mittel', Heavy: 'Schwer' };
 const kOf = id => (K && K.items[id]) || kGuess(id);
 // Fallback, falls ein Blueprint in katalog.json fehlt

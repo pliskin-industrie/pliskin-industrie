@@ -14,8 +14,10 @@ import os
 import re
 import time
 
-# Liste nach „Potential Blueprints“ bis zur nächsten Leerzeile; je Punkt „\\n- “ mit oder ohne Marke (beide Sprachen, jede Farbe)
-LISTE = re.compile(r"(Potential Blueprints</EM4>)(.*?)(?=\\n\\n|$)")
+# Liste nach „Potential Blueprints“ (auch „Potential Blueprints (Neutral only)“) bzw. „Pool 1“, „Pool 2“ … (MrKraken: „Multiple
+# Blueprint Pools“) bis zur nächsten Leerzeile; je Punkt „\\n- “ mit oder ohne Marke (beide Sprachen, jede Farbe). Auftrag 69.
+KOPF = re.compile(r"Potential Blueprints[^<\\]{0,40}</EM4>|<EM4>Pool \d+</EM4>")
+LISTE = re.compile(r"((?:Potential Blueprints[^<\\]{0,40}|<EM4>Pool \d+)</EM4>)(.*?)(?=\\n\\n|$)")
 PUNKT = re.compile(r"(\\n- )((?:\[ \]|\[X\]|<EM4>\[X\]</EM4>|\[Fehlt\]|\[Missing\]|<EM\d>\[(?:Gesucht|Wanted)\]</EM\d>) )?([^\\\r\n]+)")
 # Titel-Marke von Pliskin (alt „[Gesuchte BP]“, neu „[Gesucht]“/„[Wanted]“) – überall im Titel entfernen, dann neu setzen
 TITEL_MARKE = re.compile(r"<EM\d>\[(?:Gesucht(?:e BP)?|Wanted)\]</EM\d> ")
@@ -83,7 +85,7 @@ def schreiben(live_dir, status, farbe="EM2", sprache="de"):
     n = {"x": 0, "g": 0, "f": 0, "unbekannt": 0, "titel": 0}
     gesucht_basis = set()
     for i, z in enumerate(zeilen):
-        if "Potential Blueprints</EM4>" not in z or "=" not in z:
+        if "=" not in z or not KOPF.search(z):
             continue
         key, wert = z.split("=", 1)
         treffer = [False]

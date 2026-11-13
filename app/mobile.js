@@ -50,7 +50,7 @@ function mHeader() {
   const keyOf = { plan: 'plans', bp: TAB ? 'bp' : 'mehr', hist: 'mehr', calc: 'mehr', log: 'mehr', opt: 'mehr', db: 'mehr', orte: 'mehr', help: 'mehr', tour: 'mehr', ctr: 'mehr', ships: 'mehr', move: 'mehr' };
   const k = keyOf[M.view] || M.view;
   $$('#m-keys .mkey').forEach(x => x.classList.toggle('on', x.dataset.v === k));
-  $('#m-foot').textContent = `Pliskin Industrie ${APP_VERSION}${DEMO ? ' · DEMO' : ''} · Rezepte: Data.p4k · Patch ${R.patch || '?'} · Preise: UEX Corp${U.ts ? ' (Stand ' + fmtTime(new Date(U.ts * 1000).toISOString()) + ')' : ' (nicht geladen)'} · Blueprints: Game-Logs`;
+  $('#m-foot').textContent = `Pliskin Industrie ${APP_VERSION}${DEMO ? ' · DEMO' : ''} · Rezepte: Data.p4k · Patch ${R.patch || '?'}${R.build ? ' (Build ' + R.build + ')' : ''} · Preise: UEX Corp${U.ts ? ' (Stand ' + fmtTime(new Date(U.ts * 1000).toISOString()) + ')' : ' (nicht geladen)'} · Blueprints: Game-Logs`;
 }
 
 /* ------------------------------------------------------------------ */

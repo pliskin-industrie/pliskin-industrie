@@ -522,7 +522,7 @@ function renderHeader() {
   $('#ind-auto').classList.toggle('on', !!last && !last.error);
   $('#ind-uex').classList.toggle('on', !!U.ts && !U.stale);
   $('#ind-warn').classList.toggle('on', !!(U.error || (last && last.error)));
-  $('#footer').textContent = `Pliskin Industrie ${APP_VERSION}${DEMO ? ' · DEMO' : ''} · Rezepte: Data.p4k · Patch ${R.patch || '?'} · Wissen: Spieldaten · Preise: ${S.settings.uexOn ? 'UEX Corp + eigene' : 'eigene'}${U.ts ? ' (Stand ' + fmtTime(new Date(U.ts * 1000).toISOString()) + (U.stale ? ', offline' : '') + ')' : ' (nicht geladen)'} · Blueprints: Game-Logs · Daten: ${dataDir}`;
+  $('#footer').textContent = `Pliskin Industrie ${APP_VERSION}${DEMO ? ' · DEMO' : ''} · Rezepte: Data.p4k · Patch ${R.patch || '?'}${R.build ? ' (Build ' + R.build + ')' : ''} · Wissen: Spieldaten · Preise: ${S.settings.uexOn ? 'UEX Corp + eigene' : 'eigene'}${U.ts ? ' (Stand ' + fmtTime(new Date(U.ts * 1000).toISOString()) + (U.stale ? ', offline' : '') + ')' : ' (nicht geladen)'} · Blueprints: Game-Logs · Daten: ${dataDir}`;
 }
 
 /* ------------------------------------------------------------------ */
@@ -1518,7 +1518,7 @@ function renderOpt() {
       <div class="hint">Pliskin holt nichts von selbst aus dem Internet. Abgerufen wird nur, wenn du hier drückst – am besten einmal nach einem Patch. Ohne diese Quellen funktioniert alles, nur ohne fremde Preise/Boni.</div></div>
     <div class="win tight"><span class="pill">Datenstand</span>
       <table class="ptab">
-        <tr><td class="l dim">Rezepte</td><td class="l">${(R.blueprints || []).length} Blueprints · Patch ${esc(R.patch || '?')} · ${esc(R.source || '')} · erstellt ${esc(R.created || '')}</td></tr>
+        <tr><td class="l dim">Rezepte</td><td class="l">${(R.blueprints || []).length} Blueprints · Patch ${esc(R.patch || '?')}${R.build ? ' · Build ' + esc(R.build) : ''} · ${esc(R.source || '')} · erstellt ${esc(R.created || '')}</td></tr>
         <tr><td class="l dim">Materialien</td><td class="l">${Object.keys(RES).length}</td></tr>
         <tr><td class="l dim">UEX Corp</td><td class="l">${U.ts ? fmtTime(new Date(U.ts * 1000).toISOString()) + ' · ' + (U.commodities || []).length + ' Waren · ' + (U.prices || []).length + ' Preise' : 'nicht geladen'}${U.error ? ' · <span class="bad">' + esc(U.error) + '</span>' : ''}</td></tr>
         <tr><td class="l dim">Blueprints</td><td class="l">${Object.keys(S.owned).length} vorhanden</td></tr>

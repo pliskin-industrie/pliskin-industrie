@@ -83,7 +83,7 @@ Ein Plan ist eine Liste von Bauteilen mit Anzahl und Mindest-Qualität. Pliskin 
   - Werte: Basis, Q0, Q500, Q1000 und eine Spalte für den Qualitäts-Regler. Der Regler gilt auch als „ab Q“ beim Hinzufügen.
   - Je Rüstung / Waffe / Rüstungsteil eine Karte in der Standard-Farbe; im Detail Skin wählen → Bild wechselt. Set-Modus: Bild zeigt das ganze Set auf einer Figur. Gibt es denselben Skin mit anderen Helm-Formen (Morozov-SH / -SH-C / -SH-S), steht darunter die Auswahl „Helmform“.
   - Filter „Erspielbar“: 🎯 Erspielbar = Mission oder Start-Blueprint · ⛔ Nicht erspielbar = nur Event oder (noch) an keiner Mission.
-  - Gruppe **🔧 Werkzeuge**: Pyro-RYT-Multi-Tool, ParaMed, Cambio-SRT, MaxLift-Traktorstrahl (je Gerät eine Karte, Varianten als Skins; in 4.10.2 ohne Blueprint). Tankstutzen (früher „Andockring“) stehen bei den Schiffsteilen.
+  - Gruppe **🔧 Werkzeuge**: Pyro-RYT-Multi-Tool, ParaMed, Cambio-SRT, MaxLift-Traktorstrahl (je Gerät eine Karte, Varianten als Skins; in 4.10.3 ohne Blueprint). Tankstutzen (früher „Andockring“) stehen bei den Schiffsteilen.
   - Auch **nicht craftbare** Rüstungen, Helme, Rucksäcke, Unteranzüge und Handwaffen aus den Spieldaten (Shop/Beute/Event, ohne Blueprint): Schild „⛔ nicht craftbar“, Bild + Skins, kein „Zum Plan“. Zählen beim Filter zu „Nicht erspielbar“.
   - Bilder: **selbst berechnet aus den Spieldaten** (Modelle, Texturen, Farbschichten, Paletten; Arme locker nach unten) in `app/data/modelle/`. Keine Wiki-Fotos mehr.
     Einstellungen → Katalog-Bilder: Unteranzug auf Set-Bildern neutral (grau) oder passend (gleicher Hersteller).
@@ -98,7 +98,7 @@ Ein Plan ist eine Liste von Bauteilen mit Anzahl und Mindest-Qualität. Pliskin 
 ## Woher die Daten kommen
 | Was | Quelle |
 |---|---|
-| Rezepte, Werte aller Teile, Hersteller, Schiffe, Cargo-Grids, Quantum-Antriebe, Karte, Orte mit Ausstattung (Tanken, Raffinerie, Handel …), Waren, Fundorte, Qualitäts-Verteilung, Missionen → Blueprints, Bilder | Spieldaten (Data.p4k, Patch 4.10.2), selbst ausgelesen |
+| Rezepte, Werte aller Teile, Hersteller, Schiffe, Cargo-Grids, Quantum-Antriebe, Karte, Orte mit Ausstattung (Tanken, Raffinerie, Handel …), Waren, Fundorte, Qualitäts-Verteilung, Missionen → Blueprints, Bilder | Spieldaten (Data.p4k, Patch 4.10.3, Build 13165946), selbst ausgelesen |
 | Handelspreise | **eigene Einträge** (Datenbank → ✎ Eigene Daten), optional von [UEX Corp](https://uexcorp.space) – nur auf Knopfdruck (Einstellungen → Datenquellen) |
 | Raffinerie-Boni | **eigene Einträge** (Datenbank → ✎ Eigene Daten), optional von [SCMDB](https://scmdb.net) – nur auf Knopfdruck |
 | Eigene Blueprints | Game.log des Spiele-PCs |
@@ -107,7 +107,7 @@ Ein Plan ist eine Liste von Bauteilen mit Anzahl und Mindest-Qualität. Pliskin 
 
 ## Betrieb (Technik)
 - `pliskin_server.py` liefert die Oberfläche aus `app/` aus und speichert die Daten in `serverdaten/daten.json` mit täglicher Sicherung.
-- Nach einem neuen Patch (auf dem Pi, mit der Data.p4k): `werkzeuge/wissen_export.py` (Fundorte, Qualität, Raffinerien, Missionen → `app/data/wissen.json`; Orte + Waren → `app/data/orte.json`), `werkzeuge/werte_export.py` + `katalog_export.py` (Katalog-Werte), wie bisher `rezepte_export.py`, `schiffe_export.py`, `karte_export.py`, `missionen_export.py`.
+- Nach einem neuen Patch (auf dem Pi, mit der Data.p4k; Ablauf Schritt für Schritt: `wissen/spieldaten/patch-update.md`, Patch-Angabe zentral in `werkzeuge/patch.json`): `werkzeuge/wissen_export.py` (Fundorte, Qualität, Raffinerien, Missionen → `app/data/wissen.json`; Orte + Waren → `app/data/orte.json`), `werkzeuge/werte_export.py` + `katalog_export.py` (Katalog-Werte), wie bisher `rezepte_export.py`, `schiffe_export.py`, `karte_export.py`, `missionen_export.py`.
 - Pliskin holt **nichts von selbst** aus dem Internet. UEX und SCMDB nur per Knopf unter Einstellungen → Datenquellen (Zwischenspeicher `<Daten>/cache/uex.json` bzw. `scmdb.json`; `scmdb_abgleich.py` macht den SCMDB-Abruf).
 - `demo_erzeugen.py` erzeugt die Beispiel-Daten für den Demo-Modus (`app/data/demo.json`).
 - Mehrere Geräte gleichzeitig gehen. Ändern zwei Geräte gleichzeitig, werden die Änderungen zusammengeführt (Lager, Pläne, Contracts … je Eintrag; Gelöschtes bleibt gelöscht; nur bei genau demselben Feld gewinnt das Gerät, das zuletzt speichert).

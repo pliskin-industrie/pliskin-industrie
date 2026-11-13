@@ -1,12 +1,23 @@
 # Changelog
 
 ## 0.8.2
-- Fitting für alle Schiffe: 210 Schiffe statt 3, mit eigenen Bildern aus den Spieldaten (vorne, oben, Seite) / Ship fitting for all ships: 210 ships instead of 3, with own renders from the game files.
+- Spieldaten auf Star Citizen 4.10.3 (Build 13165946); Patch und Build unten im Programm und im Fitting / Game data updated to Star Citizen 4.10.3 (build 13165946); patch and build shown at the bottom and in the fitting.
+- Neue Schiffe im Fitting mit Bildern: Anvil Liberator, Drake Marauder, Gatac Hyun, RSI Galaxy (213 Schiffe) / New ships in the fitting with images: Anvil Liberator, Drake Marauder, Gatac Hyun, RSI Galaxy (213 ships).
+- 16 neue Blueprints im Katalog mit Bildern (u. a. Raider Camo, Epoque II, Quirinus-Rucksack); geänderte Schiffe neu gerendert / 16 new blueprints in the catalog with images (e.g. Raider Camo, Epoque II, Quirinus backpack); changed ships re-rendered.
+- StarStrings-Häkchen auch bei „Pool 1/Pool 2 …“ und „Potential Blueprints (Neutral only)“, geprüft mit StarStrings 4.10.3 / StarStrings marks also for multiple blueprint pools and “Neutral only” lists, checked with StarStrings 4.10.3.
+- Fitting für alle Schiffe: 213 Schiffe statt 3, mit eigenen Bildern aus den Spieldaten (vorne, oben, Seite) / Ship fitting for all ships: 213 ships instead of 3, with own renders from the game files.
 - Fitting: noch fehlende Bilder zeigen den Platzhalter „Bild folgt“ statt kaputter Bilder / Missing images show a “Bild folgt” (image coming) placeholder instead of broken images.
 - Fitting: neues Layout mit drei Ansichten, Schiffsauswahl als Hangar mit Filtern (Hersteller, Rolle), Teile-Vergleich, bis zu 4 Entwürfe, Ausstattung teilen und laden / New layout with three views, hangar ship picker with filters, part comparison, up to 4 drafts, share and load loadouts.
 - Lager und Tour: Kisten im Cargo-Grid werden in der richtigen Reihenfolge und liegend gezeichnet, Bilder und Material-Symbole laden zuverlässig, zu viele Kisten öffnen weitere Freight Elevators / Crates draw in the right order and lying flat, images and symbols load reliably, overflow crates open more freight elevators.
 - Englisch für Erfassung, Craft-Fenster und Lager-Ansicht; Hilfe zur Erfassung ergänzt / English for capture, craft window and storage view; more help on capture.
+- Fitting: Vorderansicht nie schmaler als das Schiff, echtes Bildformat; Bilder für alle 213 Schiffe / Front view never narrower than the ship, real image shape; images for all 213 ships.
+- Englisch für Leer-Zustände, Raffinerien und Gold-Hinweis; Offline-Seite mit Favicon / English for empty states, refineries and gold hint; offline page with favicon.
 - Desktop-Ansicht auf dem Handy wählbar („Desktop-Seite“ im Browser oder Knopf), Handy-Ansicht per Knopf zurück / Desktop view selectable on phones.
+- Fitting-Rechnung korrigiert und mit Erkul abgeglichen: Strom, Pips, Kühlung, Schilde, Signaturen, Quantum-Antrieb, Waffen-Kadenz und anhaltender Schaden, Boost; neue Anzeige mit Kopf-Kacheln, SCM/NAV und Details / Fitting maths corrected and checked against Erkul: power, pips, cooling, shields, signatures, quantum drive, weapon fire rate and sustained damage, boost; new display with header tiles, SCM/NAV and details.
+- Schild-Pips: ein gemeinsamer Balken für alle Schilde, gespeicherte Ausstattungen werden umgerechnet / Shield pips: one shared bar for all shields, saved loadouts are converted.
+- Eigene Bilder für die Teile (Waffen, Raketen, Komponenten) / Own images for parts (weapons, missiles, components).
+- Schiffsbilder nachgearbeitet: modulare Waffen an der Waffe, Außen-Anbauteile, Bildrahmen; Perseus und weitere fehlende Bilder ergänzt / Ship images reworked: modular weapons on the weapon, external attachments, image frames; Perseus and other missing images added.
+- Teile ohne Namen im Spiel (Bergungsarme, Perseus-Torpedo-Racks) sind im Fitting drin / Parts without an in-game name (salvage arms, Perseus torpedo racks) are in the fitting.
 
 ## 0.8.1
 - StarStrings: Blueprint-Markierungen passen jetzt zum aktuellen StarStrings von MrKraken (erkennt die installierte Fassung selbst) / StarStrings marks work with the current MrKraken release (detects the installed version).
